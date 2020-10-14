@@ -1,0 +1,7 @@
+name: Amped-Up-GUI
+
+dependencies:
+  - python=3.8
+  - numpy
+  - pyqt
+  - pip
