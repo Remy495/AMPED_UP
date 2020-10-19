@@ -29,15 +29,22 @@ class Node(QtWidgets.QGraphicsItem):
 		return self.baseHeight + stackedConnectionCount * connectionPointSpacing + DrawingConstants.CONNECTION_POINT_PADDING
 
 	def paint(self, painter, option, widget=None):
-		# Set brush/pen for painting the main body of the node
-		painter.setPen(QtGui.QPen(QtCore.Qt.black,4,QtCore.Qt.SolidLine))
+
+		# Set pen for drawing outlines; color based on whether or not the node is selected
+		if option.state & QtWidgets.QStyle.State_Selected:
+			painter.setPen(QtGui.QPen(DrawingConstants.HIGHLIGHT_COLOR, DrawingConstants.NODE_OUTLINE_WIDTH, QtCore.Qt.SolidLine))
+		else:
+			painter.setPen(QtGui.QPen(DrawingConstants.NODE_OUTLINE_COLOR, DrawingConstants.NODE_OUTLINE_WIDTH, QtCore.Qt.SolidLine))
+
+		# Set brush for painting the main body of the node
+		painter.setBrush(QtGui.QBrush(DrawingConstants.NODE_BACKGROUND_COLOR, QtCore.Qt.SolidPattern))
 
 		# Paint main body
 		painter.drawRect(self.x,self.y,self.width,self.height)
 		painter.drawRect(self.x,self.y,self.width, self.baseHeight)
 
-		# Set brush/pen for painting the node's connection points
-		painter.setBrush(QtGui.QBrush(QtCore.Qt.blue,QtCore.Qt.SolidPattern))
+		# Set brush for painting the node's connection points
+		painter.setBrush(QtGui.QBrush(DrawingConstants.CONNECTION_POINT_COLOR, QtCore.Qt.SolidPattern))
 
 		# Find the y coordinate at which the first bubble should be start
 		connectionStackTopY = self.y + self.baseHeight + DrawingConstants.CONNECTION_POINT_PADDING
