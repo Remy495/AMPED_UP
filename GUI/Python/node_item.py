@@ -1,35 +1,61 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+from drawing_constants import *
 
 class Node(QtWidgets.QGraphicsItem):
+
 	def __init__(self,title=None,inputs=None,x=0,y=0):
 		super(Node,self).__init__()
 		self.x=x
 		self.y=y
+		self.width = DrawingConstants.NODE_WIDTH
+		self.baseHeight = DrawingConstants.NODE_BASE_HEIGHT
 		self.title=title
 		self.inputs=inputs
 		self.outputs=[1,2]
-		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable 
-			| QtWidgets.QGraphicsItem.ItemIsSelectable)
+		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
 		self.setPos(QtCore.QPoint(x,y))
+
+
 	def boundingRect(self):
-		return QtCore.QRectF(self.x,self.y,500,500)
+		totalWidth = self.width + DrawingConstants.CONNECTION_POINT_DIAMETER
+		totalLeftEdge = self.x - DrawingConstants.CONNECTION_POINT_DIAMETER / 2
+		return QtCore.QRectF(totalLeftEdge, self.y, totalWidth, self.height)
+
+	@property
+	def height(self):
+		stackedConnectionCount = max(len(self.inputs), len(self.outputs))
+		connectionPointSpacing = DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+		return self.baseHeight + stackedConnectionCount * connectionPointSpacing + DrawingConstants.CONNECTION_POINT_PADDING
+
 	def paint(self, painter, option, widget=None):
+		# Set brush/pen for painting the main body of the node
 		painter.setPen(QtGui.QPen(QtCore.Qt.black,4,QtCore.Qt.SolidLine))
-		length=100*len(self.inputs)+50
-		painter.drawRect(self.x,self.y,200,length)
-		painter.drawRect(self.x,self.y,200,50)
+
+		# Paint main body
+		painter.drawRect(self.x,self.y,self.width,self.height)
+		painter.drawRect(self.x,self.y,self.width, self.baseHeight)
+
+		# Set brush/pen for painting the node's connection points
 		painter.setBrush(QtGui.QBrush(QtCore.Qt.blue,QtCore.Qt.SolidPattern))
-		out_space=(length+50)/(2*len(self.outputs))
+
+		# Find the y coordinate at which the first bubble should be start
+		connectionStackTopY = self.y + self.baseHeight + DrawingConstants.CONNECTION_POINT_PADDING
+
+		# Draw all of the inputs
+		connectionPointY = int(connectionStackTopY)
+		connectionPointX = int(self.x - DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
 		for i in range(len(self.inputs)):
-			painter.drawEllipse(self.x-30,self.y+100+100*i,50,50)
+			painter.drawEllipse(connectionPointX, connectionPointY, DrawingConstants.CONNECTION_POINT_DIAMETER, DrawingConstants.CONNECTION_POINT_DIAMETER)
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+
+		# Draw all of the outputs
+		connectionPointY = int(connectionStackTopY)
+		connectionPointX = int(self.x + self.width - DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
 		for i in range(len(self.outputs)):
-			painter.drawEllipse(self.x+180,self.y+int(out_space+out_space*i),50,50)
-	def mouseMoveEvent(self, e):
-		if e.buttons() & QtCore.Qt.LeftButton:
-			super(Node,self).mouseMoveEvent(e)
-		if e.buttons() & QtCore.Qt.RightButton:
-			self.setRect(QtCore.QRectF(QtCore.QPoint(), e.pos()).normalized())
+			painter.drawEllipse(connectionPointX, connectionPointY, DrawingConstants.CONNECTION_POINT_DIAMETER, DrawingConstants.CONNECTION_POINT_DIAMETER)
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+
 
 if __name__=='__main__':
 	import sys
