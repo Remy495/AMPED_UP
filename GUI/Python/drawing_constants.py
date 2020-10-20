@@ -9,5 +9,9 @@ class DrawingConstants:
     NODE_OUTLINE_COLOR = QtCore.Qt.black
     NODE_OUTLINE_WIDTH = 2
     NODE_BACKGROUND_COLOR = QtGui.QColor(230, 230, 230)
+    NODE_TEXT_COLOR = QtCore.Qt.black
     CONNECTION_POINT_COLOR = QtGui.QColor(127, 127, 255)
     HIGHLIGHT_COLOR = QtGui.QColor(100, 220, 220)
+
+    LABEL_FONT = "Helvetica"
+    NODE_TITLE_FONTSIZE = 12
