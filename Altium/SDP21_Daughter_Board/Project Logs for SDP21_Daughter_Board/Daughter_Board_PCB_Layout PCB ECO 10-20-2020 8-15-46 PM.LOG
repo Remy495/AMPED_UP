@@ -1,0 +1,7 @@
+Removed Pin From Net: NetName=SCK Pin=P2-2
+Removed Pin From Net: NetName=SCK Pin=R5-2
+Change Net Name : Old Net Name=CSQ New Net Name=CSQ_ENC
+Change Net Name : Old Net Name=DATA New Net Name=DATA_ENC
+Added Pin To Net: NetName=SCK_ENC Pin=P2-2
+Added Pin To Net: NetName=SCK_ENC Pin=R5-2
+Added Net: Name=SCK_ENC
