@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for SDP21_Daughter_Board
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -105,7 +105,48 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=UPEAGTOQ
 
+[Document5]
+DocumentPath=Job1.OutJob
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
 [GeneratedDocument1]
+DocumentPath=Project Outputs for Free Documents\NC Drill\Daughter_Board_PCB_Layout.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for Free Documents\Gerber\Daughter_Board_PCB_Layout.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for Free Documents\NC Drill\Daughter_Board_PCB_Layout.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=Project Outputs for Free Documents\Gerber\Daughter_Board_PCB_Layout.REP
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for Free Documents\Gerber\Daughter_Board_PCB_Layout.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for Free Documents\NC Drill\Daughter_Board_PCB_Layout.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument7]
 DocumentPath=Project Outputs for SDP21_Daughter_Board\Design Rule Check - Daughter_Board_PCB_Layout.html
 DItemRevisionGUID=
 
@@ -118,6 +159,9 @@ Variant=[No Variations]
 OutputJobsCount=0
 ContentTypeGUID=CB6F2064-E317-11DF-B822-12313F0024A2
 ConfigurationType=Source
+
+[Generic_EDE]
+OutputDir=Project Outputs for SDP21_Daughter_Board
 
 [OutputGroup1]
 Name=Netlist Outputs

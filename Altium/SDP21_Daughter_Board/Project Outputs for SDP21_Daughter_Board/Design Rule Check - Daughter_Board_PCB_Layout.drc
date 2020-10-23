@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
 PCB File : C:\Users\link2\Documents\GitHub\SDP_ExplodingKittens\Altium\SDP21_Daughter_Board\Daughter_Board_PCB_Layout.PcbDoc
 Date     : 10/23/2020
-Time     : 12:38:44
+Time     : 15:44:36
 
 Processing Rule : Clearance Constraint (Gap=10mil) (All),(All)
 Rule Violations :0
@@ -22,7 +22,11 @@ Processing Rule : Power Plane Connect Rule(Relief Connect )(Expansion=20mil) (Co
 Rule Violations :0
 
 Processing Rule : Hole Size Constraint (Min=1mil) (Max=100mil) (All)
-Rule Violations :0
+   Violation between Hole Size Constraint: (177.166mil > 100mil) Via (610.236mil,610.236mil) from Top Layer to Bottom Layer Actual Hole Size = 177.166mil
+   Violation between Hole Size Constraint: (177.166mil > 100mil) Via (610.236mil,-610.236mil) from Top Layer to Bottom Layer Actual Hole Size = 177.166mil
+   Violation between Hole Size Constraint: (177.166mil > 100mil) Via (-610.236mil,610.236mil) from Top Layer to Bottom Layer Actual Hole Size = 177.166mil
+   Violation between Hole Size Constraint: (177.166mil > 100mil) Via (-610.236mil,-610.236mil) from Top Layer to Bottom Layer Actual Hole Size = 177.166mil
+Rule Violations :4
 
 Processing Rule : Hole To Hole Clearance (Gap=10mil) (All),(All)
 Rule Violations :0
@@ -174,12 +178,16 @@ Processing Rule : Silk to Silk (Clearance=0mil) (All),(All)
 Rule Violations :0
 
 Processing Rule : Net Antennae (Tolerance=0mil) (All)
-Rule Violations :0
+   Violation between Net Antennae: Via (610.236mil,610.236mil) from Top Layer to Bottom Layer 
+   Violation between Net Antennae: Via (610.236mil,-610.236mil) from Top Layer to Bottom Layer 
+   Violation between Net Antennae: Via (-610.236mil,610.236mil) from Top Layer to Bottom Layer 
+   Violation between Net Antennae: Via (-610.236mil,-610.236mil) from Top Layer to Bottom Layer 
+Rule Violations :4
 
 Processing Rule : Height Constraint (Min=0mil) (Max=1000mil) (Prefered=500mil) (All)
 Rule Violations :0
 
 
-Violations Detected : 137
+Violations Detected : 145
 Waived Violations : 0
 Time Elapsed        : 00:00:01
