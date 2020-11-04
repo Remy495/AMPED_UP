@@ -3,4 +3,4 @@ Version=1.0
 [Project1]
 ProjectPath=SDP21_Daughter_Board\SDP21_Daughter_Board.PrjPcb
 [Project2]
-ProjectPath=..\..\..\..\..\Public\Documents\Altium\Projects\Counting in Binary\Counting in Binary.PrjPcb
+ProjectPath=SDP21_Main_Board\SDP21_Main_Board.PrjPcb
