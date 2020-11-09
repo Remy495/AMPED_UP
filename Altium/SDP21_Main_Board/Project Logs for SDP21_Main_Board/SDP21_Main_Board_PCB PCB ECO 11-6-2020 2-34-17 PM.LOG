@@ -1,0 +1,52 @@
+Added Component: Designator=U1(Teensy 4.1 Socket)
+Added Pin To Net: NetName=T0 Pin=U1-0
+Added Pin To Net: NetName=T1 Pin=U1-1
+Added Pin To Net: NetName=T2 Pin=U1-2
+Added Pin To Net: NetName=3.3-1 Pin=U1-3.3-1
+Added Pin To Net: NetName=3.3-2 Pin=U1-3.3-2
+Added Pin To Net: NetName=T3 Pin=U1-3
+Added Pin To Net: NetName=T4 Pin=U1-4
+Added Pin To Net: NetName=T5 Pin=U1-5
+Added Pin To Net: NetName=T6 Pin=U1-6
+Added Pin To Net: NetName=T7 Pin=U1-7
+Added Pin To Net: NetName=T8 Pin=U1-8
+Added Pin To Net: NetName=T9 Pin=U1-9
+Added Pin To Net: NetName=CS Pin=U1-10
+Added Pin To Net: NetName=MOSI Pin=U1-11
+Added Pin To Net: NetName=MISO Pin=U1-12
+Added Pin To Net: NetName=SCK Pin=U1-13
+Added Pin To Net: NetName=T14 Pin=U1-14
+Added Pin To Net: NetName=T15 Pin=U1-15
+Added Pin To Net: NetName=T16 Pin=U1-16
+Added Pin To Net: NetName=T17 Pin=U1-17
+Added Pin To Net: NetName=SDA Pin=U1-18
+Added Pin To Net: NetName=SCL Pin=U1-19
+Added Pin To Net: NetName=T20 Pin=U1-20
+Added Pin To Net: NetName=T21 Pin=U1-21
+Added Pin To Net: NetName=EN Pin=U1-22
+Added Pin To Net: NetName=T23 Pin=U1-23
+Added Pin To Net: NetName=T24 Pin=U1-24
+Added Pin To Net: NetName=T25 Pin=U1-25
+Added Pin To Net: NetName=T26 Pin=U1-26
+Added Pin To Net: NetName=T27 Pin=U1-27
+Added Pin To Net: NetName=T28 Pin=U1-28
+Added Pin To Net: NetName=T29 Pin=U1-29
+Added Pin To Net: NetName=T30 Pin=U1-30
+Added Pin To Net: NetName=T31 Pin=U1-31
+Added Pin To Net: NetName=T32 Pin=U1-32
+Added Pin To Net: NetName=T33 Pin=U1-33
+Added Pin To Net: NetName=T34 Pin=U1-34
+Added Pin To Net: NetName=T35 Pin=U1-35
+Added Pin To Net: NetName=T36 Pin=U1-36
+Added Pin To Net: NetName=T37 Pin=U1-37
+Added Pin To Net: NetName=T38 Pin=U1-38
+Added Pin To Net: NetName=T39 Pin=U1-39
+Added Pin To Net: NetName=T40 Pin=U1-40
+Added Pin To Net: NetName=T41 Pin=U1-41
+Added Pin To Net: NetName=GND Pin=U1-GND1
+Added Pin To Net: NetName=GND Pin=U1-GND2
+Added Pin To Net: NetName=GND Pin=U1-GND3
+Added Pin To Net: NetName=Vin Pin=U1-Vin
+Added Member To Class: ClassName=SDP21_Main_Board_Schematic Member=Component U1 Teensy 4.1 Socket
+Added Room: Name=SDP21_Main_Board_Schematic
+PCB-ECO: Change Pad Pin/Pkg Length: Old=57.087mil New=0mil

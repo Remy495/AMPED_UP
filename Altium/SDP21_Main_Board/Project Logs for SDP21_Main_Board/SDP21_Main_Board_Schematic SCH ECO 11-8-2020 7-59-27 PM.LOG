@@ -1,0 +1,2 @@
+Remove Pin=P4-2 From Net=3.3-1
+Add Pin To Net: Pin=P4-2 Old Net=3.3-1 New Net=3.3-2
