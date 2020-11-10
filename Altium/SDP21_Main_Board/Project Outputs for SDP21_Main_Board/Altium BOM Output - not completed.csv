@@ -1,0 +1,16 @@
+Line #,Name,Designator,Description,Quantity,Manufacturer 1,Manufacturer Part Number 1,Manufacturer Lifecycle 1,Supplier 1,Supplier Part Number 1,Supplier Unit Price 1,Supplier Subtotal 1
+
+"","JTAG Connector","CON1","","1","Amphenol FCI","20021111-00010T4LF","Volume Production","Digi-Key","609-3712-ND","0.69","0.69"
+"","TLMS1000-GS08","DS1, DS2, DS3","Low Current LED, 40 mW, 1.8 V, -40 to 100 degC, 2-Pin SMD (0603), RoHS, Tape and Reel","3","Vishay","TLMS1000-GS08","Volume Production","Digi-Key","TLMS1000-GS08CT-ND","0.45","1.35"
+"","TLMY1000-GS08","DS4, DS5, DS6","Low Current LED, 40 mW, -40 to 100 degC, 2-Pin SMD, RoHS, Tape and Reel","3","Vishay","TLMY1000-GS08","Volume Production","Digi-Key","TLMY1000-GS08DKR-ND","0.45","1.35"
+"","Header 2","P1, P6","Header, 2-Pin","2","","","","","","",""
+"","Header 24","P2, P3","Header, 24-Pin","2","","","","","","",""
+"","Header 14","P4, P5","Header, 14-Pin","2","","","","","","",""
+"","Header 10","P7","Header, 10-Pin","1","","","","","","",""
+"","RR1220P-331-D","R1, R2, R3, R13, R14, R15","","6","Susumu","RR1220P-331-D","Volume Production","Digi-Key","RR12P330DDKR-ND","0.1","0.6"
+"","CRCW060310K0FKEA","R4, R5, R6, R7, R8","Chip Resistor, 10 KOhm, +/- 1%, 100 mW, -55 to 155 degC, 0603 (1608 Metric), RoHS, Tape and Reel","5","Vishay","CRCW060310K0FKEA","Volume Production","Digi-Key","541-10.0KHCT-ND","0.031","0.31"
+"","CRCW0603100RFKEA","R9, R10, R11, R12","","4","Vishay Dale","CRCW0603100RFKEA","Volume Production","Digi-Key","541-100HCT-ND","0.031","0.31"
+"","434123043816","SW1, SW2, SW3","WS-TASV J-Bend SMD Tact Switch 6.0X3.5 mm","3","Wurth Electronics","434123043816","Volume Production","Digi-Key","732-7051-6-ND","0.54","1.62"
+"","1825255-1","SW4","Slide Switch, SPDT, 125 V, -20 to 85 degC, 5-Pin THD, RoHS, Tray","1","TE Connectivity Alcoswitch","1825255-1","Volume Production","Digi-Key","450-1567-ND","0.85","0.85"
+"","Teensy 4.1 Socket","U1","Teensy 4.1","1","Amphenol FCI","68002-124HLF","Volume Production","Digi-Key","609-68002-124HLF-ND","1.84","1.84"
+"","ESP32-WROOM-32 Espressif Systems","U2","ESP32 BGA mounted on PCB w/ castellated holes","1","Espressif Systems","ESP32-WROOM-32","Volume Production","Digi-Key","1904-1010-6-ND","3.8","3.8"
