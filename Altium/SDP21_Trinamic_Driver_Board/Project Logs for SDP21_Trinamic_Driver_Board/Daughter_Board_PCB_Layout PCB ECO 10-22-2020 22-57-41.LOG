@@ -1,0 +1,8 @@
+Removed Pin From Net: NetName=M1A1 Pin=P3-1
+Removed Pin From Net: NetName=M1B1 Pin=P3-3
+Removed Pin From Net: NetName=M1B2 Pin=P3-4
+Added Pin To Net: NetName=M1B2 Pin=P3-1
+Added Pin To Net: NetName=M1A1 Pin=P3-3
+Added Pin To Net: NetName=M1B1 Pin=P3-4
+Added Pin To Net: NetName=+3.3V Pin=REG1-4
+Added Room: Name=SDP21_Daughter_Board_Schematic

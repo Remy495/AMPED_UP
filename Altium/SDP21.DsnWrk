@@ -1,6 +1,8 @@
 [ProjectGroup]
 Version=1.0
 [Project1]
-ProjectPath=SDP21_Daughter_Board\SDP21_Daughter_Board.PrjPcb
-[Project2]
 ProjectPath=SDP21_Main_Board\SDP21_Main_Board.PrjPcb
+[Project2]
+ProjectPath=SDP21_Daughter_Board\SDP21_Daughter_Board.PrjPcb
+[Project3]
+ProjectPath=SDP21_Trinamic_Driver_Board\SDP21_Trinamic_Driver_Board.PrjPcb

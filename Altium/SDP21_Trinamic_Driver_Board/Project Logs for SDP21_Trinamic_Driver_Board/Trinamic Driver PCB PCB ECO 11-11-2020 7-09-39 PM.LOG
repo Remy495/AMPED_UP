@@ -1,0 +1,12 @@
+Removed Pin From Net: NetName=BRA Pin=JMP3-1
+Removed Pin From Net: NetName=BRB Pin=JMP4-1
+Change Component Designator: OldDesignator=JMP5 NewDesignator=JMP4
+Change Component Designator: OldDesignator=JMP6 NewDesignator=JMP5
+Change Component Designator: OldDesignator=JMP7 NewDesignator=JMP6
+Change Component Designator: OldDesignator=JMP8 NewDesignator=JMP7
+Added Pin To Net: NetName=BRB Pin=JMP3-1
+Added Pin To Net: NetName=BRA Pin=JMP3-2
+Change Net Name : Old Net Name=NetJMP5_2 New Net Name=NetJMP4_2
+Added Member To Class: ClassName=Trinamic Driver Schematic Member=Component JMP6 Solder Jump
+Added Member To Class: ClassName=Trinamic Driver Schematic Member=Component JMP7 Solder Jump
+Added Room: Name=Trinamic Driver Schematic
