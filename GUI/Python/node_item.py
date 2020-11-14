@@ -2,7 +2,83 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 
+class NodeScene(QtWidgets.QGraphicsScene):
+	def __init__(self, parent = None):
+		# Initialize super class
+		super(NodeScene,self).__init__(parent)
 
+		# Set default values for mouse position (will be updates when mouse moves)
+		self.mousePos = QtCore.QPointF(0, 0)
+
+		# Reference to the currently active connection (i.e. the one that the user is currently dragging)
+		self.activeConnection = None
+
+		# List of nodes currently present in the scene
+		self.nodes = []
+
+	def addNode(self, node):
+		self.nodes.append(node)
+		self.addItem(node)
+
+	def mouseMoveEvent(self, e):
+		# Whenever the mouse moves, update mousePos
+		self.mousePos = e.scenePos()
+		if self.activeConnection is not None:
+			self.activeConnection.rebuildEndpoints()
+
+		super(NodeScene, self).mouseMoveEvent(e)
+
+	def mouseReleaseEvent(self, e):
+		# If there is an active connection (following the mouse), find which connection point the user has dropped it on
+		if self.activeConnection is not None:
+			selectedConnectionPoint = None
+
+			# Every connection must lead from an output to an input. Check which one this connection is missing so that
+			# the corrisponding connection points can be checked
+			if self.activeConnection.input is None:
+				print("looking for input")
+				activeConnectionNeedsInput = True
+			else:
+				print("looking for output")
+				activeConnectionNeedsInput = False
+
+			for node in self.nodes:
+				# Check if the mouse pointer is within the node
+				relativeMousePosition = node.mapFromScene(e.scenePos())
+				if node.boundingRect().contains(relativeMousePosition):
+					# Decide which kind of connection point to check based on which end of the edge has no conneciton
+					if activeConnectionNeedsInput:
+						availableConnectionPoints = node.inputs
+					else:
+						availableConnectionPoints = node.outputs
+
+					# Check if the mouse pointer is within any of the node's connection points
+					for connectionPoint in availableConnectionPoints:
+						if connectionPoint.bubbleRect.contains(relativeMousePosition):
+							selectedConnectionPoint = connectionPoint
+			
+			# If a connection point was selected, set it as the end point of the connection. Otherwise remove the conneciton
+			if selectedConnectionPoint is not None:
+				if activeConnectionNeedsInput:
+					self.activeConnection.input = selectedConnectionPoint
+				else:
+					self.activeConnection.output = selectedConnectionPoint
+				selectedConnectionPoint.registerConnection(self.activeConnection)
+				self.activeConnection.rebuildEndpoints()
+			else:
+				if activeConnectionNeedsInput:
+					self.activeConnection.output.unregisterConnection(self.activeConnection)
+				else:
+					self.activeConnection.input.unregisterConnection(self.activeConnection)
+				self.removeItem(self.activeConnection)
+			
+			# No matter what happened, the previously active connection is no longer active.
+			self.activeConnection = None
+				
+			
+		super(NodeScene, self).mouseReleaseEvent(e)
+
+	
 
 class Node(QtWidgets.QGraphicsItem):
 
@@ -11,12 +87,20 @@ class Node(QtWidgets.QGraphicsItem):
 		self.width = DrawingConstants.NODE_WIDTH
 		self.height = DrawingConstants.NODE_BASE_HEIGHT
 		self.title = title
+
+		# Add input and output connection points
 		self.inputs = [ConnectionPoint(inputTitle, self, False) for inputTitle in inputs]
 		self.outputs = [ConnectionPoint(outputTitle, self, True) for outputTitle in outputs]
-		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
-		self.setPos(QtCore.QPoint(x,y))
 
+		# Calculate the positions at which each of the connection points should be drawn (relative to the node)
 		self.rebuild()
+
+		# Set the node as draggable and selectable
+		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
+		self.setAcceptHoverEvents(True)
+
+		# Move the node to the specified position
+		self.setPos(QtCore.QPoint(x,y))
 
 
 	def boundingRect(self):
@@ -105,10 +189,35 @@ class Node(QtWidgets.QGraphicsItem):
 			painter.drawText(connectionPoint.rightAlignedTextRect, QtCore.Qt.AlignRight, connectionPoint.title)
 
 	def mouseMoveEvent(self, e):
-		super(Node, self).mouseMoveEvent(e)
-		if e.buttons() & QtCore.Qt.LeftButton:
-			for connectionPoint in self.connectionPoints:
-				connectionPoint.updateConnections()
+		if self.scene().activeConnection is None:
+			super(Node, self).mouseMoveEvent(e)
+			if e.buttons() & QtCore.Qt.LeftButton:
+				for connectionPoint in self.connectionPoints:
+					connectionPoint.updateConnections()
+
+	def mousePressEvent(self, e):
+		# Determine if any of the connection points were clicked on
+
+		selectedConnectionPoint = None
+		for connectionPoint in self.connectionPoints:
+			if connectionPoint.bubbleRect.contains(e.pos()):
+				selectedConnectionPoint = connectionPoint
+		
+		if selectedConnectionPoint is not None:
+
+			if selectedConnectionPoint.isOutput:
+				newConnection = Connection(selectedConnectionPoint, None)
+			else:
+				newConnection = Connection(None, selectedConnectionPoint)
+
+			self.scene().addItem(newConnection)
+			self.scene().activeConnection = newConnection
+			self.scene().activeConnection.rebuildEndpoints()
+			e.accept()
+			return
+		else:
+			super(Node, self).mousePressEvent(e)
+
 		
 
 
@@ -121,6 +230,7 @@ class ConnectionPoint:
 		self.xRelative = xRelative
 		self.yRelative = yRelative
 		self.connections = []
+		self.isOutput = isOutput
 
 	@property
 	def bubbleRect(self):
@@ -149,44 +259,67 @@ class ConnectionPoint:
 	def registerConnection(self, connection):
 		# If this is an input and there is already a connection, remove it
 		if self.connections and not self.isOutput:
+			for oldConnection in self.connections:
+				oldConnection.output.unregisterConnection(oldConnection)
+				self.owner.scene().removeItem(oldConnection)
 			self.connections.clear()
 
 		self.connections.append(connection)
 
+		print("register connection:", connection)
+		print("connection list:", self.connections)
+
 	def unregisterConnection(self, connection):
+		print("unregister connection:", connection)
+		print("connection list:", self.connections)
 		self.connections.remove(connection)
 
 	def updateConnections(self):
 		for connection in self.connections:
-			connection.update()
+			connection.rebuildEndpoints()
 
 
 
 class Connection(QtWidgets.QGraphicsItem):
 
-	def __init__(self, input, output):
+	def __init__(self, output, input):
 		super(Connection,self).__init__()
-		self.input = input
-		input.registerConnection(self)
 
 		self.output = output
-		output.registerConnection(self)
+		if output is not None:
+			print("output is connected")
+			output.registerConnection(self)
+
+		self.input = input
+		if input is not None:
+			print("input is connected")
+			input.registerConnection(self)
 
 		self.rebuildEndpoints()
 
 		self.setZValue(-1)
 
-	@property
-	def inputNode(self):
-		return self.input.owner
-
-	@property
-	def outputNode(self):
-		return self.output.owner
-
 	def rebuildEndpoints(self):
-		self.inputPoint = self.mapFromItem(self.inputNode, self.input.bubbleRect.center())
-		self.outputPoint = self.mapFromItem(self.outputNode, self.output.bubbleRect.center())
+		self.prepareGeometryChange()
+
+		if self.input is not None:
+			# If an input node is connection, move the input point to the corrisponding connection point
+			self.inputPoint = self.mapFromItem(self.input.owner, self.input.bubbleRect.center())
+		elif self.scene() is not None:
+			# If not, move to the mouse position
+			self.inputPoint = self.scene().mousePos
+		else:
+			# If this connection has not yet been added to a scene, just set a default value
+			self.inputPoint = QtCore.QPointF(0, 0)
+
+
+		if self.output is not None:
+			self.outputPoint = self.mapFromItem(self.output.owner, self.output.bubbleRect.center())
+		elif self.scene() is not None:
+			self.outputPoint = self.scene().mousePos
+		else:
+			self.outputPoint = QtCore.QPointF(0, 0)
+
 
 	def boundingRect(self):
 		x = min(self.inputPoint.x(), self.outputPoint.x())
@@ -197,15 +330,10 @@ class Connection(QtWidgets.QGraphicsItem):
 		return QtCore.QRectF(x, y, width, height)
 
 	def paint(self, painter, option, widget=None):
-		self.rebuildEndpoints()
 
 		borderPen = QtGui.QPen(DrawingConstants.NODE_OUTLINE_COLOR, DrawingConstants.NODE_OUTLINE_WIDTH, QtCore.Qt.SolidLine)
 		painter.setPen(borderPen)
 		painter.drawLine(self.inputPoint, self.outputPoint)
-
-	# FIXME: There is a graphical glitch where, when you move a node fast, you sometimes get gaps in the connection line
-	#        that persist when draggin stops. This probably happens because the bounding box only contains where the
-	#        line was last drawn, not where it is about to be drawn. 
 
 
 
@@ -213,14 +341,14 @@ class Connection(QtWidgets.QGraphicsItem):
 if __name__=='__main__':
 	import sys
 	app =QtWidgets.QApplication(sys.argv)
-	scene = QtWidgets.QGraphicsScene()
+	scene = NodeScene()
 	view = QtWidgets.QGraphicsView(scene)
 	node1 = Node('Node1',["first","second","third","fourth"],["output"],40,40)
-	node2 = Node('Node2',["input"],["first", "second"],500,500)
-	connection = Connection(node2.inputs[0], node1.outputs[0])
-	scene.addItem(node1)
-	scene.addItem(node2)
-	scene.addItem(connection)
+	node2 = Node('Node2',["input", "other"],["first", "second"],500,500)
+	#connection = Connection(node2.inputs[0], node1.outputs[0])
+	scene.addNode(node1)
+	scene.addNode(node2)
+	#scene.addItem(connection)
 	view.show()
 	sys.exit(app.exec_())
 
