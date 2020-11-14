@@ -1,0 +1,43 @@
+include "AmpedUpPresets.fbs";
+
+namespace AmpedUpMessaging;
+
+table SetKnobValuesMessage {
+    knobValues: AmpedUpPresets.KnobValues;
+}
+
+table SavePresetMessage {
+    preset: AmpedUpPresets.Preset;
+}
+
+table SaveCurrentAsPresetMessage {
+    id: uint16;
+}
+
+table LoadPresetMessage {
+    id: uint16;
+}
+
+enum LogSeverity: uint8 {
+    DEBUG,
+    WARNING,
+    CRITICAL,
+    FATAL
+}
+
+table LogMessage {
+    severity: LogSeverity;
+    message: string;
+}
+
+union MessagePayload {
+    SetKnobValuesMessage,
+    SavePresetMessage,
+    SaveCurrentAsPresetMessage,
+    LoadPresetMessage,
+    LogMessage
+}
+
+table Message {
+    payload: MessagePayload;
+}

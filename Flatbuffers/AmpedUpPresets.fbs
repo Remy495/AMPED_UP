@@ -1,0 +1,18 @@
+
+include "AmpedUpNodes.fbs";
+
+namespace AmpedUpPresets;
+
+table FixedKnobValues {
+    knobValues: [float];
+}
+
+union KnobValues {
+    FixedKnobValues,
+    AmpedUpNodes.NodeGraph
+}
+
+table Preset {
+    id: uint16;
+    data: KnobValues;
+}

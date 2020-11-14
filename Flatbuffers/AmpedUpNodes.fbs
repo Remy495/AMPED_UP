@@ -1,0 +1,56 @@
+
+namespace AmpedUpNodes;
+
+table Connection {
+    nodeIndex: uint16;
+    outputIndex: uint8;
+}
+
+table ConstantValueFloat {
+    value: float32;
+}
+
+table ConstantValueInt {
+    value: int32;
+}
+
+union InputValue {
+    Connection,
+    ConstantValueFloat,
+    ConstantValueInt
+}
+
+// Python does not support vectors of unions, so it is necessary to wrap InputValue in a table
+table Input {
+    value: InputValue;
+}
+
+enum NodeType: uint8 {
+    //Input Nodes
+    GUITAR_SIGNAL,
+    EFFECTS_PEDAL,
+    SINE_WAVE,
+    SQUARE_WAVE,
+
+    //Mathematical Nodes
+    MULTIPLY,
+    ADD,
+    SUBTRACT,
+    DIVIDE,
+    MEAN,
+    REMAP_RANGE,
+
+    //Output Nodes
+    KNOB_POSITIONS
+}
+
+table Node {
+    type: NodeType;
+    inputs: [Input];
+}
+
+table NodeGraph {
+    nodes: [Node];
+}
+
+root_type Node;
