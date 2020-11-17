@@ -2,38 +2,8 @@
 FileName = Trinamic Driver PCB.GBR
 AutoAperture = True
 *************************************************************
-Generating : Bottom Solder
-      File : Trinamic Driver PCB.GBS
-
-    Adding Layer      : Bottom Solder
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D30
-    D31
-*************************************************************
-
-*************************************************************
-Generating : Bottom Pad Master
-      File : Trinamic Driver PCB.GPB
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D33
-    D34
-*************************************************************
-
-*************************************************************
-Generating : Top Pad Master
-      File : Trinamic Driver PCB.GPT
+Generating : Top Layer
+      File : Trinamic Driver PCB.GTL
 
     Adding Layer      : Top Layer
 
@@ -41,6 +11,7 @@ Generating : Top Pad Master
 
 
 Used DCodes :
+    D11
     D13
     D14
     D15
@@ -53,6 +24,23 @@ Used DCodes :
     D22
     D23
     D24
+    D32
+    D33
+    D34
+    D35
+    D36
+*************************************************************
+
+*************************************************************
+Generating : Bottom Pad Master
+      File : Trinamic Driver PCB.GPB
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
     D33
     D34
 *************************************************************
@@ -78,63 +66,14 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Mechanical 1
-      File : Trinamic Driver PCB.GM1
+Generating : Bottom Overlay
+      File : Trinamic Driver PCB.GBO
 
-    Adding Layer      : Mechanical 1
+    Adding Layer      : Bottom Overlay
 
 
 Used DCodes :
     D11
-*************************************************************
-
-*************************************************************
-Generating : Mechanical 13
-      File : Trinamic Driver PCB.GM13
-
-    Adding Layer      : Mechanical 13
-
-
-Used DCodes :
-    D39
-*************************************************************
-
-*************************************************************
-Generating : Top Solder
-      File : Trinamic Driver PCB.GTS
-
-    Adding Layer      : Top Solder
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D13
-    D14
-    D15
-    D17
-    D19
-    D20
-    D21
-    D25
-    D26
-    D27
-    D28
-    D29
-    D30
-    D31
-*************************************************************
-
-*************************************************************
-Generating : Keep-Out Layer
-      File : Trinamic Driver PCB.GKO
-
-    Adding Layer      : Keep-Out Layer
-
-
-Used DCodes :
 *************************************************************
 
 *************************************************************
@@ -146,6 +85,32 @@ Generating : Bottom Paste
     Adding Layer      : Bottom Layer
 
     Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : Trinamic Driver PCB.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D30
+    D31
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : Trinamic Driver PCB.GKO
+
+    Adding Layer      : Keep-Out Layer
 
 
 Used DCodes :
@@ -178,10 +143,10 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Bottom Overlay
-      File : Trinamic Driver PCB.GBO
+Generating : Mechanical 1
+      File : Trinamic Driver PCB.GM1
 
-    Adding Layer      : Bottom Overlay
+    Adding Layer      : Mechanical 1
 
 
 Used DCodes :
@@ -201,6 +166,34 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
+Generating : Top Solder
+      File : Trinamic Driver PCB.GTS
+
+    Adding Layer      : Top Solder
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D13
+    D14
+    D15
+    D17
+    D19
+    D20
+    D21
+    D25
+    D26
+    D27
+    D28
+    D29
+    D30
+    D31
+*************************************************************
+
+*************************************************************
 Generating : Top Overlay
       File : Trinamic Driver PCB.GTO
 
@@ -214,8 +207,8 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Top Layer
-      File : Trinamic Driver PCB.GTL
+Generating : Top Pad Master
+      File : Trinamic Driver PCB.GPT
 
     Adding Layer      : Top Layer
 
@@ -223,7 +216,6 @@ Generating : Top Layer
 
 
 Used DCodes :
-    D11
     D13
     D14
     D15
@@ -236,10 +228,18 @@ Used DCodes :
     D22
     D23
     D24
-    D32
     D33
     D34
-    D35
-    D36
+*************************************************************
+
+*************************************************************
+Generating : Mechanical 13
+      File : Trinamic Driver PCB.GM13
+
+    Adding Layer      : Mechanical 13
+
+
+Used DCodes :
+    D39
 *************************************************************
 
