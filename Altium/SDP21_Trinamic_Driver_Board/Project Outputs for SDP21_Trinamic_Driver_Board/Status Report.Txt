@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [Trinamic Driver PCB.PcbDoc]
+   Generated File[Trinamic Driver PCB.TXT]
+   Generated File[Trinamic Driver PCB.LDP]
+   Generated File[Trinamic Driver PCB.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 2:34:53 PM On 11/17/2020

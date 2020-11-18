@@ -1,0 +1,5 @@
+Removed Pin From Net: NetName=11 Pin=P1-11
+Change Net Name : Old Net Name=11 New Net Name=GND
+Added Pin To Net: NetName=11 Pin=P1-11
+Added Net: Name=11
+Added Room: Name=Trinamic Driver Schematic
