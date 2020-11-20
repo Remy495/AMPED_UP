@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui
 
 class DrawingConstants:
-    NODE_WIDTH = 200
+    NODE_WIDTH = 215
     NODE_BASE_HEIGHT = 25
     CONNECTION_POINT_DIAMETER = 20
     CONNECTION_POINT_PADDING = 10
