@@ -1,7 +1,7 @@
-import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 from connection_item import *
+from slider_item import *
 
 	
 
@@ -13,13 +13,8 @@ class Node(QtWidgets.QGraphicsItem):
 		self.height = DrawingConstants.NODE_BASE_HEIGHT
 		self.title = title
 
-		# Add input and output connection points
-		self.inputs = [ConnectionPoint(inputTitle, self, False) for inputTitle in inputs]
-		self.outputs = [ConnectionPoint(outputTitle, self, True) for outputTitle in outputs]
-
-
-		self.inputNames = inputs
-		self.outputNames = outputs
+		self.inputTable = inputs
+		self.outputTable = outputs
 
 		self.x = x
 		self.y = y
@@ -52,40 +47,52 @@ class Node(QtWidgets.QGraphicsItem):
 		return self.inputs + self.outputs
 
 	def rebuild(self):
+		# Reset the lists of connection points
+		self.inputs = []
+		self.outputs = []
+
+		# Reset the list of connection point sliders
+		self.inputTextItems = []
+
 		# Find the y coordinate at which the first connection point should be start
-		connectionStackTopY = DrawingConstants.NODE_BASE_HEIGHT + DrawingConstants.CONNECTION_POINT_PADDING
+		connectionStackTopY = DrawingConstants.NODE_BASE_HEIGHT + DrawingConstants.NODE_PADDING
 
 		# Calculate positions for all of the inputs
 		connectionPointY = int(connectionStackTopY)
 		connectionPointX = int(-DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
-		for connectionPoint in self.inputs:
+		for inputTitle, inputRange in self.inputTable.items():
+			connectionPoint = ConnectionPoint(inputTitle, self, False)
+
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
 
 			if self.scene() is not None:
-				inputTextItem = QtWidgets.QGraphicsTextItem(self)
-				inputTextItem.setPlainText("0.0")
+				inputTextItem = Slider(inputRange, self)
 				textItemX = self.width / 2
 				textItemY = connectionPointY
 				inputTextItem.setPos(textItemX, textItemY)
-				inputTextItem.setTextInteractionFlags(QtCore.Qt.TextEditable)
 				self.inputTextItems.append(inputTextItem)
 
 				connectionPoint.textBox = inputTextItem
+			
+			self.inputs.append(connectionPoint)
 
-			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 
 		# Adjust the height of the node to contain all of the inputs
 		self.height = connectionPointY
 
 		# Calculate positions for all of the outputs
-		#connectionPointY = int(connectionStackTopY)
 		connectionPointX = int(self.width - DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
-		for connectionPoint in self.outputs:
+		for outputTitle in self.outputTable:
+			connectionPoint = ConnectionPoint(outputTitle, self, True)
+
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
+
+			self.outputs.append(connectionPoint)
 			
-			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 
 		# Adjust the height of the node to contain all of the outputs
 		if connectionPointY > self.height:
@@ -149,7 +156,7 @@ class Node(QtWidgets.QGraphicsItem):
 		# Determine if any of the connection points were clicked on
 
 		if self.isInPallet:
-			newNode = Node(self.title, self.inputNames, self.outputNames, True, self.x, self.y)
+			newNode = Node(self.title, self.inputTable, self.outputTable, True, self.x, self.y)
 			self.isInPallet = False
 			self.setZValue(0)
 			self.scene().addNode(newNode)
@@ -211,18 +218,18 @@ class ConnectionPoint:
 
 	@property
 	def leftAlignedTextRect(self):
-		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.CONNECTION_POINT_PADDING
+		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.NODE_PADDING
 		height = DrawingConstants.CONNECTION_POINT_DIAMETER
-		x = self.xRelative + DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+		x = self.xRelative + DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 		y = self.yRelative
 
 		return QtCore.QRectF(x, y, width, height)
 
 	@property
 	def rightAlignedTextRect(self):
-		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.CONNECTION_POINT_PADDING
+		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.NODE_PADDING
 		height = DrawingConstants.CONNECTION_POINT_DIAMETER
-		x = self.xRelative - DrawingConstants.CONNECTION_POINT_PADDING - width
+		x = self.xRelative - DrawingConstants.NODE_PADDING - width
 		y = self.yRelative
 
 		return QtCore.QRectF(x, y, width, height)
