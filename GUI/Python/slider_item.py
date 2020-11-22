@@ -6,7 +6,7 @@ class Slider(QtWidgets.QGraphicsTextItem):
     def __init__(self, range, parent = None):
         super(Slider, self).__init__(parent)
 
-        self.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
+        self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
         self.width = DrawingConstants.NODE_WIDTH / 2 - 2 * DrawingConstants.NODE_PADDING
 

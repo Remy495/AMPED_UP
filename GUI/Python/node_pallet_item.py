@@ -31,3 +31,16 @@ class NodePallet(QtWidgets.QGraphicsItem):
         # Paint main body
         painter.drawRect(0,0,self.width,self.height)
 
+    # Swallow mouse events (so they don't get passed on to items behind this one) so that nothing happens when you click on the pallet
+
+    def mouseMoveEvent(self, e):
+        e.accept()
+
+    def mousePressEvent(self, e):
+        e.accept()
+
+    def mouseReleaseEvent(self, e):
+        e.accept()
+
+    
+

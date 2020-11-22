@@ -160,8 +160,7 @@ class Node(QtWidgets.QGraphicsItem):
 		if self.scene().activeConnection is None:
 			super(Node, self).mouseMoveEvent(e)
 			if e.buttons() & QtCore.Qt.LeftButton:
-				for connectionPoint in self.connectionPoints:
-					connectionPoint.updateConnections()
+				self.updateConnections()
 
 	def mousePressEvent(self, e):
 		if self.isInPallet:
@@ -235,8 +234,7 @@ class Node(QtWidgets.QGraphicsItem):
 						self.setParentTranslated(self.scene().background)
 						self.dragStartPos = None
 						# Make sure the any connections update their endpoints accordingly
-						for connectionPoint in self.connectionPoints:
-							connectionPoint.updateConnections()
+						self.updateConnections()
 				else:
 					# If this node was dropped onto the background, ensure that it is on the right layer and that it is parented to the background
 					self.setParentTranslated(self.scene().background)
@@ -255,6 +253,10 @@ class Node(QtWidgets.QGraphicsItem):
 
 		self.setParentItem(parent)
 		self.setPos(newPos)
+
+	def updateConnections(self):
+		for connectionPoint in self.connectionPoints:
+			connectionPoint.updateConnections()
 
 		
 

@@ -2,6 +2,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 
+from node_item import *
+
 class NodeSceneBackground(QtWidgets.QGraphicsItem):
 
     def __init__(self, parent = None):
@@ -23,17 +25,20 @@ class NodeSceneBackground(QtWidgets.QGraphicsItem):
         super(NodeSceneBackground, self).mouseReleaseEvent(e)
         self.rebuild()
 
+    def mouseMoveEvent(self, e):
+        super(NodeSceneBackground, self).mouseMoveEvent(e)
+        for item in self.childItems():
+            if isinstance(item, Node):
+                item.updateConnections()
+
     def mousePressEvent(self, e):
         if self.scene() is not None:
             self.scene().clearSelection()
 
+        super(NodeSceneBackground, self).mousePressEvent(e)
+
 
     def paint(self, painter, option, widget=None):
         pass
-        # # Select pen/brush for painting the main body of the node
-        # painter.setBrush(QtGui.QBrush(DrawingConstants.NODE_BACKGROUND_COLOR, QtCore.Qt.SolidPattern))
-        # painter.setPen(QtGui.QPen(DrawingConstants.NODE_OUTLINE_COLOR, DrawingConstants.NODE_OUTLINE_WIDTH, QtCore.Qt.SolidLine))
-
-        # painter.drawRect(self.boundingRect())
     
 

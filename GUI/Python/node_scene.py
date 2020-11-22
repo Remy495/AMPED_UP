@@ -2,6 +2,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 
+from node_item import *
+
 class NodeScene(QtWidgets.QGraphicsScene):
 	def __init__(self, parent = None):
 		# Initialize super class
@@ -95,6 +97,16 @@ class NodeScene(QtWidgets.QGraphicsScene):
 				
 			
 		super(NodeScene, self).mouseReleaseEvent(e)
+
+	def keyPressEvent(self, e):
+		if e.key() == QtCore.Qt.Key_Delete or e.key() == QtCore.Qt.Key_Backspace:
+			for item in self.selectedItems():
+				# For now, the only things that are selectable are nodes. So just run deleteNode on each one (if it is deleteable)
+				if item.isDeleteable:
+					self.removeNode(item)
+
+			# Any non-deleteable nodes should be deselected
+			self.clearSelection()
 
 	def onSceneRectChanged(self, rect):
 		if self.pallet is not None and self.background is not None:
