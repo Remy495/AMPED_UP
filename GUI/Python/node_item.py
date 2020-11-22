@@ -7,8 +7,9 @@ from slider_item import *
 
 class Node(QtWidgets.QGraphicsItem):
 
-	def __init__(self, title="", inputs=None, outputs=None, isInPallet = True, x=0, y=0):
+	def __init__(self, title="", inputs=None, outputs=None, isInPallet = True, x=0, y=0, isDeleteable = False):
 		super(Node,self).__init__()
+
 		self.width = DrawingConstants.NODE_WIDTH
 		self.height = DrawingConstants.NODE_BASE_HEIGHT
 		self.title = title
@@ -19,8 +20,10 @@ class Node(QtWidgets.QGraphicsItem):
 		self.x = x
 		self.y = y
 
+		self.isDeleteable = isDeleteable
+
 		# Calculate the positions at which each of the connection points should be drawn (relative to the node)
-		self.rebuild()
+		# self.rebuild()
 
 		# Set the node as draggable and selectable
 		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
@@ -30,11 +33,15 @@ class Node(QtWidgets.QGraphicsItem):
 		self.setPos(QtCore.QPoint(x,y))
 
 		self.isInPallet = isInPallet
+
+		# If the node is in the node pallet, set its Z level to 1 (1 in front of the pallet item)
 		if isInPallet:
-			self.setZValue(-1)
+			self.setZValue(1)
 
 
 		self.inputTextItems = []
+
+		self.dragStartPos = None
 
 
 	def boundingRect(self):
@@ -47,6 +54,10 @@ class Node(QtWidgets.QGraphicsItem):
 		return self.inputs + self.outputs
 
 	def rebuild(self):
+
+		if self.scene() is not None and not self.isInPallet:
+			self.setParentTranslated(self.scene().background)
+
 		# Reset the lists of connection points
 		self.inputs = []
 		self.outputs = []
@@ -153,22 +164,26 @@ class Node(QtWidgets.QGraphicsItem):
 					connectionPoint.updateConnections()
 
 	def mousePressEvent(self, e):
-		# Determine if any of the connection points were clicked on
-
 		if self.isInPallet:
-			newNode = Node(self.title, self.inputTable, self.outputTable, True, self.x, self.y)
+			# If this node is in the pallet, make a copy to leave behind and let the user drag it out of the pallet
 			self.isInPallet = False
-			self.setZValue(0)
+			self.isDeleteable = True
+
+			newNode = Node(self.title, self.inputTable, self.outputTable, True, self.x, self.y, False)
 			self.scene().addNode(newNode)
 
+			# Connection points cannot be used when a node is in the pallet, so selectedConnectionPoint should be None
+			selectedConnectionPoint = None
 
-		selectedConnectionPoint = None
-		for connectionPoint in self.connectionPoints:
-			if connectionPoint.bubbleRect.contains(e.pos()):
-				selectedConnectionPoint = connectionPoint
+		else:
+			# Find if the user clicked on a connection point (as opposed to the main body of the node)
+			selectedConnectionPoint = None
+			for connectionPoint in self.connectionPoints:
+				if connectionPoint.bubbleRect.contains(e.pos()):
+					selectedConnectionPoint = connectionPoint
 		
-		if selectedConnectionPoint is not None and not self.isInPallet:
-
+		if selectedConnectionPoint is not None:
+			# If the user clicked on a connection point, create a new connection
 			if not selectedConnectionPoint.isOutput and selectedConnectionPoint.connections:
 				# If the user clicked an input which already has a connection, let them grab the existing connection
 				# Note that, as inputs can only have one connection, we can just use connecitons[0] to get that connection
@@ -192,7 +207,54 @@ class Node(QtWidgets.QGraphicsItem):
 			e.accept()
 			return
 		else:
+			# If the user did not click on a connection point, allow the node to be dragged
+			# Set the node's Z value to 3, so it appears on top of everything else
+			self.setParentTranslated(None)
+			self.setZValue(3)
+			self.dragStartPos = self.pos()
 			super(Node, self).mousePressEvent(e)
+			
+
+
+	def mouseReleaseEvent(self, e):
+		super(Node, self).mouseReleaseEvent(e)
+		if self.dragStartPos is not None:
+			# Check if the user was dragging the node
+
+			if self.scene() is not None and self.scene().pallet is not None and self.scene().background is not None:
+				# Check that the node is part of a scene which is fully set up
+
+				palletRect = self.mapRectFromItem(self.scene().pallet, self.scene().pallet.boundingRect())
+				if palletRect.contains(e.pos()):
+					# If this node was dropped onto the pallet, try to delete it
+					if self.isDeleteable:
+						self.scene().removeNode(self)
+					else:
+						# If the node is not deleteable, snap it back to where it was before the user dragged it
+						self.setPos(self.dragStartPos)
+						self.setParentTranslated(self.scene().background)
+						self.dragStartPos = None
+						# Make sure the any connections update their endpoints accordingly
+						for connectionPoint in self.connectionPoints:
+							connectionPoint.updateConnections()
+				else:
+					# If this node was dropped onto the background, ensure that it is on the right layer and that it is parented to the background
+					self.setParentTranslated(self.scene().background)
+
+			else:
+				print("Warning, scene not fully set up; pallet or background was not set")
+
+	def setParentTranslated(self, parent):
+		# Set this item's parent without changing its aparent location on the screen
+		scenePos = self.scenePos()
+
+		if parent is None:
+			newPos = scenePos
+		else:
+			newPos = parent.mapFromScene(scenePos)
+
+		self.setParentItem(parent)
+		self.setPos(newPos)
 
 		
 

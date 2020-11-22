@@ -11,7 +11,7 @@ class NodePallet(QtWidgets.QGraphicsItem):
         self.width = 0
         self.height = 0
 
-        self.setZValue(-2)
+        self.setZValue(1)
 
     def rebuildDimensions(self):
         if self.scene() is not None:

@@ -19,11 +19,26 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		self.sceneRectChanged.connect(self.onSceneRectChanged)
 
 		self.pallet = None
+		self.background = None
 
 	def addNode(self, node):
 		self.nodes.append(node)
 		self.addItem(node)
 		node.rebuild()
+
+	def removeNode(self, node):
+		# Remove all of the node connections
+		for connectionPoint in node.connectionPoints:
+			for connection in connectionPoint.connections:
+				connection.input.unregisterConnection(connection)
+				connection.output.unregisterConnection(connection)
+				self.removeItem(connection)
+
+		# Remove the node from the list of nodes
+		self.nodes.remove(node)
+
+		# Remove the node from the scene
+		self.removeItem(node)
 
 	def mouseMoveEvent(self, e):
 		# Whenever the mouse moves, update mousePos
@@ -82,5 +97,6 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		super(NodeScene, self).mouseReleaseEvent(e)
 
 	def onSceneRectChanged(self, rect):
-		if self.pallet is not None:
+		if self.pallet is not None and self.background is not None:
 			self.pallet.rebuildDimensions()
+			self.background.rebuild()

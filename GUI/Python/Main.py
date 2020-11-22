@@ -4,6 +4,7 @@ from node_item import *
 import time
 from node_pallet_item import *
 from slider_item import *
+from node_scene_background import *
 
 
 class NodeGraphicsView(QtWidgets.QGraphicsView):
@@ -34,6 +35,11 @@ if __name__=='__main__':
 	scene.addItem(pallet)
 	pallet.rebuildDimensions()
 	scene.pallet = pallet
+
+	background = NodeSceneBackground()
+	scene.addItem(background)
+	scene.background = background
+	background.rebuild()
 
 	for node in nodes:
 		scene.addNode(node)
