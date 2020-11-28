@@ -68,14 +68,21 @@ class NodeScene(QtWidgets.QGraphicsScene):
 				if node.boundingRect().contains(relativeMousePosition):
 					# Decide which kind of connection point to check based on which end of the edge has no conneciton
 					if activeConnectionNeedsInput:
-						availableConnectionPoints = node.inputs
-					else:
-						availableConnectionPoints = node.outputs
+						# If the active connection is being dragged from an output to an input, check if the mouse is within any of this node's input bubbles
+						for connectionPoint in node.inputs:
+							if connectionPoint.bubbleRect.contains(relativeMousePosition):
+								# If the user selected an input connection point, check that creating this connection will not create a cycle in the graph
+								if not node.comesBefore(self.activeConnection.output.owner):
+									selectedConnectionPoint = connectionPoint
 
-					# Check if the mouse pointer is within any of the node's connection points
-					for connectionPoint in availableConnectionPoints:
-						if connectionPoint.bubbleRect.contains(relativeMousePosition):
-							selectedConnectionPoint = connectionPoint
+					else:
+						# If the active connection is being dragged from an input to an output, check if the mouse is within any of this node's output bubbles
+						for connectionPoint in node.outputs:
+							if connectionPoint.bubbleRect.contains(relativeMousePosition):
+								# If the user selected an output connection point, check that creating this connection will not create a cycle in the graph
+								if not node.comesAfter(self.activeConnection.input.owner):
+									selectedConnectionPoint = connectionPoint
+
 			
 			# If a connection point was selected, set it as the end point of the connection. Otherwise remove the conneciton
 			if selectedConnectionPoint is not None:

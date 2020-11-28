@@ -109,6 +109,23 @@ class Node(QtWidgets.QGraphicsItem):
 		if connectionPointY > self.height:
 			self.height = connectionPointY
 
+	def comesBefore(self, otherNode):
+		comesBefore = False
+		for connectionPoint in self.outputs:
+			for connection in connectionPoint.connections:
+				if connection.input is not None and (connection.input.owner is otherNode or connection.input.owner.comesBefore(otherNode)):
+					comesBefore = True
+
+		return comesBefore
+
+	def comesAfter(self, otherNode):
+		comesAfter = False
+		for connectionPoint in self.inputs:
+			for connection in connectionPoint.connections:
+				if connection.output is not None and (connection.output.owner is otherNode or connection.output.owner.comesAfter(otherNode)):
+					comesAfter = True
+
+		return comesAfter
 
 	def paint(self, painter, option, widget=None):
 
