@@ -43,6 +43,8 @@ class Node(QtWidgets.QGraphicsItem):
 
 		self.dragStartPos = None
 
+		self.indexNumber = None
+
 
 	def boundingRect(self):
 		totalWidth = self.width + DrawingConstants.CONNECTION_POINT_DIAMETER
@@ -126,6 +128,18 @@ class Node(QtWidgets.QGraphicsItem):
 					comesAfter = True
 
 		return comesAfter
+
+	def hasUnmarkedPrecursors(self, sortNumber):
+		hasUnmarkedEdges = False
+		# Iterate over all connections going into this node's inputs
+		for connectionPoint in self.inputs:
+			for connection in connectionPoint.connections:
+				# If this connection has not been marked for this sort, then this node has unmarked precursor(s)
+				if connection.sortMarkNumber != sortNumber:
+					hasUnmarkedEdges = True
+					
+		return hasUnmarkedEdges
+
 
 	def paint(self, painter, option, widget=None):
 

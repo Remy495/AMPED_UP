@@ -1,7 +1,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
-
 from node_item import *
 
 class NodeScene(QtWidgets.QGraphicsScene):
@@ -23,6 +22,8 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		self.pallet = None
 		self.background = None
 
+		self.sortNumber = 0
+
 	def addNode(self, node):
 		self.nodes.append(node)
 		self.addItem(node)
@@ -41,6 +42,34 @@ class NodeScene(QtWidgets.QGraphicsScene):
 
 		# Remove the node from the scene
 		self.removeItem(node)
+
+	def sortedNetwork(self):
+		sortedNodes = []
+		# Find all of the nodes with no connections going into them
+		inProgressNodes = [node for node in self.nodes if not node.isInPallet and not node.hasUnmarkedPrecursors(self.sortNumber)]
+
+		while inProgressNodes:
+			# Select a node from inputNodes and add it to the sorted list. This is safe, as it is known to have no precursors not in the sorted list
+			currentNode = inProgressNodes.pop()
+			currentNode.indexNumber = len(sortedNodes)
+			sortedNodes.append(currentNode)
+
+			# Iterate over all of the connections going out of the node just added
+			for connectionPoint in currentNode.outputs:
+				for connection in connectionPoint.connections:
+					# Mark the connection point, as its output has been added to the sorted list
+					connection.sortMarkNumber = self.sortNumber
+
+					# Check if the input of this connection now has no unmarked connections going into it
+					nextNode = connection.input.owner
+					if not nextNode.hasUnmarkedPrecursors(self.sortNumber):
+						# If so, all of its precursors are in the sorted list, and it can be safely processed
+						inProgressNodes.append(nextNode)
+
+		self.sortNumber += 1
+		return sortedNodes
+
+
 
 	def mouseMoveEvent(self, e):
 		# Whenever the mouse moves, update mousePos
