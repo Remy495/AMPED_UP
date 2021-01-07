@@ -1,4 +1,0 @@
-Added Component: Designator=T?(Korg Nutube 6P1 Twin Triode)
-Added Pin To Net: NetName=GND Pin=T?-5
-Added Net: Name=GND
-Added Member To Class: ClassName=Test Sheet Member=Component T? Nutube 6P1 Twin Triode
