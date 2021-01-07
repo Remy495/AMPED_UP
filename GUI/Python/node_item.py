@@ -1,31 +1,29 @@
-import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 from connection_item import *
+from slider_item import *
 
 	
 
 class Node(QtWidgets.QGraphicsItem):
 
-	def __init__(self, title="", inputs=None, outputs=None, isInPallet = True, x=0, y=0):
+	def __init__(self, title="", inputs=None, outputs=None, isInPallet = True, x=0, y=0, isDeleteable = False):
 		super(Node,self).__init__()
+
 		self.width = DrawingConstants.NODE_WIDTH
 		self.height = DrawingConstants.NODE_BASE_HEIGHT
 		self.title = title
 
-		# Add input and output connection points
-		self.inputs = [ConnectionPoint(inputTitle, self, False) for inputTitle in inputs]
-		self.outputs = [ConnectionPoint(outputTitle, self, True) for outputTitle in outputs]
-
-
-		self.inputNames = inputs
-		self.outputNames = outputs
+		self.inputTable = inputs
+		self.outputTable = outputs
 
 		self.x = x
 		self.y = y
 
+		self.isDeleteable = isDeleteable
+
 		# Calculate the positions at which each of the connection points should be drawn (relative to the node)
-		self.rebuild()
+		# self.rebuild()
 
 		# Set the node as draggable and selectable
 		self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsSelectable)
@@ -35,11 +33,17 @@ class Node(QtWidgets.QGraphicsItem):
 		self.setPos(QtCore.QPoint(x,y))
 
 		self.isInPallet = isInPallet
+
+		# If the node is in the node pallet, set its Z level to 1 (1 in front of the pallet item)
 		if isInPallet:
-			self.setZValue(-1)
+			self.setZValue(1)
 
 
 		self.inputTextItems = []
+
+		self.dragStartPos = None
+
+		self.indexNumber = None
 
 
 	def boundingRect(self):
@@ -52,44 +56,89 @@ class Node(QtWidgets.QGraphicsItem):
 		return self.inputs + self.outputs
 
 	def rebuild(self):
+
+		if self.scene() is not None and not self.isInPallet:
+			self.setParentTranslated(self.scene().background)
+
+		# Reset the lists of connection points
+		self.inputs = []
+		self.outputs = []
+
+		# Reset the list of connection point sliders
+		self.inputTextItems = []
+
 		# Find the y coordinate at which the first connection point should be start
-		connectionStackTopY = DrawingConstants.NODE_BASE_HEIGHT + DrawingConstants.CONNECTION_POINT_PADDING
+		connectionStackTopY = DrawingConstants.NODE_BASE_HEIGHT + DrawingConstants.NODE_PADDING
 
 		# Calculate positions for all of the inputs
 		connectionPointY = int(connectionStackTopY)
 		connectionPointX = int(-DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
-		for connectionPoint in self.inputs:
+		for inputTitle, inputRange in self.inputTable.items():
+			connectionPoint = ConnectionPoint(inputTitle, self, False)
+
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
 
 			if self.scene() is not None:
-				inputTextItem = QtWidgets.QGraphicsTextItem(self)
-				inputTextItem.setPlainText("0.0")
+				inputTextItem = Slider(inputRange, self)
 				textItemX = self.width / 2
 				textItemY = connectionPointY
 				inputTextItem.setPos(textItemX, textItemY)
-				inputTextItem.setTextInteractionFlags(QtCore.Qt.TextEditable)
 				self.inputTextItems.append(inputTextItem)
 
 				connectionPoint.textBox = inputTextItem
+			
+			self.inputs.append(connectionPoint)
 
-			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 
 		# Adjust the height of the node to contain all of the inputs
 		self.height = connectionPointY
 
 		# Calculate positions for all of the outputs
-		#connectionPointY = int(connectionStackTopY)
 		connectionPointX = int(self.width - DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
-		for connectionPoint in self.outputs:
+		for outputTitle in self.outputTable:
+			connectionPoint = ConnectionPoint(outputTitle, self, True)
+
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
+
+			self.outputs.append(connectionPoint)
 			
-			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 
 		# Adjust the height of the node to contain all of the outputs
 		if connectionPointY > self.height:
 			self.height = connectionPointY
+
+	def comesBefore(self, otherNode):
+		comesBefore = False
+		for connectionPoint in self.outputs:
+			for connection in connectionPoint.connections:
+				if connection.input is not None and (connection.input.owner is otherNode or connection.input.owner.comesBefore(otherNode)):
+					comesBefore = True
+
+		return comesBefore
+
+	def comesAfter(self, otherNode):
+		comesAfter = False
+		for connectionPoint in self.inputs:
+			for connection in connectionPoint.connections:
+				if connection.output is not None and (connection.output.owner is otherNode or connection.output.owner.comesAfter(otherNode)):
+					comesAfter = True
+
+		return comesAfter
+
+	def hasUnmarkedPrecursors(self, sortNumber):
+		hasUnmarkedEdges = False
+		# Iterate over all connections going into this node's inputs
+		for connectionPoint in self.inputs:
+			for connection in connectionPoint.connections:
+				# If this connection has not been marked for this sort, then this node has unmarked precursor(s)
+				if connection.sortMarkNumber != sortNumber:
+					hasUnmarkedEdges = True
+					
+		return hasUnmarkedEdges
 
 
 	def paint(self, painter, option, widget=None):
@@ -142,26 +191,29 @@ class Node(QtWidgets.QGraphicsItem):
 		if self.scene().activeConnection is None:
 			super(Node, self).mouseMoveEvent(e)
 			if e.buttons() & QtCore.Qt.LeftButton:
-				for connectionPoint in self.connectionPoints:
-					connectionPoint.updateConnections()
+				self.updateConnections()
 
 	def mousePressEvent(self, e):
-		# Determine if any of the connection points were clicked on
-
 		if self.isInPallet:
-			newNode = Node(self.title, self.inputNames, self.outputNames, True, self.x, self.y)
+			# If this node is in the pallet, make a copy to leave behind and let the user drag it out of the pallet
 			self.isInPallet = False
-			self.setZValue(0)
+			self.isDeleteable = True
+
+			newNode = Node(self.title, self.inputTable, self.outputTable, True, self.x, self.y, False)
 			self.scene().addNode(newNode)
 
+			# Connection points cannot be used when a node is in the pallet, so selectedConnectionPoint should be None
+			selectedConnectionPoint = None
 
-		selectedConnectionPoint = None
-		for connectionPoint in self.connectionPoints:
-			if connectionPoint.bubbleRect.contains(e.pos()):
-				selectedConnectionPoint = connectionPoint
+		else:
+			# Find if the user clicked on a connection point (as opposed to the main body of the node)
+			selectedConnectionPoint = None
+			for connectionPoint in self.connectionPoints:
+				if connectionPoint.bubbleRect.contains(e.pos()):
+					selectedConnectionPoint = connectionPoint
 		
-		if selectedConnectionPoint is not None and not self.isInPallet:
-
+		if selectedConnectionPoint is not None:
+			# If the user clicked on a connection point, create a new connection
 			if not selectedConnectionPoint.isOutput and selectedConnectionPoint.connections:
 				# If the user clicked an input which already has a connection, let them grab the existing connection
 				# Note that, as inputs can only have one connection, we can just use connecitons[0] to get that connection
@@ -185,7 +237,57 @@ class Node(QtWidgets.QGraphicsItem):
 			e.accept()
 			return
 		else:
+			# If the user did not click on a connection point, allow the node to be dragged
+			# Set the node's Z value to 3, so it appears on top of everything else
+			self.setParentTranslated(None)
+			self.setZValue(3)
+			self.dragStartPos = self.pos()
 			super(Node, self).mousePressEvent(e)
+			
+
+
+	def mouseReleaseEvent(self, e):
+		super(Node, self).mouseReleaseEvent(e)
+		if self.dragStartPos is not None:
+			# Check if the user was dragging the node
+
+			if self.scene() is not None and self.scene().pallet is not None and self.scene().background is not None:
+				# Check that the node is part of a scene which is fully set up
+
+				palletRect = self.mapRectFromItem(self.scene().pallet, self.scene().pallet.boundingRect())
+				if palletRect.contains(e.pos()):
+					# If this node was dropped onto the pallet, try to delete it
+					if self.isDeleteable:
+						self.scene().removeNode(self)
+					else:
+						# If the node is not deleteable, snap it back to where it was before the user dragged it
+						self.setPos(self.dragStartPos)
+						self.setParentTranslated(self.scene().background)
+						self.dragStartPos = None
+						# Make sure the any connections update their endpoints accordingly
+						self.updateConnections()
+				else:
+					# If this node was dropped onto the background, ensure that it is on the right layer and that it is parented to the background
+					self.setParentTranslated(self.scene().background)
+
+			else:
+				print("Warning, scene not fully set up; pallet or background was not set")
+
+	def setParentTranslated(self, parent):
+		# Set this item's parent without changing its aparent location on the screen
+		scenePos = self.scenePos()
+
+		if parent is None:
+			newPos = scenePos
+		else:
+			newPos = parent.mapFromScene(scenePos)
+
+		self.setParentItem(parent)
+		self.setPos(newPos)
+
+	def updateConnections(self):
+		for connectionPoint in self.connectionPoints:
+			connectionPoint.updateConnections()
 
 		
 
@@ -211,18 +313,18 @@ class ConnectionPoint:
 
 	@property
 	def leftAlignedTextRect(self):
-		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.CONNECTION_POINT_PADDING
+		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.NODE_PADDING
 		height = DrawingConstants.CONNECTION_POINT_DIAMETER
-		x = self.xRelative + DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.CONNECTION_POINT_PADDING
+		x = self.xRelative + DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 		y = self.yRelative
 
 		return QtCore.QRectF(x, y, width, height)
 
 	@property
 	def rightAlignedTextRect(self):
-		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.CONNECTION_POINT_PADDING
+		width = self.owner.width / 2 - DrawingConstants.CONNECTION_POINT_DIAMETER / 2 - DrawingConstants.NODE_PADDING
 		height = DrawingConstants.CONNECTION_POINT_DIAMETER
-		x = self.xRelative - DrawingConstants.CONNECTION_POINT_PADDING - width
+		x = self.xRelative - DrawingConstants.NODE_PADDING - width
 		y = self.yRelative
 
 		return QtCore.QRectF(x, y, width, height)

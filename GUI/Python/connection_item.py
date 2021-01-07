@@ -19,6 +19,12 @@ class Connection(QtWidgets.QGraphicsItem):
 
 		self.setZValue(-10)
 
+		# Used by node scene for topological sorting. Kahn's algorithm for topological sort involves removing edges from the graph.
+		# However, as the sort is done on the live copy of the graph, we must not actually remove nodes. So instead, the node scene
+		# marks edges as "removed" by setting sortMarkNumber to an arbitrary value selected each time a sort is performed. It can
+		# then recognize edges that have been "removed" and ignore them
+		self.sortMarkNumber = -1
+
 	def rebuildEndpoints(self):
 		self.prepareGeometryChange()
 

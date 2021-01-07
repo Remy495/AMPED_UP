@@ -4,7 +4,7 @@ class DrawingConstants:
     NODE_WIDTH = 215
     NODE_BASE_HEIGHT = 25
     CONNECTION_POINT_DIAMETER = 20
-    CONNECTION_POINT_PADDING = 10
+    NODE_PADDING = 10
 
     NODE_OUTLINE_COLOR = QtCore.Qt.black
     NODE_OUTLINE_WIDTH = 2
@@ -15,3 +15,7 @@ class DrawingConstants:
 
     LABEL_FONT = "Helvetica"
     NODE_TITLE_FONTSIZE = 12
+
+    SLIDER_EMPTY_COLOR = QtGui.QColor(210, 210, 210)
+    SLIDER_FULL_COLOR = QtGui.QColor(160, 160, 160)
+    SLIDER_FOCUS_COLOR = QtGui.QColor(120, 120, 120)
