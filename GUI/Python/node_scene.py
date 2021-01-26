@@ -3,6 +3,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 from node_item import *
 
+import flatbuffers
+from node_graph_serializer import *
+
 class NodeScene(QtWidgets.QGraphicsScene):
 	def __init__(self, parent = None):
 		# Initialize super class
@@ -69,6 +72,12 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		self.sortNumber += 1
 		return sortedNodes
 
+	
+	def clearNetwork(self):
+		nodesToRemove = [node for node in self.nodes if node.isDeleteable]
+
+		for node in nodesToRemove:
+			self.removeNode(node)
 
 
 	def mouseMoveEvent(self, e):
@@ -135,6 +144,7 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		super(NodeScene, self).mouseReleaseEvent(e)
 
 	def keyPressEvent(self, e):
+		super(NodeScene, self).keyPressEvent(e)
 		if e.key() == QtCore.Qt.Key_Delete or e.key() == QtCore.Qt.Key_Backspace:
 			for item in self.selectedItems():
 				# For now, the only things that are selectable are nodes. So just run deleteNode on each one (if it is deleteable)
@@ -143,6 +153,16 @@ class NodeScene(QtWidgets.QGraphicsScene):
 
 			# Any non-deleteable nodes should be deselected
 			self.clearSelection()
+
+		if e.key() == QtCore.Qt.Key_Space:
+			builder = flatbuffers.Builder(1024)
+			nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
+			builder.Finish(nodeGraphOffset)
+			buf = builder.Output()
+
+			nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
+			NodeGraphSerializer.deserialize(nodeGraph, self)
+			
 
 	def onSceneRectChanged(self, rect):
 		if self.pallet is not None and self.background is not None:

@@ -15,10 +15,12 @@ class NodePallet(QtWidgets.QGraphicsItem):
 
     def rebuildDimensions(self):
         if self.scene() is not None:
+            self.prepareGeometryChange()
             sceneRect = self.scene().sceneRect()
 
             self.width = DrawingConstants.NODE_WIDTH + 100
             self.height = sceneRect.height()
+    
     def boundingRect(self):
         return QtCore.QRectF(0, 0, self.width, self.height)
 

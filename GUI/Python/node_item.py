@@ -7,12 +7,13 @@ from slider_item import *
 
 class Node(QtWidgets.QGraphicsItem):
 
-	def __init__(self, title="", inputs=None, outputs=None, isInPallet = True, x=0, y=0, isDeleteable = False):
+	def __init__(self, title, nodeType, inputs=None, outputs=None, isInPallet = True, x=0, y=0, isDeleteable = False):
 		super(Node,self).__init__()
 
 		self.width = DrawingConstants.NODE_WIDTH
 		self.height = DrawingConstants.NODE_BASE_HEIGHT
 		self.title = title
+		self.nodeType = nodeType
 
 		self.inputTable = inputs
 		self.outputTable = outputs
@@ -73,11 +74,14 @@ class Node(QtWidgets.QGraphicsItem):
 		# Calculate positions for all of the inputs
 		connectionPointY = int(connectionStackTopY)
 		connectionPointX = int(-DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
+		connectionPointIndex = 0
 		for inputTitle, inputRange in self.inputTable.items():
 			connectionPoint = ConnectionPoint(inputTitle, self, False)
 
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
+
+			connectionPoint.indexNumber = connectionPointIndex
 
 			if self.scene() is not None:
 				inputTextItem = Slider(inputRange, self)
@@ -91,21 +95,26 @@ class Node(QtWidgets.QGraphicsItem):
 			self.inputs.append(connectionPoint)
 
 			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
+			connectionPointIndex += 1
 
 		# Adjust the height of the node to contain all of the inputs
 		self.height = connectionPointY
 
 		# Calculate positions for all of the outputs
 		connectionPointX = int(self.width - DrawingConstants.CONNECTION_POINT_DIAMETER / 2)
+		connectionPointIndex = 0
 		for outputTitle in self.outputTable:
 			connectionPoint = ConnectionPoint(outputTitle, self, True)
 
 			connectionPoint.xRelative = connectionPointX
 			connectionPoint.yRelative = connectionPointY
 
+			connectionPoint.indexNumber = connectionPointIndex
+
 			self.outputs.append(connectionPoint)
 			
 			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
+			connectionPointIndex += 1
 
 		# Adjust the height of the node to contain all of the outputs
 		if connectionPointY > self.height:
@@ -140,6 +149,10 @@ class Node(QtWidgets.QGraphicsItem):
 					
 		return hasUnmarkedEdges
 
+	def copy(self, x, y):
+		newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, False, self.x, self.y, True)
+		self.scene().addNode(newNode)
+		return newNode
 
 	def paint(self, painter, option, widget=None):
 
@@ -199,7 +212,7 @@ class Node(QtWidgets.QGraphicsItem):
 			self.isInPallet = False
 			self.isDeleteable = True
 
-			newNode = Node(self.title, self.inputTable, self.outputTable, True, self.x, self.y, False)
+			newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, True, self.x, self.y, False)
 			self.scene().addNode(newNode)
 
 			# Connection points cannot be used when a node is in the pallet, so selectedConnectionPoint should be None
@@ -303,6 +316,9 @@ class ConnectionPoint:
 		self.connections = []
 		self.isOutput = isOutput
 
+		# Set by owning node, keeps track of this connection point's location in the list of inputs or outputs
+		self.indexNumber = None
+
 		self.textBox = None
 
 	@property
@@ -328,6 +344,13 @@ class ConnectionPoint:
 		y = self.yRelative
 
 		return QtCore.QRectF(x, y, width, height)
+
+	@property
+	def literalValue(self):
+		if self.textBox is not None:
+			return self.textBox.value
+		else:
+			return 0.0
 
 	def registerConnection(self, connection):
 		# If this is an input and there is already a connection, remove it

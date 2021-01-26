@@ -6,7 +6,8 @@ class Slider(QtWidgets.QGraphicsTextItem):
     def __init__(self, range, parent = None):
         super(Slider, self).__init__(parent)
 
-        self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
+        # self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
+        self.setTextInteractionFlags(QtCore.Qt.TextEditable)
 
         self.width = DrawingConstants.NODE_WIDTH / 2 - 2 * DrawingConstants.NODE_PADDING
 
@@ -63,6 +64,8 @@ class Slider(QtWidgets.QGraphicsTextItem):
             self.clearFocus()
         else:
             super(Slider, self).keyPressEvent(e)
+            e.accept()
+            return
 
     def mouseMoveEvent(self, e):
         if self.hasFocus():
