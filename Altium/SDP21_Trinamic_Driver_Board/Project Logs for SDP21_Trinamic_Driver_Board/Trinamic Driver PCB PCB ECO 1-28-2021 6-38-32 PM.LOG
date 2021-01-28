@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=5VOUT Pin=R1-1
+Removed Pin From Net: NetName=VCC Pin=R1-2
+Removed Member From Class: ClassName=Trinamic Driver Schematic Member=R1
+Change Component Comment : Designator=C8 Old Comment=C0603C474K4RACTU New Comment=0.47uF
+Change Component Comment : Designator=C9 Old Comment=C0603C475K9PACTU New Comment=4.7uF
+Change Component Comment : Designator=C3 Old Comment=C1210C476M4PACTU New Comment=47uF
+Change Component Comment : Designator=C10 Old Comment=CC0603KRX7R9BB223 New Comment=22nF
+Change Component Comment : Designator=C1 Old Comment=CGA3E2X7R1H104K080AA New Comment=0.1uF
+Change Component Comment : Designator=C2 Old Comment=CGA3E2X7R1H104K080AA New Comment=0.1uF
+Change Component Comment : Designator=C6 Old Comment=CGA3E2X7R1H104K080AA New Comment=0.1uF
+Change Component Comment : Designator=C7 Old Comment=CGA3E2X7R1H104K080AA New Comment=0.1uF
+Change Component Comment : Designator=C4 Old Comment=EEE-FK1H101P New Comment=100uF
+Change Component Comment : Designator=C5 Old Comment=EEE-FK1H101P New Comment=100uF
+Change Component Comment : Designator=R2 Old Comment=ERJ3EKF1002V New Comment=10K
