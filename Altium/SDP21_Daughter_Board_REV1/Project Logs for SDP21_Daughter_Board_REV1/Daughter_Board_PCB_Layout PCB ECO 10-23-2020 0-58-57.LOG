@@ -1,0 +1,35 @@
+Added Component: Designator=U1(QFN-36)
+Added Pin To Net: NetName=GND Pin=U1-1
+Added Pin To Net: NetName=CSN Pin=U1-2
+Added Pin To Net: NetName=SCK Pin=U1-3
+Added Pin To Net: NetName=MOSI Pin=U1-4
+Added Pin To Net: NetName=MISO Pin=U1-5
+Added Pin To Net: NetName=STEP Pin=U1-6
+Added Pin To Net: NetName=DIR Pin=U1-7
+Added Pin To Net: NetName=+3.3V Pin=U1-8
+Added Pin To Net: NetName=NetC1_1 Pin=U1-11
+Added Pin To Net: NetName=NetC1_1 Pin=U1-12
+Added Pin To Net: NetName=M1B1 Pin=U1-13
+Added Pin To Net: NetName=GND Pin=U1-14
+Added Pin To Net: NetName=M1B2 Pin=U1-15
+Added Pin To Net: NetName=VM Pin=U1-16
+Added Pin To Net: NetName=GND Pin=U1-18
+Added Pin To Net: NetName=DIAG1 Pin=U1-20
+Added Pin To Net: NetName=DIAG0 Pin=U1-21
+Added Pin To Net: NetName=DRV_ENN_CFG6 Pin=U1-22
+Added Pin To Net: NetName=NetR3_1 Pin=U1-23
+Added Pin To Net: NetName=NetC1_1 Pin=U1-24
+Added Pin To Net: NetName=5VOUT Pin=U1-25
+Added Pin To Net: NetName=NetC8_2 Pin=U1-26
+Added Pin To Net: NetName=NetC11_2 Pin=U1-27
+Added Pin To Net: NetName=NetC11_1 Pin=U1-28
+Added Pin To Net: NetName=NetC7_2 Pin=U1-29
+Added Pin To Net: NetName=VM Pin=U1-30
+Added Pin To Net: NetName=VM Pin=U1-31
+Added Pin To Net: NetName=M1A2 Pin=U1-32
+Added Pin To Net: NetName=GND Pin=U1-33
+Added Pin To Net: NetName=M1A1 Pin=U1-34
+Added Pin To Net: NetName=NetC1_1 Pin=U1-35
+Added Pin To Net: NetName=GND Pin=U1-36
+Added Pin To Net: NetName=NetC1_1 Pin=U1--
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic Member=Component U1 TMC2130-LA

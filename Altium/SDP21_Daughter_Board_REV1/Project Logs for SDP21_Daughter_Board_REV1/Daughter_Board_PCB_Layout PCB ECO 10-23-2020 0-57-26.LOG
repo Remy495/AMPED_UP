@@ -1,0 +1,21 @@
+Change Component Footprint: Designator=R4 Old Footprint=RESC1609X50X30NL10T20 New Footprint=RESC0603(1608)_M
+Change Component Footprint: Designator=R5 Old Footprint=RESC1609X50X30NL10T20 New Footprint=RESC0603(1608)_M
+Change Component Comment : Designator=R4 Old Comment=CRCW0603100RFKEA New Comment=470R 1% 0603(1608)
+Change Component Comment : Designator=R5 Old Comment=CRCW0603100RFKEA New Comment=470R 1% 0603(1608)
+Change Managed Component Library Link : Designator=R4 Old VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 New VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 Old ItemGUID=2B8A9B7B-5285-4DC1-92A4-EA7C2D6CB45B New ItemGUID=0AFF93A1-2D46-4476-937A-77133F4455C7 Old RevisionGUID=02E57B43-A15B-47E7-A2D3-5CF192CDF3A8 New RevisionGUID=1974E0F4-4943-4948-AE22-6050CA583069
+Change Managed Component Library Link : Designator=R5 Old VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 New VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 Old ItemGUID=2B8A9B7B-5285-4DC1-92A4-EA7C2D6CB45B New ItemGUID=0AFF93A1-2D46-4476-937A-77133F4455C7 Old RevisionGUID=02E57B43-A15B-47E7-A2D3-5CF192CDF3A8 New RevisionGUID=1974E0F4-4943-4948-AE22-6050CA583069
+Change component parameters: Designator = "R4" ("R4"); Footprint = "RESC1609X50X30NL10T20"; UniqueID = "\GBYCUBNV" ("\GBYCUBNV")
+Change component parameters (AddParameter): Name = "Case-EIA"; Value = "0603"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Case-Metric"; Value = "1608"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Power"; Value = "0.1 W"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Technology"; Value = "SMT"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Tolerance"; Value = "1 %"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Value"; Value = "470.00 Ohm"; VariantName = "[No Variations]"
+Change component parameters: Designator = "R5" ("R5"); Footprint = "RESC1609X50X30NL10T20"; UniqueID = "\UITZVRUE" ("\UITZVRUE")
+Change component parameters (AddParameter): Name = "Case-EIA"; Value = "0603"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Case-Metric"; Value = "1608"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Power"; Value = "0.1 W"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Technology"; Value = "SMT"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Tolerance"; Value = "1 %"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Value"; Value = "470.00 Ohm"; VariantName = "[No Variations]"
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic Member=Component U1 TMC2130-LA
