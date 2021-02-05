@@ -6,5 +6,3 @@ ProjectPath=SDP21_Main_Board\SDP21_Main_Board.PrjPcb
 ProjectPath=SDP21_Daughter_Board\SDP21_Daughter_Board.PrjPcb
 [Project3]
 ProjectPath=SDP21_Trinamic_Driver_Board\SDP21_Trinamic_Driver_Board.PrjPcb
-[Project4]
-ProjectPath=..\..\..\..\..\Public\Documents\Altium\Projects\Guitar_Input_Stage\Guitar_Input_Stage.PrjPcb
