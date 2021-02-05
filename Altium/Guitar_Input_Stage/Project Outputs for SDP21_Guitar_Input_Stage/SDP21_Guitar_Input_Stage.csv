@@ -1,0 +1,16 @@
+Name,Description,Designator,Quantity,Manufacturer 1,Manufacturer Part Number 1,Supplier 1,Supplier Part Number 1,Supplier Unit Price 1,Supplier Subtotal 1
+
+"POWER","Header, 2-Pin","PWR1","1","","","","","",""
+"SAMPLED_SIGNAL","Header, 2-Pin","SMP1","1","","","","","",""
+"3362P-1-104LF","Square Trimpot(R) Trimming Potentiometer, 100 KOhm, 300 V, -55 to 125 degC, 3-Pin THD, RoHS, Tube","POT1","1","Bourns","3362P-1-104LF","Digi-Key","3362P-104LF-ND","1.02","1.02"
+"AMPLIFIER_INPUT","Header, 2-Pin","AMP1","1","Switchcraft","12B","Digi-Key","SC1094-ND","2.6","2.6"
+"C0805C104K5RACTU","CAP CER 0.1UF 50V X7R 0805","C4, C5","2","KEMET","C0805C104K5RACTU","Digi-Key","399-1170-6-ND","0.15","0.3"
+"C0805C271J5GACTU","CAP CER 270PF 50V C0G/NP0 0805","C1, C6","2","KEMET","C0805C271J5GACTU","Digi-Key","399-1129-6-ND","0.12","0.24"
+"ERJ-6ENF1004V","Chip Resistor, 1000 KOhm, +/- 1%, 0.125 W, -55 to 155 degC, 0805 (2012 Metric), RoHS, Tape and Reel","R6","1","Panasonic","ERJ-6ENF1004V","Digi-Key","P1.00MCDKR-ND","0.1","0.1"
+"ERJ-6ENF4700V","Chip Resistor, 470 Ohm, +/- 1%, 0.125 W, -55 to 155 degC, 0805 (2012 Metric), RoHS, Tape and Reel","R2, R5","2","Panasonic","ERJ-6ENF4700V","Digi-Key","P470CDKR-ND","0.1","0.2"
+"GUITAR_OUTPUT","Header, 2-Pin","GTR1","1","Switchcraft","12B","Digi-Key","SC1094-ND","2.6","2.6"
+"MCP6002-E/SN","1 MHz, Low-Power Operational Amplifier, 8-Pin SOIC, Extended Temperature","U1","1","Microchip","MCP6002-E/SN","Digi-Key","MCP6002-E/SN-ND","0.36","0.36"
+"RC0805FR-0710KL","Chip Resistor, 10 KOhm, +/- 1%, 0.125 W, -55 to 155 degC, 0805 (2012 Metric), RoHS, Tape and Reel","R1, R4","2","Yageo","RC0805FR-0710KL","Digi-Key","311-10.0KCRDKR-ND","0.1","0.2"
+"RC0805FR-07100KL","Chip Resistor, 100 KOhm, +/- 1%, 0.125 W, -55 to 155 degC, 0805 (2012 Metric), RoHS, Tape and Reel","R3","1","Yageo","RC0805FR-07100KL","Digi-Key","311-100KCRDKR-ND","0.1","0.1"
+"T491A106K010AT","Capacitor, Tantalum, 10 uF, +/- 10%, 10 V, -55 to 125 degC, 2-Pin SMD (1206), RoHS, Tape and Reel","C2, C3","2","KEMET","T491A106K010AT","Digi-Key","399-3684-6-ND","0.37","0.74"
+"T491D107K016AT","Tantalum Surface Mount Capacitor, 100 uF, +/- 10%, 16 V, -55 to 125 degC, 2917 (7343 Metric), RoHS, Tape and Reel","C7","1","KEMET","T491D107K016ATAUTO","Digi-Key","399-18067-6-ND","1.43","1.43"

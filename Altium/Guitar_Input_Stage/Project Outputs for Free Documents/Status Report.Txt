@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [Guitar Input PCB.PcbDoc]
+   Generated File[Guitar Input PCB.TXT]
+   Generated File[Guitar Input PCB.LDP]
+   Generated File[Guitar Input PCB.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 14:34:30 On 2/5/2021
