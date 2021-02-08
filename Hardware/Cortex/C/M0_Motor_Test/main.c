@@ -2,6 +2,7 @@
 #define stepPin PA14
 #define dirPin PA15
 #define Enable PA16
+//This Code is in the process of being re-written for trinamic driver use rather than the MDR motor driver we used.
 void SPI_Send_Data(uint8_t data[5]){
 	struct io_descriptor *io;
 	spi_m_sync_get_io_descriptor(&SPI_0, &io);
