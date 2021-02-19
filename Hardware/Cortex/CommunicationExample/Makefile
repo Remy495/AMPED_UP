@@ -1,8 +1,5 @@
 
-CXX := arm-none-eabi-g++
-CC := arm-none-eabi-gcc
-OBJ_COPY := arm-none-eabi-objcopy
-PRINT_SIZE := arm-none-eabi-size
+TOOLCHAIN_PATH = ../../Toolchain
 
 SOURCE_DIRS := ./Hardware ./src ./src/io ./src/sercom ./src/util
 ADDITIONAL_INCLUDE_DIRS := ./Hardware/SAMD21/samd21c/include ./Hardware/CMSIS/Core/Include
@@ -18,12 +15,19 @@ PROJECT_NAME := CortexCommunicationExample
 
 ######## YOU PROBABLY DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE ########
 
+COMPILER_PATH = $(TOOLCHAIN_PATH)/gcc-arm-none-eabi/bin
+
+CXX := $(COMPILER_PATH)/arm-none-eabi-g++
+CC := $(COMPILER_PATH)/arm-none-eabi-gcc
+OBJ_COPY := $(COMPILER_PATH)/arm-none-eabi-objcopy
+PRINT_SIZE := $(COMPILER_PATH)/arm-none-eabi-size
+
 ELF := $(BIN_DIR)/$(PROJECT_NAME).elf
 BIN := $(BIN_DIR)/$(PROJECT_NAME).bin
 
 # Directory for storing intermediate files
-C_BUILD_DIR := .$(CC)
-CXX_BUILD_DIR := .$(CXX)
+C_BUILD_DIR := .$(notdir $(CC))
+CXX_BUILD_DIR := .$(notdir $(CXX))
 
 # Colors for console output
 ANSI_GREEN := \033[1;92m
@@ -54,8 +58,8 @@ endif
 INCLUDE_FLAGS := $(addprefix -I, $(INCLUDE_DIRS))
 DEVICE_FLAGS := -mthumb -D__SAMD21E15B__ -mcpu=cortex-m0plus
 
-C_FLAGS := $(OPT_FLAGS) -Wall $(INCLUDE_FLAGS) $(DEVICE_FLAGS) -std=gnu99
-CXX_FLAGS := $(OPT_FLAGS) -Wall $(INCLUDE_FLAGS) $(DEVICE_FLAGS) -std=gnu++17
+C_FLAGS := $(OPT_FLAGS) -Wall $(INCLUDE_FLAGS) $(DEVICE_FLAGS) -std=gnu99 -ffunction-sections
+CXX_FLAGS := $(OPT_FLAGS) -Wall $(INCLUDE_FLAGS) $(DEVICE_FLAGS) -std=gnu++17 -fno-exceptions -fno-rtti -ffunction-sections
 
 LINK_SCRIPT_DIR := $(dir $(LINK_SCRIPT))
 LINK_SCRIPT_NAME := $(notdir $(LINK_SCRIPT))
@@ -95,7 +99,7 @@ $(BIN): $(ELF) | $(BIN_DIR)
 	$(OBJ_COPY) -O binary $< $@
 
 all: $(BIN)
-	@printf "%b" "$(ANSI_GREEN)*** Success building Teensy debugging code ***$(ANSI_DEFAULT_COLOR)\n"
+	@printf "%b" "$(ANSI_GREEN)*** Success building $(PROJECT_NAME) ***$(ANSI_DEFAULT_COLOR)\n"
 	@$(PRINT_SIZE) $(ELF)
 
 program: $(BIN)

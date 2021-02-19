@@ -42,6 +42,12 @@ OPTIONS += -D__$(MCU)__ -DARDUINO=10810 -DTEENSYDUINO=149 -DARDUINO_TEENSY41
 # for Cortex M7 with single & double precision FPU
 CPUOPTIONS = -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 -mthumb
 
+SOURCE_DIRS = ./src ./src/thirdparty ./src/thirdparty/Arduino ./src/nodes ./src/generated ./src/HardwareInterface ./src/thirdparty/teensy4_i2c ./src/thirdparty/teensy4_i2c/imx_rt1060
+
+ADDITIONAL_INCLUDES = ./external/CMSIS_DSP/include
+
+LIB_DIRS = ./external/CMSIS_DSP
+
 # use this for a smaller, no-float printf
 #SPECS = --specs=nano.specs
 
@@ -59,38 +65,35 @@ CPUOPTIONS = -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 -mthumb
 # locations and edit the pathnames.  The rest of Arduino is not needed.
 #************************************************************************
 
-# Those that specify a NO_ARDUINO environment variable will
-# be able to use this Makefile with no Arduino dependency.
-# Please note that if ARDUINOPATH was set, it will override
-# the NO_ARDUINO behaviour.
-CURRENT_DIRECTORY = $(abspath .)
-# Path to your arduino installation
+TOOLCHAIN_PATH = ../Toolchain
 
 # path location for Teensy Loader, teensy_post_compile and teensy_reboot (on Linux)
-TOOLSPATH = $(CURENT_DIRECTORY)/tools
-
-# path location for Arduino libraries (currently not used)
-LIBRARYPATH = $(CURRENT_DIRECTORY)/libraries
+TOOLSPATH = $(TOOLCHAIN_PATH)/teensy
 
 # path location for the arm-none-eabi compiler
-COMPILERPATH = $(CURRENT_DIRECTORY)/tools/arm/bin
+COMPILERPATH = $(TOOLCHAIN_PATH)/gcc-arm-none-eabi/bin
 
 
 #************************************************************************
 # Settings below this point usually do not need to be edited
 #************************************************************************
 
+INCLUDE_DIRS = $(SOURCE_DIRS) $(ADDITIONAL_INCLUDES)
+INCLUDE_FLAGS += $(addprefix -I, $(INCLUDE_DIRS))
+
 # CPPFLAGS = compiler options for C and C++
-CPPFLAGS = -Wall -g -O2 $(CPUOPTIONS) -MMD $(OPTIONS) -I. -ffunction-sections -fdata-sections
+CPPFLAGS = -Wall -g -O2 $(CPUOPTIONS) -MMD $(OPTIONS) -I. -ffunction-sections -fdata-sections $(INCLUDE_FLAGS)
 
 # compiler options for C++ only
-CXXFLAGS = -std=gnu++14 -felide-constructors -fno-exceptions -fpermissive -fno-rtti -Wno-error=narrowing
+CXXFLAGS = -std=gnu++17 -felide-constructors -fno-exceptions -fpermissive -fno-rtti -Wno-error=narrowing --specs=nano.specs
 
 # compiler options for C only
 CFLAGS =
 
 # linker options
 LDFLAGS = -Os -Wl,--gc-sections,--relax $(SPECS) $(CPUOPTIONS) -T$(MCU_LD)
+
+LIB_DIR_FLAGS = $(foreach dir, $(LIB_DIRS), -L$(dir))
 
 # additional libraries to link
 LIBS = -larm_cortexM7lfsp_math -lm -lstdc++
@@ -103,33 +106,31 @@ OBJCOPY = $(COMPILERPATH)/arm-none-eabi-objcopy
 SIZE = $(COMPILERPATH)/arm-none-eabi-size
 
 # automatically create lists of the sources and objects
-# TODO: this does not handle Arduino libraries yet...
-C_FILES := $(wildcard *.c)
-CPP_FILES := $(wildcard *.cpp)
+C_FILES := $(foreach dir, $(SOURCE_DIRS), $(wildcard $(dir)/*.c))
+CPP_FILES := $(foreach dir, $(SOURCE_DIRS), $(wildcard $(dir)/*.cpp))
 OBJS := $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
+DEPS := $(OBJS:.o=.d)
 
 
 # the actual makefile rules (all .o files built by GNU make's default implicit rules)
 
 all: $(TARGET).hex
+ifneq (,$(wildcard $(TOOLSPATH)))
+	$(TOOLSPATH)/teensy_post_compile -file=$(basename $<) -path=$(shell pwd) -tools=$(TOOLSPATH)
+	-$(TOOLSPATH)/teensy_reboot
+endif
 
 $(TARGET).elf: $(OBJS) $(MCU_LD)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIB_DIR_FLAGS) $(LIBS)
 
 %.hex: %.elf
 	$(SIZE) $<
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
-ifneq (,$(wildcard $(TOOLSPATH)))
-	$(TOOLSPATH)/teensy_post_compile -file=$(basename $@) -path=$(shell pwd) -tools=$(TOOLSPATH)
-	-$(TOOLSPATH)/teensy_reboot
-endif
 
 # compiler generated dependency info
--include $(OBJS:.o=.d)
+-include $(DEPS)
 
-# make "MCU" lower case
-LOWER_MCU := $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(MCU)))))))))))))))))))))))))))
-MCU_LD = $(LOWER_MCU)_t41.ld
+MCU_LD = $(TOOLSPATH)/imxrt1062_t41.ld
 
 clean:
-	rm -f *.o *.d $(TARGET).elf $(TARGET).hex
+	rm -f $(OBJS) $(DEPS) $(TARGET).elf $(TARGET).hex
