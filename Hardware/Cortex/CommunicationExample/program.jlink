@@ -1,0 +1,8 @@
+device ATSAMD21E15
+speed 4000
+si 1
+erase
+loadbin ./bin/CortexCommunicationExample.bin 0x0
+r
+g
+q
