@@ -11,7 +11,8 @@
 #define SPI_MODE 6 //Pin 10 DB
 //bool standalone = true;
 uint8_t val[5]={0,0,0,0,0};
-const uint8_t required[9][5] ={{0xEC,0x00,0x01,0x00,0xC3},{0x90,0x00,0x06,0x1F,0x0A},{0x91,0x00,0x00,0x00,0x0A},{0x80,0x00,0x00,0x00,0x04},{0x93,0x00,0x00,0x01,0xF4},{0xF0,0x00,0x04,0x01,0xC8}};
+const uint8_t required[9][5] ={{0xEC,0x01,0x01,0x00,0xC2},{0x90,0x00,0x06,0x1F,0x0A},{0x91,0x00,0x00,0x00,0x0A},{0x80,0x00,0x00,0x00,0x03},{0x93,0x00,0x00,0x00,0x00}};
+const uint8_t checkPins[5]={0x04,0x00,0x00,0x00,0x00};
 void SPI_Send(uint8_t value[5]){
   digitalWrite(SS_CFG3, LOW); 
   for(int i =0; i<5; i++)
@@ -20,16 +21,16 @@ void SPI_Send(uint8_t value[5]){
   }
   digitalWrite(SS_CFG3,HIGH);
   for(int i =0; i<5; i++){
-    Serial.print(val[i],HEX);
-    Serial.print(" ");
+    //Serial.print(val[i],HEX);
+    //Serial.print(" ");
   }
-  Serial.println("");
+  //Serial.println("");
 }
 void stepperSetup(){
 
   for(int i =0; i<9; i++){
       SPI_Send(required[i]);
-      delay(1000);
+      delay(100);
     }
   }
 void standalone_mode()
@@ -58,7 +59,7 @@ void spi_mode()
  digitalWrite(SPI_MODE,1); 
  //Write CFG4 Low to disable dcstep
  digitalWrite(CFG4,LOW);
- //drive CFG 6 Low for Driver Enable(ONLY IN SPI MODE THIS PIN WORKS AS A CONFIGURATION PIN IN STANDALONE)
+ //drive CFG 6 Low for Driver Enable(ONLY IN SPI MODE, THIS PIN WORKS AS A CONFIGURATION PIN IN STANDALONE)
  digitalWrite(CFG6,LOW);
  //Write SS High to ensure no signals get read by accident
  digitalWrite(SS_CFG3, HIGH); 
@@ -68,6 +69,7 @@ void spi_mode()
   // Slow down the master a bit
  SPI.setClockDivider(SPI_CLOCK_DIV8);
  stepperSetup();
+ digitalWrite(DIR,LOW);
  //digitalWrite(SPI_MODE,0);
 }
 void setup() 
@@ -83,15 +85,17 @@ void setup()
  pinMode(CFG4,OUTPUT);
  pinMode(CFG5,OUTPUT);
  pinMode(CFG6,OUTPUT);
- standalone_mode();
- //spi_mode();
+ //standalone_mode();
+ spi_mode();
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   digitalWrite(STEP,LOW);
-  delayMicroseconds(1000);
+  delayMicroseconds(10);
+  //SPI_Send(checkPins);
   digitalWrite(STEP,HIGH);
-  delayMicroseconds(1000);
+  delayMicroseconds(10);
 
 }
