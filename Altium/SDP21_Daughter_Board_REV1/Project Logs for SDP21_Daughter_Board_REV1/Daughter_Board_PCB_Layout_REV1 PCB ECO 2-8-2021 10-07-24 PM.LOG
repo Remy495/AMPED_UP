@@ -1,0 +1,9 @@
+Change Net Name : Old Net Name=NetC3_1 New Net Name=VDD_CORE
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C3 1uF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C6 100nF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C7 22nF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C8 10uF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C11 100nF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C13 100nF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component R7 2.2
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component R8 0.15

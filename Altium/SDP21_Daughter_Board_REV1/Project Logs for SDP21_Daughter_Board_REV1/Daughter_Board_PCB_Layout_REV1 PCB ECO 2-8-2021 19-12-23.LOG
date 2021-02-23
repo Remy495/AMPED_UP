@@ -1,0 +1,20 @@
+Change Component Comment : Designator=J1 Old Comment=PJ-002BH-SMT-TR New Comment=694103303002
+Change Managed Component Library Link : Designator=J1 Old VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 New VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 Old ItemGUID=D465EDE2-5802-4677-881F-DC6CEB6873F9 New ItemGUID=C9D061BF-E087-436E-988C-1474670BBBA6 Old RevisionGUID=F6C17BE9-88CD-4504-A479-6CA5AA62F9AC New RevisionGUID=338F8B46-C053-42B1-BBC5-44F3C0356D37
+Change component parameters: Designator = "J1" ("J1"); Footprint = "FP-PJ-002BH-SMT-TR-MFG"; UniqueID = "\LKRWETNH" ("\LKRWETNH")
+Change component parameters (AddParameter): Name = "Datasheet URL"; Value = "http://katalog.we-online.de/em/datasheet/6941xx303002.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Gender"; Value = "Male"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer URL"; Value = "http://www.we-online.de"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Mounting Technology"; Value = "THT"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Opening Diameter"; Value = "4.2mm"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Operating Temperature"; Value = "-40to85degC"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Orientation"; Value = "RightAngled"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Package Reference"; Value = "694103303002"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Packaging"; Value = "Bag"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Part Number"; Value = "694103303002"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Plug Inner Diameter"; Value = "1.35mm"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Plug Outer Diameter"; Value = "3.5mm"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Publisher"; Value = "WurthElektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Rated Current"; Value = "2A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Working Voltage"; Value = "30V"; VariantName = "[No Variations]"
+Added Room: Name=SDP21_Daughter_Board_Schematic_REV1
