@@ -1,0 +1,4 @@
+Removed Pin From Net: NetName=DIAG1 Pin=U2-7
+Removed Pin From Net: NetName=DIAG0 Pin=U2-8
+Added Pin To Net: NetName=DIAG0 Pin=U2-7
+Added Pin To Net: NetName=DIAG1 Pin=U2-8
