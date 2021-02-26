@@ -1,0 +1,13 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [Daughter_Board_PCB_Layout_REV1.PcbDoc]
+   Generated File[Daughter_Board_PCB_Layout_REV1-RoundHoles.TXT]
+   Generated File[Daughter_Board_PCB_Layout_REV1-SlotHoles.TXT]
+   Generated File[Daughter_Board_PCB_Layout_REV1.LDP]
+   Generated File[Daughter_Board_PCB_Layout_REV1.DRR]
+
+
+Files Generated   : 4
+Documents Printed : 0
+
+Finished Output Generation At 1:21:04 PM On 2/26/2021
