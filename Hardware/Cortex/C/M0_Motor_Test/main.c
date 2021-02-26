@@ -43,38 +43,43 @@ int main(void)
 	previous = gpio_get_pin_level(IFA)*2 + gpio_get_pin_level(IFB);//encoder stuff
 	//standalone();
 	//spi_setup();
-	//gpio_set_pin_direction(TEST, GPIO_DIRECTION_OUT);
-	//gpio_set_pin_level(TEST,true);
+	gpio_set_pin_direction(TEST, GPIO_DIRECTION_OUT);
+	gpio_set_pin_level(TEST,true);
 	//main loop
 	while(1){
-		uint8_t msg = 0b000000001;
-		SPI_Send_Data(msg);
-		delay_ms(100000);
+		struct spi_xfer new;
+		new.txbuf = "Hi\n";
+		new.size=sizeof(new.txbuf);
+		spi_m_sync_enable(&SPI_0);
+		gpio_set_pin_level(CFG3,false);
+		
+		spi_m_sync_transfer(&SPI_0,&new);
+		delay_ms(1);
+		
+		gpio_set_pin_level(CFG3,true);
+		
+		delay_ms(10000);
+		
 		//enc_read();
 		//step();
 	}
 }
-void SPI_Send_Data(uint8_t data){
+void SPI_Send_Data(uint8_t data[5]){
 	
 	struct io_descriptor *io;
 	spi_m_sync_get_io_descriptor(&SPI_0, &io);
 	spi_m_sync_enable(&SPI_0);
-	//_spi_m_sync_io_write(&SPI_0,data,5);
 	gpio_set_pin_level(CFG3,false);
-	//io_write(io, data, 5);
-	io_write(&io,data,sizeof(data));
 	gpio_set_pin_level(CFG3,true);
 }
 void spi_setup(){//by driving SPI_MODE High, we enable SPI control to give it register configurations
-	uint8_t sending;
 	gpio_set_pin_level(SPI_MODE,true);
 	gpio_set_pin_level(CFG4,false);
 	gpio_set_pin_level(CFG6,false);
 	gpio_set_pin_level(CFG3,true);//SS high for now
 	gpio_set_pin_level(dirPin,false);
 	for(int i=0; i<9;i++){
-		sending = required[i];
-		SPI_Send_Data(sending);
+		SPI_Send_Data(required[i]);
 		delay_ms(10);
 	}
 }
