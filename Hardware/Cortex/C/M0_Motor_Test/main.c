@@ -4,10 +4,10 @@
 #define IFA PA04
 #define IFB PA05
 #define IFC PA03
-#define CFG0 PA08
-#define CFG1 PA11
-#define CFG2 PA09
-#define CFG3 PA10
+#define CFG0 PA08 //MISO
+#define CFG1 PA11 //MOSI
+#define CFG2 PA09 //SCK
+#define CFG3 PA10 //SS
 #define CFG4 PA18
 #define CFG5 PA19
 #define CFG6 PA16
@@ -42,33 +42,39 @@ int main(void)
 	gpio_set_pin_direction(IFB, GPIO_DIRECTION_IN);
 	previous = gpio_get_pin_level(IFA)*2 + gpio_get_pin_level(IFB);//encoder stuff
 	//standalone();
-	spi_setup();
+	//spi_setup();
 	//gpio_set_pin_direction(TEST, GPIO_DIRECTION_OUT);
 	//gpio_set_pin_level(TEST,true);
 	//main loop
 	while(1){
+		uint8_t msg = 0b000000001;
+		SPI_Send_Data(msg);
+		delay_ms(100000);
 		//enc_read();
-		step();
+		//step();
 	}
 }
-void SPI_Send_Data(uint8_t data[5]){
+void SPI_Send_Data(uint8_t data){
 	
 	struct io_descriptor *io;
 	spi_m_sync_get_io_descriptor(&SPI_0, &io);
 	spi_m_sync_enable(&SPI_0);
 	//_spi_m_sync_io_write(&SPI_0,data,5);
 	gpio_set_pin_level(CFG3,false);
-	io_write(io, data, 5);
+	//io_write(io, data, 5);
+	io_write(&io,data,sizeof(data));
 	gpio_set_pin_level(CFG3,true);
 }
 void spi_setup(){//by driving SPI_MODE High, we enable SPI control to give it register configurations
+	uint8_t sending;
 	gpio_set_pin_level(SPI_MODE,true);
 	gpio_set_pin_level(CFG4,false);
 	gpio_set_pin_level(CFG6,false);
 	gpio_set_pin_level(CFG3,true);//SS high for now
 	gpio_set_pin_level(dirPin,false);
 	for(int i=0; i<9;i++){
-		SPI_Send_Data(required[i]);
+		sending = required[i];
+		SPI_Send_Data(sending);
 		delay_ms(10);
 	}
 }
