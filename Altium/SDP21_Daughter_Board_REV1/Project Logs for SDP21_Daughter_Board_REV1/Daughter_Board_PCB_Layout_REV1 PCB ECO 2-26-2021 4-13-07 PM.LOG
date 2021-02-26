@@ -1,0 +1,41 @@
+Removed Pin From Net: NetName=RESET Pin=SW1-1
+Removed Pin From Net: NetName=GND Pin=U3-S
+Change Component Footprint: Designator=SW1 Old Footprint=PTS525 SM08 SMTR2 LFS New Footprint=FP-B3FS-1000-MFG
+Change Component Comment : Designator=SW1 Old Comment=PTS525SM15SMTR2 LFS New Comment=B3FS-1000
+Change Managed Component Library Link : Designator=SW1 Old VaultGUID= New VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 Old ItemGUID= New ItemGUID=32CC5454-6EAE-47A5-AA0D-1E9CC2CAFAB1 Old RevisionGUID= New RevisionGUID=40F13AB8-F918-4EE5-B330-250316662F31
+Change component parameters: Designator = "SW1" ("SW1"); Footprint = "PTS525 SM08 SMTR2 LFS"; UniqueID = "\GTHKNYNC" ("\GTHKNYNC")
+Change component parameters (AddParameter): Name = "Ambient Temperature Range High"; Value = "+70°C"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Ambient Temperature Range Low"; Value = "-25°C"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Automotive"; Value = "No"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Category"; Value = "Switch"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Contact Current Rating"; Value = "50mA"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Contact Resistance"; Value = "100mO"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Device Class L1"; Value = "Electromechanical"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Device Class L2"; Value = "Switches"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Device Class L3"; Value = "Tactile Switches"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Digikey Description"; Value = "SWITCH TACTILE SPST-NO 0.05A 24V"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Electromechanical Life"; Value = "1000000Cycles"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Height"; Value = "3.3mm"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Lead Free"; Value = "Yes"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Omron Electronics Inc-EMC Div"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer Part Number"; Value = "B3FS-1000"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Mount"; Value = "Surface Mount"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Mouser Description"; Value = "Tactile Switches 6X6X3.1mm 100gF"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Octopart"; Value = "https://octopart.com/b3fs-1000-omron-116581"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Operating Force"; Value = "0.98N"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Package"; Value = "0"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "RoHS"; Value = "TRUE"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Temperature"; Value = "-25°C to +70°C"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Temperature Range High"; Value = "+70°C"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Temperature Range Low"; Value = "-25°C"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Throw Configuration"; Value = "SPST-NO"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Voltage Rating Dc"; Value = "24V"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=SW1-1
+Added Pin To Net: NetName=RESET Pin=SW1-3
+Added Pin To Net: NetName=RESET Pin=SW1-4
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C13 100nF
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component C14 10uF
+PCB-ECO: Change Pad Pin/Pkg Length: Old=57.087mil New=0mil
+PCB-ECO: Change Pad Pin/Pkg Length: Old=57.087mil New=0mil
