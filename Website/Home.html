@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+h1 {
+  text-align: center;
+}
+h2 {
+	text-align: center;
+}
+p {
+	text-align: center;
+}
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: url('');
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+.topnav a.active {
+  background-color: #942B00;
+  color: white;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+footer {
+	text-align: center;
+	padding: 3px;
+	background-color: #800000;
+	color: white;
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href=Home.html>Home</a>
+  <a href=Team.html>Our Team</a>
+  <a href=Hardware.html>Hardware</a>
+  <a href=Software.html>Software</a>
+</div>
+
+<div style="padding-left:16px">
+  <h1 class="center">Team 4: Amped UP</h1>
+  <p>The secret for many of the defining guitar tones across history can often be attributed to the relationship between the musician and their guitar amplifier.
+  As a result, many lines of amplifiers have risen to fame, and the rich distortion provided by certain tube amps have become highly sought after.
+  </p>
+  <p>Amped Up! provides an exciting new way for guitarists to interact with their amp. 
+	By connecting the knobs that control the tonal parameters of the amp to precise motors and rotational encoders, 
+	we offer a method of storing and recalling presets that does not rely on a digital recreation of the amp’s sound.
+	Moreover, we allow the artist to analyze the incoming signal in order to dynamically vary the position of each knob during play. 
+	The result is an intelligent system that can be used to recall preferred sounds, maintain desired tonal characteristics during play, or create completely unique sounds.
+  </p>
+  <p>
+  Our project includes user-end software which can be run on a laptop or computer and upload presets to the system via Bluetooth. In addition to creating static knob settings, 
+  the software allows the user to define dynamic presets by connecting a diverse range of “nodes” to build up a customized response to several parameters, such as the guitar signal, 
+  an expression pedal, and mathematical functions of time.
+  </p>
+  <h2>System Specifications:</h2>
+  <ul>
+	<li>Is compatible with existing amplifiers, allows manual override</li>
+	<ul>
+		<li>Electromechanically can control at least 8 knobs</li>
+		<li>Able to turn from extreme to extreme in at most 80 ms</li>
+	</ul>
+	<li>Controls tone shaping parameters for guitar sound, including: </li>
+	<ul>
+		<li>Gain, EQ, Post-amp Effects, Volume, Channel Selection
+	</ul>
+	<li>Supports locally saving and recalling user configurations (10+ configurations)</li>
+	<ul>
+		<li>Guitar signal volume, Generic footswitch, Expression pedal, Mathematical functions, Guitar signal frequency</li>
+	</ul>
+	<li>Can produce dynamic sounds by modulating the amplifier’s tone shaping parameters in real-time</li>
+	<li>Supports arbitrary automations to control the amplifier parameters according to:</li>
+	<ul>
+		<li>Must be robust enough to adequately control all features of the amplifier</li>
+	</ul>
+  </ul>
+  <h2>Block Diagram:</h2>
+  <img src="Design_Diagram.png" alt="HTML5 Icon" class="center" width="480">
+  <h2>Documents:</h2>
+  <iframe frameborder="5" scrolling="yes" class="center" allowfullscreen="true"
+     width="640" height="360"
+     src="PDR.pdf">
+  </iframe>
+  <iframe frameborder="5" scrolling="yes" class="center"
+     width="640" height="360"
+     src="MDR.pdf">
+  </iframe>
+</div>
+  
+
+</body>
+<footer>
+<p>University of Massachusetts Amherst</p>
+<p>SDP 2020-2021 College of Electrical and Computer Engineering</p>
+</footer>
+</html>

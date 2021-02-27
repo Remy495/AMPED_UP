@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Users\grouc\Documents\GitHub\AMPED_UP\Altium\SDP21_Daughter_Board_REV1\Daughter_Board_PCB_Layout_REV1.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=daughter_board_pcb_layout_rev1-roundholes.txt|DrillLayers=gtl,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=daughter_board_pcb_layout_rev1-slotholes.txt|DrillLayers=gtl,gbl
