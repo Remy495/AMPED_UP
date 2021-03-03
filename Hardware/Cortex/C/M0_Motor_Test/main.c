@@ -28,10 +28,10 @@ int main(void)
 {
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
-	gpio_set_pin_direction(CFG0,GPIO_DIRECTION_OUT);
-	gpio_set_pin_direction(CFG1,GPIO_DIRECTION_OUT);
-	gpio_set_pin_direction(CFG2,GPIO_DIRECTION_OUT);
-	gpio_set_pin_direction(CFG3,GPIO_DIRECTION_OUT);
+	//gpio_set_pin_direction(CFG0,GPIO_DIRECTION_IN);
+	//gpio_set_pin_direction(CFG1,GPIO_DIRECTION_OUT);
+	//gpio_set_pin_direction(CFG2,GPIO_DIRECTION_OUT);
+	//gpio_set_pin_direction(CFG3,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG4,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG5,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG6,GPIO_DIRECTION_OUT);
@@ -40,6 +40,8 @@ int main(void)
 	gpio_set_pin_direction(SPI_MODE,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(IFA, GPIO_DIRECTION_IN);
 	gpio_set_pin_direction(IFB, GPIO_DIRECTION_IN);
+	struct io_descriptor *io;
+	spi_m_sync_get_io_descriptor(&SPI_0, &io);
 	previous = gpio_get_pin_level(IFA)*2 + gpio_get_pin_level(IFB);//encoder stuff
 	//standalone();
 	//spi_setup();
@@ -47,17 +49,15 @@ int main(void)
 	gpio_set_pin_level(TEST,true);
 	//main loop
 	while(1){
-		struct spi_xfer new;
+		/*struct spi_xfer new;
 		new.txbuf = "Hi\n";
 		new.size=sizeof(new.txbuf);
-		spi_m_sync_enable(&SPI_0);
+		*/
+		uint8_t data[6] = {0b01001000, 0b01100101, 0b01101100, 0b01101100, 0b01101111, 0b00100001};
 		gpio_set_pin_level(CFG3,false);
-		
-		spi_m_sync_transfer(&SPI_0,&new);
+		io_write(io,data,6);
 		delay_ms(1);
-		
 		gpio_set_pin_level(CFG3,true);
-		
 		delay_ms(10000);
 		
 		//enc_read();

@@ -1,0 +1,38 @@
+<html>
+<head>
+<link rel="stylesheet" href="Theme.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="topnav">
+  <a href="Home.html">Home</a>
+  <a href="Team.html">Our Team</a>
+  <a class="active" href=Hardware.html>Hardware</a>
+  <a href="Software.html">Software</a>
+  <a href="Gallery.html">Gallery</a>
+  <nav-left>Amped-Up</nav-left>
+</div>
+<div class="topnav2">
+  <a href="Mechanical.html">Mechanical Design</a>
+  <a class="active" href="Mainboard.html">Mainboard</a>
+  <a href="Daughterboard.html">Daughterboard</a>
+  <a href="GuitarSampler.html">Guitar Sampler</a>
+</div>
+<div style="padding-left:16px">
+  <h1>The Main Board:</h1>
+  <p>
+  The main board is a separate PCBA which houses several core processing components. A Teensy 4.1 is plugged into a socket here and provides the computations necessary to store and recall presets, 
+  as well as evaluate the guitar signal and send updated motor positions to each motor. Also mounted to the mainboard is an ESP32 responsible for Bluetooth communication between the external 
+  user-side software and the Teensy 4.1. The mainboard is directly connected to the guitar input buffer PCBA. This routes the incoming guitar signal through an op-amp buffer which offsets and amplifies 
+  the peak voltage of the guitar to fall between 0 and 5V, providing a way of sampling the guitar input without directly interfering with its path to the guitar amp.
+  </p>
+</div>
+
+</body>
+<footer>
+<div class = "footerwrap">
+<p>University of Massachusetts Amherst</p>
+<p>SDP 2020-2021 College of Electrical and Computer Engineering</p>
+</div>
+</footer>
+</html>

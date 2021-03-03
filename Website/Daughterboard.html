@@ -1,0 +1,45 @@
+<html>
+<head>
+<link rel="stylesheet" href="Theme.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="topnav">
+  <a href="Home.html">Home</a>
+  <a href="Team.html">Our Team</a>
+  <a class="active" href=Hardware.html>Hardware</a>
+  <a href="Software.html">Software</a>
+  <a href="Gallery.html">Gallery</a>
+  <nav-left>Amped-Up</nav-left>
+</div>
+<div class="topnav2">
+  <a href="Mechanical.html">Mechanical Design</a>
+  <a href="Mainboard.html">Mainboard</a>
+   <a class="active" href="Daughterboard.html">Daughterboard</a>
+  <a href="GuitarSampler.html">Guitar Sampler</a>
+</div>
+<div style="padding-left:16px">
+  <h1>The Daughterboards:</h1>
+  <p>
+	The daughter board represents the main PCB design effort of the project. Each daughter board contains 3 main components, as well as supporting passives and connections for daisy-chained I2C and power. These are:
+  </p>
+  
+</div>
+<h3>Cortex M0 (ATSAMD21 E15B AUT):</h3>
+<p>The main processor on each board, responsible for closed-loop stepper control, communications with the main board, and auto-calibration. Each is programmed in C and configures its
+ I2C address through a DIP switch set by the user prior to use.</p>
+<h3>Trinamic motor driver (TMC-2310-LA):</h3>
+<p>These advanced motor drivers accept SPI configuration from the M0, as well as step/direction instructions. They are capable of driving the stepper motor with high levels of microstepping almost silently. 
+They are also equipped with StallGuard current detection which is used to detect when a knob has been rotated to its limit during autocalibration.</p>
+<h3>Magnetic encoder (TLE5012B):</h3>
+<p>The magnetic encoder resides on the bottom-side of the daughter board and is positioned precisely above the back side of the motor shaft which bears a diametrically magnetized disk magnet.
+ Using internal magnetoresistance, the chip communicates rotation to the M0 through a series of pulses which correspond to a rotational resolution in excess of 2000 counts/step.
+</p>
+</body>
+<footer>
+<div class = "footerwrap">
+<p>University of Massachusetts Amherst</p>
+<p>SDP 2020-2021 College of Electrical and Computer Engineering</p>
+</div>
+</footer>
+</html>
