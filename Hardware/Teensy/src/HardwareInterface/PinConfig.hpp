@@ -2,52 +2,52 @@
 #ifndef _PIN_CONFIG_
 #define _PIN_CONFIG_
 
-#include <cstdint>
+#include "PadConfig.hpp"
 
 namespace AmpedUp
 {
 
-    class PinConfig
+    class PinConfiguration
     {
     public:
 
-    PinConfig(uint32_t& muxReg, uint32_t muxRegValue) : muxRegPtr_(&muxReg), muxRegValue_(muxRegValue)
+    constexpr PinConfiguration(volatile uint32_t& muxReg, uint32_t muxRegValue) : muxRegPtr_(&muxReg), muxRegValue_(muxRegValue)
     {}
 
-    PinConfig(uint32_t& muxReg, uint32_t muxRegValue, uint32_t& configReg, uint32_t configRegValue) :
-            muxRegPtr_(&muxReg), muxRegValue_(muxRegValue), configRegPtr_(&configReg), configRegValue_(configRegValue)
+    constexpr PinConfiguration(volatile uint32_t& muxReg, uint32_t muxRegValue, volatile uint32_t& configReg, PadDriverConfiguration padConfig) :
+            muxRegPtr_(&muxReg), muxRegValue_(muxRegValue), configRegPtr_(&configReg), configRegValue_(padConfig.getRegisterValue())
     {}
 
-    PinConfig(uint32_t& muxReg, uint32_t muxRegValue, uint32_t& configReg, uint32_t configRegValue, uint32_t& daisyReg, uint32_t daisyRegValue) :
-            muxRegPtr_(&muxReg), muxRegValue_(muxRegValue), configRegPtr_(&configReg), configRegValue_(configRegValue), daisyRegPtr_(&daisyReg), daisyRegValue_(daisyRegValue)
+    constexpr PinConfiguration(volatile uint32_t& muxReg, uint32_t muxRegValue, volatile uint32_t& configReg, PadDriverConfiguration padConfig, volatile uint32_t& daisyReg, uint32_t daisyRegValue) :
+            muxRegPtr_(&muxReg), muxRegValue_(muxRegValue), configRegPtr_(&configReg), configRegValue_(padConfig.getRegisterValue()), daisyRegPtr_(&daisyReg), daisyRegValue_(daisyRegValue)
     {}
 
-    void initialize()
+    void apply()
     {
-        if (muxRegPtr_)
+        if (muxRegPtr_ != nullptr)
         {
             *muxRegPtr_ = muxRegValue_;
         }
 
-        if (configRegPtr_)
+        if (configRegPtr_ != nullptr)
         {
             *configRegPtr_ = configRegValue_;
         }
 
-        if (daisyRegPtr_)
+        if (daisyRegPtr_ != nullptr)
         {
             *daisyRegPtr_ = daisyRegValue_;
         }
     }
 
     private:
-        uint32_t* muxRegPtr_{nullptr};
+        volatile uint32_t* muxRegPtr_{nullptr};
         uint32_t muxRegValue_{0};
 
-        uint32_t* configRegPtr_{nullptr};
+        volatile uint32_t* configRegPtr_{nullptr};
         uint32_t configRegValue_{0};
 
-        uint32_t* daisyRegPtr_{nullptr};
+        volatile uint32_t* daisyRegPtr_{nullptr};
         uint32_t daisyRegValue_{0};
     };
 

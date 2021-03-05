@@ -7,19 +7,19 @@
 namespace AmpedUp
 {
 
-    enum class KnobMessageType : int8_t;
+    enum class KnobMessageType : int8_t
     {
-        ERROR = -1,
-        HEARTBEAT = 0,
+        ERROR,
+        HEARTBEAT,
         HEARTBEAT_REPLY,
         SET_KNOB_POSITION,
         CURRENT_KNOB_POSITION,
         DO_AUTO_CALIBRATION
-    }
+    };
 
 
-    // pack structure, put checksum before
-    class KnobMessage
+    
+    class __attribute__((__packed__)) KnobMessage
     {
     public:
         KnobMessage() = default;;
@@ -52,7 +52,7 @@ namespace AmpedUp
     private:
         float value_;
         int8_t messageTypeRaw_;
-    }
+    };
 
 }
 

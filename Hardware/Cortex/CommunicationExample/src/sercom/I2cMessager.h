@@ -5,7 +5,7 @@
 #define I2CSLAVECONTROLLER_H_
 
 #include "SercomInterface.h"
-#include "TypedDoubleBuffer.h"
+#include "I2cConnection.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
@@ -18,7 +18,7 @@ public:
 		
 	virtual void begin(uint8_t address, bool useAltPins = false)
 	{
-		address_ = address;
+		masterConnection_.setAddress(address);
 		
 		// Enable the sercom unit and take control of pins 1 and 2
 		HardwareInterface::enable();
@@ -39,17 +39,18 @@ public:
 		sercomRegisters.I2CS.CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN;
 
 		// Set slave address
-		sercomRegisters.I2CS.ADDR.reg = SERCOM_I2CS_ADDR_ADDR(address_);
+		sercomRegisters.I2CS.ADDR.reg = SERCOM_I2CS_ADDR_ADDR(address);
 
 		// Enable I2C communication when registers are synchronized
 		while (sercomRegisters.I2CS.SYNCBUSY.bit.ENABLE);
 		sercomRegisters.I2CS.CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;	
 
-		// Enabled interrupts on address match (i.e. start), stop, and data ready
+		// Enabled interrupts on address match (i.e. start), stop, data ready, and error
 		sercomRegisters.I2CS.INTENSET.reg =
 		SERCOM_I2CS_INTENSET_PREC |
 		SERCOM_I2CS_INTENSET_AMATCH |
-		SERCOM_I2CS_INTENSET_DRDY;
+		SERCOM_I2CS_INTENSET_DRDY |
+		SERCOM_I2CS_INTENSET_ERROR;
 
 		// Enable interrupts
 		HardwareInterface::setInterruptHandler(I2cMessager<SERCOM_HANDLE, T>::processInterrupt);
@@ -68,21 +69,19 @@ public:
 	void setReply(const T& message)
 	{
 		HardwareInterface::disableInterrupts();
-		outgoingMessage_.getWriterBuffer() = message;
-		outgoingMessageIsFrech_ = true;
+		masterConnection_.putOutgoingMessage(message);
 		HardwareInterface::enableInterrupts();
 	}
 	
 	bool hasReceivedMessage() const
 	{
-		return incomingMessageIsFresh_;
+		return masterConnection_.isIncomingMessageFresh();
 	}
 	
 	T takeReceivedMessage()
 	{
 		HardwareInterface::disableInterrupts();
-		T receivedMessage(incomingMessage_.getReaderBuffer().getInstance());
-		incomingMessageIsFresh_ = false;
+		T receivedMessage = masterConnection_.takeIncomingMessage();;
 		HardwareInterface::enableInterrupts();
 		
 		return receivedMessage;
@@ -99,24 +98,8 @@ private:
 	using HardwareInterface = SercomInterface<SERCOM_HANDLE>;
 	using MessageBuffer = TypedDoubleBuffer<T>;
 	
-	enum class Status
-	{
-		IDLE,
-		TRANSMITTING,
-		RECEIVING
-	};
-
-	static inline uint8_t address_{};
-	
-	static inline MessageBuffer incomingMessage_{};
-	static inline volatile bool incomingMessageIsFresh_{false};
-	
-	static inline MessageBuffer outgoingMessage_{};
-	static inline volatile bool outgoingMessageIsFrech_{false};
-		
-	static inline volatile uint32_t currentTransactionOffset_{0};
-		
-	static inline volatile Status status_{};
+	static inline I2cConnection<T> masterConnection_{};
+	static inline bool currentTransactionSuccess_{true};
 
 	I2cMessager() = default;
 		
@@ -125,44 +108,36 @@ private:
 		// Create a flag variable to be masked with the different possible sources of interrupt (address match, data ready or STOP)
 		Sercom& registers = HardwareInterface::getRegisters();
 		uint32_t flags = registers.I2CS.INTFLAG.reg;
-				
+
+		// Process error interrupt
+		if (flags & SERCOM_I2CS_INTFLAG_ERROR)
+		{
+			// Abort the current transaction, consider it a failure
+			masterConnection_.abortTransaction();
+			currentTransactionSuccess_ = false;
+
+			// Clear the error interrupt flag
+			registers.I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_ERROR;
+		}				
 				
 		// Process stop interrupt
 		if (flags & SERCOM_I2CS_INTFLAG_PREC)
 		{
-			if (status_ == Status::RECEIVING)
+			if (currentTransactionSuccess_)
 			{
-				incomingMessage_.swapBuffers();
-				incomingMessageIsFresh_ = true;
-			}
-					
+				// If no errors occured during transaction, end it normally.
+				masterConnection_.endTransaction();
+			}	
 			// Clear stop interrupt flag
 			registers.I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
-			// Set status to idle
-			status_ = Status::IDLE;
 		}
 
 		// Process address match (ie. start)
 		if (flags & SERCOM_I2CS_INTFLAG_AMATCH)
 		{
-			// Set the status to transmitting or receiving depending on the data direction flag
-			if (registers.I2CS.STATUS.reg & SERCOM_I2CS_STATUS_DIR)
-			{
-				status_ = Status::TRANSMITTING;
-						
-				if (outgoingMessageIsFrech_)
-				{
-					outgoingMessage_.swapBuffers();
-					outgoingMessageIsFrech_ = false;
-				}
-			}
-			else
-			{
-				status_ = Status::RECEIVING;
-			}
-					
-			// Reset message offset
-			currentTransactionOffset_ = 0;
+			// Start a transaction in the appropriate direction based on the status register
+			masterConnection_.startTransaction(registers.I2CS.STATUS.reg & SERCOM_I2CS_STATUS_DIR);
+			currentTransactionSuccess_ = true;
 					
 			// Clear Interrupt Flag Address Match Condition
 			registers.I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
@@ -171,20 +146,17 @@ private:
 		// Process data ready (i.e. request to transmit or receive the next byte)
 		if (flags & SERCOM_I2CS_INTFLAG_DRDY)
 		{
-			if (status_ == Status::TRANSMITTING)
+			if (masterConnection_.isTransmitting())
 			{
 				// Send the next byte the the master
 						
 				uint8_t data = 0;
 				// Check if master has issued a nack (which would mean it is ending the transaction)
 				// Note that the first byte never has a nack.
-				if (currentTransactionOffset_ == 0 || !registers.I2CS.STATUS.bit.RXNACK)
+				if (!masterConnection_.messageHasBegun() || !registers.I2CS.STATUS.bit.RXNACK)
 				{
 					// If transmission is continuing, load the next byte into the data register.
-					data = outgoingMessage_.getReaderBuffer().getData()[currentTransactionOffset_];
-							
-					// Advance to the next byte (wrap around if overflow)
-					currentTransactionOffset_ = (currentTransactionOffset_ + 1) % outgoingMessage_.getReaderBuffer().getSize();
+					data = masterConnection_.readOutgoingMessageByte();
 				}
 						
 				// Put the byte into the data register to be sent
@@ -193,10 +165,7 @@ private:
 			else
 			{
 				// Receive the next byte from the master
-				incomingMessage_.getWriterBuffer().getData()[currentTransactionOffset_] = registers.I2CS.DATA.reg;
-						
-				// Advance to the next byte (wrap around if overflow)
-				currentTransactionOffset_ = (currentTransactionOffset_ + 1) % incomingMessage_.getWriterBuffer().getSize();
+				masterConnection_.writeIncomingMessageByte(registers.I2CS.DATA.reg);
 			}
 		}
 	}

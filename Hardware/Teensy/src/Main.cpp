@@ -10,30 +10,55 @@
 
 #include "Arduino.h"
 
-#include "i2c_device.h"
+// #include "i2c_device.h"
+
+#include "I2cMessagerServer.hpp"
 
 
 int main(int argc, char** argv) {
 
     Serial.begin(9600);
 
-    AmpedUp::Time::initialize();
+    // I2CMaster& master = Master;
+    // master.begin(400000);
 
-    I2CMaster& master = Master;
-    master.begin(400000);
+    // uint32_t receivedValue{};
+    // uint32_t sentValue{};
+
+    // AmpedUp::I2cConfig<AmpedUp::I2cHandle::I2C_1> x;
+
+    // while (true)
+    // {
+    //     master.write_async(8, (uint8_t*)&sentValue, 4, true);
+    //     delay(500);
+    //     master.read_async(8, (uint8_t*)&receivedValue, 4, true);
+    //     delay(500);
+    //     Serial.println(receivedValue);
+    //     sentValue++;
+    // }
 
     uint32_t receivedValue{};
-    uint32_t sentValue{};
+    uint32_t transmittedValue{};
+
+    delay(5000);
+    Serial.println("connected");
+    delay(1000);
+
+    auto& i2cMessager = AmpedUp::I2cMessager<AmpedUp::I2cHandle::I2C_1, uint32_t, 2>::getInstance();
+
+    i2cMessager.begin(AmpedUp::I2cSpeed::FAST_400K, 8);
 
     while (true)
     {
-        master.write_async(8, (uint8_t*)&sentValue, 4, true);
-        delay(500);
-        master.read_async(8, (uint8_t*)&receivedValue, 4, true);
-        delay(500);
-        Serial.println(receivedValue);
-        sentValue++;
+        if (i2cMessager.hasReceivedMessageFromIndex(0))
+        {
+            receivedValue = i2cMessager.takeReceivedMessageFromIndex(0);
+            Serial.println(receivedValue);
+            transmittedValue++;
+            i2cMessager.sendToIndex(0, transmittedValue);
+        }
     }
+
 
 
     // size_t nodeCount = 3;

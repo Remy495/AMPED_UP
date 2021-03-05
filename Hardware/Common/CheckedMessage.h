@@ -6,7 +6,7 @@
 
 
 template<typename T>
-class CheckedMessage
+class __attribute__((__packed__)) CheckedMessage
 {
 public:
 
@@ -20,7 +20,7 @@ public:
 		return checksum_ == computeChecksum();
 	}
 	
-	const T& getPayload() const
+	const T getPayload() const
 	{
 		return payload_;
 	}
@@ -30,14 +30,14 @@ private:
 	static constexpr checksum_t INITIAL_CHECKSUM = 0xFF;
 	static constexpr uint32_t SIZE_IN_CHECKSUMS = sizeof(T) / sizeof(checksum_t);
 
-	checksum_t checksum_;
 	T payload_;
+	checksum_t checksum_;
 	
 	checksum_t computeChecksum() const
 	{
 		checksum_t checksum = INITIAL_CHECKSUM;
 		
-		checksum_t* messageData = reinterpret_cast<checksum_t*>(&payload_);
+		const checksum_t* messageData = reinterpret_cast<const checksum_t*>(&payload_);
 		for (uint32_t i = 0; i < SIZE_IN_CHECKSUMS; i++)
 		{
 			checksum ^= messageData[i];
