@@ -9,6 +9,7 @@ int main(void)
 {
 	auto& messager = I2cMessager<SercomHandle::SERCOM_3, uint32_t>::getInstance();
 	messager.begin(8, false);
+	messager.setReply(messageValue);
 
 	while(1)
 	{

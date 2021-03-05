@@ -42,9 +42,9 @@ OPTIONS += -D__$(MCU)__ -DARDUINO=10810 -DTEENSYDUINO=149 -DARDUINO_TEENSY41
 # for Cortex M7 with single & double precision FPU
 CPUOPTIONS = -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 -mthumb
 
-SOURCE_DIRS = ./src ./src/thirdparty ./src/thirdparty/Arduino ./src/nodes ./src/generated ./src/HardwareInterface ./src/thirdparty/teensy4_i2c ./src/thirdparty/teensy4_i2c/imx_rt1060
+SOURCE_DIRS = ./src ./src/thirdparty ./src/thirdparty/Arduino ./src/nodes ./src/generated ./src/HardwareInterface ./src/I2C ./src/thirdparty/teensy4_i2c ./src/thirdparty/teensy4_i2c/imx_rt1060
 
-ADDITIONAL_INCLUDES = ./external/CMSIS_DSP/include
+ADDITIONAL_INCLUDES = ./external/CMSIS_DSP/include ../Common
 
 LIB_DIRS = ./external/CMSIS_DSP
 

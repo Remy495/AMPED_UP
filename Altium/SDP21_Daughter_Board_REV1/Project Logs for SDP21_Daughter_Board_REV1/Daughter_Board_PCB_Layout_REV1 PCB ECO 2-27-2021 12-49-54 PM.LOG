@@ -1,0 +1,36 @@
+Added Component: Designator=SW?(FP-KMR211GLFS-MFG)
+Add component (AddParameter): Name = "Actuator Length"; Value = "0.5mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Actuator Type"; Value = "Standard"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Current Rating"; Value = "50mA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Material"; Value = "Silver"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Plating"; Value = "Silver"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current Rating"; Value = "50mA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Depth"; Value = "4.6mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Illumination Type"; Value = "Non-Illuminated"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Free"; Value = "Lead Free"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Length"; Value = "2.8mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Current Rating"; Value = "50mA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Operating Temperature"; Value = "85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Voltage Rating (DC)"; Value = "32V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mechanical Life"; Value = "200000Cycles"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Min Operating Temperature"; Value = "-40°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mount"; Value = "Surface Mount"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Force"; Value = "1.2N"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Orientation"; Value = "Straight"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package Quantity"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Tape and Reel"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Power Rating"; Value = "1W"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Radiation Hardening"; Value = "No"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "REACH SVHC"; Value = "No SVHC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Switch Function"; Value = "Off-Mom"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Switch Travel"; Value = "0.2mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination"; Value = "Gull Wing"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Throw Configuration"; Value = "SPST"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage Rating (DC)"; Value = "32V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Width"; Value = "2.8mm"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=RESET Pin=SW?-1
+Added Pin To Net: NetName=RESET Pin=SW?-2
+Added Pin To Net: NetName=GND Pin=SW?-3
+Added Pin To Net: NetName=GND Pin=SW?-4
+Added Pin To Net: NetName=GND Pin=SW?-5
+Added Member To Class: ClassName=SDP21_Daughter_Board_Schematic_REV1 Member=Component SW? KMR211GLFS

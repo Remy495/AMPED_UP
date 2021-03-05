@@ -1,8 +1,9 @@
 
-TOOLCHAIN_PATH = ../../Toolchain
+HARDWARE_DIR := ../..
+TOOLCHAIN_PATH := $(HARDWARE_DIR)/Toolchain
 
 SOURCE_DIRS := ./Hardware ./src ./src/io ./src/sercom ./src/util
-ADDITIONAL_INCLUDE_DIRS := ./Hardware/SAMD21/samd21c/include ./Hardware/CMSIS/Core/Include
+ADDITIONAL_INCLUDE_DIRS := ./Hardware/SAMD21/samd21c/include ./Hardware/CMSIS/Core/Include $(HARDWARE_DIR)/Common
 
 BIN_DIR := ./bin
 
