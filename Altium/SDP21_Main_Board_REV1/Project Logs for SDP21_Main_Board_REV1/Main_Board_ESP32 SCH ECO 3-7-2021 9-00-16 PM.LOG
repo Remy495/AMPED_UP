@@ -1,0 +1,6 @@
+Remove Pin=U1-19 From Net=SCL
+Remove Pin=U3-3 From Net=RST
+Remove Pin=U3-13 From Net=TMS
+Remove Pin=U3-14 From Net=TDI
+Remove Pin=U3-16 From Net=TCK
+Remove Pin=U3-23 From Net=TDO
