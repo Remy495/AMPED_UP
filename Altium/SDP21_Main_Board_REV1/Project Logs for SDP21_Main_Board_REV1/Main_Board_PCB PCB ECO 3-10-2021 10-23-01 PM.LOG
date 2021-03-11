@@ -1,0 +1,13 @@
+Removed Pin From Net: NetName=NetDS4_1 Pin=U4-20
+Removed Pin From Net: NetName=NetDS5_1 Pin=U4-21
+Removed Pin From Net: NetName=NetDS6_1 Pin=U4-22
+Removed Pin From Net: NetName=NetR6_1 Pin=U4-34
+Added Pin To Net: NetName=3V3 Pin=U3-3V3
+Added Pin To Net: NetName=NetR6_1 Pin=U3-25
+Added Pin To Net: NetName=NetDS5_1 Pin=U3-32
+Added Pin To Net: NetName=NetDS6_1 Pin=U3-33
+Added Pin To Net: NetName=NetDS4_1 Pin=U3-34
+Added Pin To Net: NetName=GND Pin=U3-GND-1
+Added Pin To Net: NetName=GND Pin=U3-GND-2
+Added Pin To Net: NetName=GND Pin=U3-GND-3
+PCB-ECO: Change Pad Pin/Pkg Length: Old=57.087mil New=0mil
