@@ -1,3 +1,4 @@
 Record=TopLevelDocument|FileName=Main_Board_ESP32.SchDoc|SheetNumber=3
+Record=NoMainPathDocument|SourceDocument=Main_Board_ESP32.SchDoc|FileName=Main_Board_Guitar_Buffer.SchDoc|SheetNumber=4
 Record=NoMainPathDocument|SourceDocument=Main_Board_ESP32.SchDoc|FileName=Main_Board_IO.SchDoc|SheetNumber=2
 Record=NoMainPathDocument|SourceDocument=Main_Board_ESP32.SchDoc|FileName=Main_Board_Teensy.SchDoc|SheetNumber=1
