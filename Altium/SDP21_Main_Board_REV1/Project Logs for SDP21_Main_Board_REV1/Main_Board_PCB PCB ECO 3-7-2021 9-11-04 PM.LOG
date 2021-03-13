@@ -1,0 +1,18 @@
+Removed Member From Class: ClassName=Main_Board_Teensy Member=U?
+Change Component Designator: OldDesignator=P1 NewDesignator=P3
+Change Component Designator: OldDesignator=P3 NewDesignator=P4
+Change Component Designator: OldDesignator=P? NewDesignator=P1
+Change Component Designator: OldDesignator=U? NewDesignator=U1
+Change Component Designator: OldDesignator=U? NewDesignator=U3
+Change Net Name : Old Net Name=NetP1_1 New Net Name=NetP3_1
+Change Net Name : Old Net Name=NetU?_10 New Net Name=NetU1_10
+Change Net Name : Old Net Name=NetU?_11 New Net Name=NetU1_13
+Added Pin To Net: NetName=NetU1_11 Pin=U1-11
+Added Net: Name=NetU1_11
+Added Pin To Net: NetName=NetU1_12 Pin=U1-12
+Added Pin To Net: NetName=NetU1_12 Pin=U3-10
+Added Net: Name=NetU1_12
+Added Member To Class: ClassName=Main_Board_Teensy Member=Component U1 Teensy 4.1 Socket
+Added Room: Name=Main_Board_ESP32
+Added Room: Name=Main_Board_IO
+Added Room: Name=Main_Board_Teensy

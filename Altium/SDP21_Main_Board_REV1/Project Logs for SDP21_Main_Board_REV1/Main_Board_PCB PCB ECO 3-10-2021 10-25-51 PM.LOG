@@ -1,0 +1,7 @@
+Removed Pin From Net: NetName=GND Pin=PWR1-2
+Removed Member From Class: ClassName=Main_Board_Guitar_Buffer Member=PWR1
+Added Pin To Net: NetName=GND Pin=C9-1
+Added Pin To Net: NetName=GND Pin=C11-1
+Added Pin To Net: NetName=GND Pin=R13-2
+Added Pin To Net: NetName=GND Pin=U6-8
+Change Net Name : Old Net Name=GND New Net Name=+5V

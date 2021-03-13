@@ -10,3 +10,5 @@ ProjectPath=SDP21_Trinamic_Driver_Board\SDP21_Trinamic_Driver_Board.PrjPcb
 ProjectPath=Guitar_Input_Stage\SDP21_Guitar_Input_Stage.PrjPcb
 [Project5]
 ProjectPath=SDP21_Daughter_Board_REV1\SDP21_Daughter_Board_REV1.PrjPcb
+[Project6]
+ProjectPath=SDP21_Main_Board_REV1\SDP21_Main_Board_REV1.PrjPcb

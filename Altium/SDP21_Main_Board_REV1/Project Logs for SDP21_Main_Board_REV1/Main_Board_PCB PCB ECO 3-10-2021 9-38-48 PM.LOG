@@ -1,0 +1,3 @@
+Added Component: Designator=*1(ESP32-DevKitC-32D)
+Added Member To Class: ClassName=Main_Board_ESP32 Member=Component *1 ESP32-DevKitC-32D
+Added Member To Class: ClassName=Main_Board_ESP32 Member=Component P3 T2M-110-01-L-D-TH-WT

@@ -1,0 +1,13 @@
+Removed Member From Class: ClassName=Main_Board_ESP32 Member=*1
+Change Component Designator: OldDesignator=EXP NewDesignator=EXP1
+Change Component Designator: OldDesignator=P3 NewDesignator=P2
+Change Component Designator: OldDesignator=U3 NewDesignator=U4
+Change Component Designator: OldDesignator=U4 NewDesignator=U5
+Change Component Designator: OldDesignator=U5 NewDesignator=U6
+Added Component: Designator=U3(ESP32-DevKitC-32D)
+Change Net Name : Old Net Name=NetEXP_2 New Net Name=NetEXP1_2
+Added Member To Class: ClassName=Main_Board_ESP32 Member=Component U5 3.3V Reg
+Added Room: Name=Main_Board_ESP32
+Added Room: Name=Main_Board_Guitar_Buffer
+Added Room: Name=Main_Board_IO
+Added Room: Name=Main_Board_Teensy
