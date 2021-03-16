@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [Mechanical Plates.PcbDoc]
+   Generated File[Mechanical Plates.TXT]
+   Generated File[Mechanical Plates.LDP]
+   Generated File[Mechanical Plates.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 11:53:15 AM On 3/16/2021
