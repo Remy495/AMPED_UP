@@ -46,17 +46,6 @@ int main(void)
 	gpio_set_pin_level(TEST,true);
 	//main loop
 	while(1){
-		/*struct spi_xfer new;
-		new.txbuf = "Hi\n";
-		new.size=sizeof(new.txbuf);
-		*/
-		/*uint8_t data[6] = {0b01001000, 0b01100101, 0b01101100, 0b01101100, 0b01101111, 0b00100001};
-		gpio_set_pin_level(CFG3,false);
-		io_write(io,data,6);
-		delay_ms(1);
-		gpio_set_pin_level(CFG3,true);
-		delay_ms(10000);
-		*/
 		//enc_read();
 		step();
 	}

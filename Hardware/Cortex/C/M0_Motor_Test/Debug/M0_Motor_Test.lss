@@ -27,11 +27,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  11 .debug_macro  000174bf  00000000  00000000  00053a75  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   0000cf43  00000000  00000000  0006af34  2**0
+ 12 .debug_line   0000cf40  00000000  00000000  0006af34  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    0007e20f  00000000  00000000  00077e77  2**0
+ 13 .debug_str    0007e20f  00000000  00000000  00077e74  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_frame  000018ec  00000000  00000000  000f6088  2**2
+ 14 .debug_frame  000018ec  00000000  00000000  000f6084  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3606,7 +3606,7 @@ static inline uint32_t _gpio_get_level(const enum gpio_port port)
     1398:	0000041f 	.word	0x0000041f
 
 0000139c <SPI_Send_Data>:
-		*/
+	while(1){
 		//enc_read();
 		step();
 	}
