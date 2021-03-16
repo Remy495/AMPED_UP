@@ -79,74 +79,58 @@ DocumentPath=Project Outputs for Mechanical System\Design Rule Check - Mechanica
 DItemRevisionGUID=
 
 [GeneratedDocument2]
-DocumentPath=Project Outputs for Free Documents\NC Drill\Mechanical Plates.DRR
-DItemRevisionGUID=
-
-[GeneratedDocument3]
 DocumentPath=Project Outputs for Mechanical System\NC Drill\Mechanical Plates.DRR
 DItemRevisionGUID=
 
-[GeneratedDocument4]
-DocumentPath=Project Outputs for Free Documents\Gerber\Mechanical Plates.EXTREP
-DItemRevisionGUID=
-
-[GeneratedDocument5]
+[GeneratedDocument3]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.EXTREP
 DItemRevisionGUID=
 
-[GeneratedDocument6]
+[GeneratedDocument4]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GBL
 DItemRevisionGUID=
 
-[GeneratedDocument7]
+[GeneratedDocument5]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GBO
 DItemRevisionGUID=
 
-[GeneratedDocument8]
+[GeneratedDocument6]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GBP
 DItemRevisionGUID=
 
-[GeneratedDocument9]
+[GeneratedDocument7]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GBS
 DItemRevisionGUID=
 
-[GeneratedDocument10]
+[GeneratedDocument8]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GM1
 DItemRevisionGUID=
 
-[GeneratedDocument11]
+[GeneratedDocument9]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GTL
 DItemRevisionGUID=
 
-[GeneratedDocument12]
+[GeneratedDocument10]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GTO
 DItemRevisionGUID=
 
-[GeneratedDocument13]
+[GeneratedDocument11]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.GTS
 DItemRevisionGUID=
 
-[GeneratedDocument14]
+[GeneratedDocument12]
 DocumentPath=Project Outputs for Mechanical System\NC Drill\Mechanical Plates.LDP
 DItemRevisionGUID=
 
-[GeneratedDocument15]
+[GeneratedDocument13]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.REP
 DItemRevisionGUID=
 
-[GeneratedDocument16]
-DocumentPath=Project Outputs for Free Documents\Gerber\Mechanical Plates.RUL
-DItemRevisionGUID=
-
-[GeneratedDocument17]
+[GeneratedDocument14]
 DocumentPath=Project Outputs for Mechanical System\Gerber\Mechanical Plates.RUL
 DItemRevisionGUID=
 
-[GeneratedDocument18]
-DocumentPath=Project Outputs for Free Documents\NC Drill\Mechanical Plates.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument19]
+[GeneratedDocument15]
 DocumentPath=Project Outputs for Mechanical System\NC Drill\Mechanical Plates.TXT
 DItemRevisionGUID=
 
