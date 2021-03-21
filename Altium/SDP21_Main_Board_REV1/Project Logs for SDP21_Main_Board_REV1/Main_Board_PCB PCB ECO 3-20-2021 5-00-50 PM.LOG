@@ -1,0 +1,6 @@
+Removed Member From Class: ClassName=Main_Board_IO Member=LED12
+Removed Member From Class: ClassName=Main_Board_Guitar_Buffer Member=U3
+Added Pin To Net: NetName=5V Pin=LED11-1
+Added Member To Class: ClassName=Main_Board_IO Member=Component LED2 1655
+Added Member To Class: ClassName=Main_Board_ESP32 Member=Component U3 3.3V Reg
+Added Member To Class: ClassName=Main_Board_Guitar_Buffer Member=Component U5 MCP6002

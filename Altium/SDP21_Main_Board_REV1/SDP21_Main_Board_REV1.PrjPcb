@@ -126,7 +126,7 @@ GenerateClassCluster=0
 DocumentUniqueId=DCCMOMHN
 
 [Document6]
-DocumentPath=Main_Board_PCB.PcbDoc
+DocumentPath=Main_Board_Guitar_Buffer.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -140,7 +140,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=UXQKJEOA
+DocumentUniqueId=ZLNALLDL
 
 [Document7]
 DocumentPath=..\SDP21_Main_Board\SDP21_Main_Board_Schematic_Library.SchLib
@@ -177,7 +177,7 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [Document9]
-DocumentPath=Main_Board_Guitar_Buffer.SchDoc
+DocumentPath=Main_Board_PCB.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -191,7 +191,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=ZLNALLDL
+DocumentUniqueId=RTDPYVXD
 
 [Configuration1]
 Name=Sources
