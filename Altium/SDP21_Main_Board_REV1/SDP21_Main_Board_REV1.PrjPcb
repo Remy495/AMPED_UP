@@ -193,6 +193,10 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=RTDPYVXD
 
+[GeneratedDocument1]
+DocumentPath=Project Outputs for SDP21_Main_Board_REV1\Design Rule Check - Main_Board_PCB.html
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
