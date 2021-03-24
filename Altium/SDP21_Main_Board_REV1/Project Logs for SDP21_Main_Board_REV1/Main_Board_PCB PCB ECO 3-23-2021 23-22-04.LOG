@@ -1,0 +1,4 @@
+Change Component Designator: OldDesignator=U? NewDesignator=U6
+Added Room: Name=Main_Board_ESP32
+Added Room: Name=Main_Board_Guitar_Buffer
+Added Room: Name=Main_Board_Teensy
