@@ -11,6 +11,6 @@ ProjectPath=Guitar_Input_Stage\SDP21_Guitar_Input_Stage.PrjPcb
 [Project5]
 ProjectPath=SDP21_Daughter_Board_REV1\SDP21_Daughter_Board_REV1.PrjPcb
 [Project6]
-ProjectPath=SDP21_Main_Board_REV1\SDP21_Main_Board_REV1.PrjPcb
-[Project7]
 ProjectPath=Mechanical System\Mechanical System.PrjPcb
+[Project7]
+ProjectPath=SDP21_Main_Board_REV1\SDP21_Main_Board_REV1.PrjPcb
