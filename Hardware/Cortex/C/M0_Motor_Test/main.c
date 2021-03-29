@@ -12,12 +12,12 @@
 #define CFG5 PA19
 #define CFG6 PA16
 #define SPI_MODE PA17
-#define TEST PA06
+#define TEST PA25
 uint8_t current;
 uint8_t previous;
 const uint8_t required[9][5] ={{0xEC,0x01,0x01,0x00,0xC2},{0x90,0x00,0x06,0x1F,0x0A},{0x91,0x00,0x00,0x00,0x0A},{0x80,0x00,0x00,0x00,0x03},{0x93,0x00,0x00,0x00,0x00}};//Desired Register Settings For Trinamic Driver
 const int target = 0;
-const int delay=2000;
+const int delay=100;
 const int threshold = 200;
 long count = 0;
 bool is_stepping=true;
@@ -40,8 +40,8 @@ int main(void)
 	struct io_descriptor *io;
 	spi_m_sync_get_io_descriptor(&SPI_0, &io);
 	previous = gpio_get_pin_level(IFA)*2 + gpio_get_pin_level(IFB);//encoder stuff
-	//standalone();
-	spi_setup();
+	standalone();
+	//spi_setup();
 	gpio_set_pin_direction(TEST, GPIO_DIRECTION_OUT);
 	gpio_set_pin_level(TEST,true);
 	//main loop
@@ -74,13 +74,13 @@ void spi_setup(){//by driving SPI_MODE High, we enable SPI control to give it re
 }
 void standalone(){//By pulling SPI_MODE low, we dictate that the only thing the trinamic driver works is with the step/dir
 	gpio_set_pin_level(SPI_MODE,false);
-	gpio_set_pin_direction(CFG0,GPIO_DIRECTION_IN);
+	gpio_set_pin_direction(CFG0,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG1,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG2,GPIO_DIRECTION_OUT);
 	gpio_set_pin_direction(CFG3,GPIO_DIRECTION_OUT);
 	gpio_set_pin_level(CFG0,false);
-	gpio_set_pin_level(CFG1,false);
-	gpio_set_pin_level(CFG2,false);
+	gpio_set_pin_level(CFG1,true);
+	gpio_set_pin_level(CFG2,true);
 	gpio_set_pin_level(CFG3,true);
 	gpio_set_pin_level(CFG4,false);
 	gpio_set_pin_level(CFG5,true);
