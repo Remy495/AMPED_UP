@@ -145,9 +145,7 @@ void writePin(struct pin* Pin, bool val){
 	}
 }
 bool readPin(struct pin* Pin){
-	if(Pin->_pin_mode == INPUT){
-		return true;
-	}
-	else{return false;}
+	unsigned long result = PORT->Group[Pin->_port].IN.reg;
+	return result & Pin->bitmask;
 }
 #endif /* INCFILE1_H_ */
