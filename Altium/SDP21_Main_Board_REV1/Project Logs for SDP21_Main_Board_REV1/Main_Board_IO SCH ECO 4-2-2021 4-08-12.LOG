@@ -1,0 +1,186 @@
+Removed Parameter Manufacturer:Susumu from Part R3
+Removed Parameter Manufacturer:Susumu from Part R4
+Removed Parameter Manufacturer:Susumu from Part R5
+Removed Parameter Manufacturer:Susumu from Part R9
+Removed Parameter Manufacturer:Susumu from Part R10
+Removed Parameter Manufacturer:Susumu from Part R11
+Removed Parameter Part Number:RR1220P-331-D from Part R3
+Removed Parameter Part Number:RR1220P-331-D from Part R4
+Removed Parameter Part Number:RR1220P-331-D from Part R5
+Removed Parameter Part Number:RR1220P-331-D from Part R9
+Removed Parameter Part Number:RR1220P-331-D from Part R10
+Removed Parameter Part Number:RR1220P-331-D from Part R11
+Added Parameter Case/Package=0805 to Part R3
+Added Parameter Case/Package=0805 to Part R4
+Added Parameter Case/Package=0805 to Part R5
+Added Parameter Case/Package=0805 to Part R9
+Added Parameter Case/Package=0805 to Part R10
+Added Parameter Case/Package=0805 to Part R11
+Added Parameter Case Code (Imperial)=0805 to Part R3
+Added Parameter Case Code (Imperial)=0805 to Part R4
+Added Parameter Case Code (Imperial)=0805 to Part R5
+Added Parameter Case Code (Imperial)=0805 to Part R9
+Added Parameter Case Code (Imperial)=0805 to Part R10
+Added Parameter Case Code (Imperial)=0805 to Part R11
+Added Parameter Case Code (Metric)=2012 to Part R3
+Added Parameter Case Code (Metric)=2012 to Part R4
+Added Parameter Case Code (Metric)=2012 to Part R5
+Added Parameter Case Code (Metric)=2012 to Part R9
+Added Parameter Case Code (Metric)=2012 to Part R10
+Added Parameter Case Code (Metric)=2012 to Part R11
+Added Parameter Depth=1.25mm to Part R3
+Added Parameter Depth=1.25mm to Part R4
+Added Parameter Depth=1.25mm to Part R5
+Added Parameter Depth=1.25mm to Part R9
+Added Parameter Depth=1.25mm to Part R10
+Added Parameter Depth=1.25mm to Part R11
+Added Parameter Height=0.4mm to Part R3
+Added Parameter Height=0.4mm to Part R4
+Added Parameter Height=0.4mm to Part R5
+Added Parameter Height=0.4mm to Part R9
+Added Parameter Height=0.4mm to Part R10
+Added Parameter Height=0.4mm to Part R11
+Added Parameter Lead Free=Lead Free to Part R3
+Added Parameter Lead Free=Lead Free to Part R4
+Added Parameter Lead Free=Lead Free to Part R5
+Added Parameter Lead Free=Lead Free to Part R9
+Added Parameter Lead Free=Lead Free to Part R10
+Added Parameter Lead Free=Lead Free to Part R11
+Added Parameter Length=2mm to Part R3
+Added Parameter Length=2mm to Part R4
+Added Parameter Length=2mm to Part R5
+Added Parameter Length=2mm to Part R9
+Added Parameter Length=2mm to Part R10
+Added Parameter Length=2mm to Part R11
+Added Parameter Max Operating Temperature=125°C to Part R3
+Added Parameter Max Operating Temperature=125°C to Part R4
+Added Parameter Max Operating Temperature=125°C to Part R5
+Added Parameter Max Operating Temperature=125°C to Part R9
+Added Parameter Max Operating Temperature=125°C to Part R10
+Added Parameter Max Operating Temperature=125°C to Part R11
+Added Parameter Max Power Dissipation=100mW to Part R3
+Added Parameter Max Power Dissipation=100mW to Part R4
+Added Parameter Max Power Dissipation=100mW to Part R5
+Added Parameter Max Power Dissipation=100mW to Part R9
+Added Parameter Max Power Dissipation=100mW to Part R10
+Added Parameter Max Power Dissipation=100mW to Part R11
+Added Parameter Min Operating Temperature=-55°C to Part R3
+Added Parameter Min Operating Temperature=-55°C to Part R4
+Added Parameter Min Operating Temperature=-55°C to Part R5
+Added Parameter Min Operating Temperature=-55°C to Part R9
+Added Parameter Min Operating Temperature=-55°C to Part R10
+Added Parameter Min Operating Temperature=-55°C to Part R11
+Added Parameter Number of Terminations=2 to Part R3
+Added Parameter Number of Terminations=2 to Part R4
+Added Parameter Number of Terminations=2 to Part R5
+Added Parameter Number of Terminations=2 to Part R9
+Added Parameter Number of Terminations=2 to Part R10
+Added Parameter Number of Terminations=2 to Part R11
+Added Parameter Package Quantity=1 to Part R3
+Added Parameter Package Quantity=1 to Part R4
+Added Parameter Package Quantity=1 to Part R5
+Added Parameter Package Quantity=1 to Part R9
+Added Parameter Package Quantity=1 to Part R10
+Added Parameter Package Quantity=1 to Part R11
+Added Parameter Packaging=Tape and Reel to Part R3
+Added Parameter Packaging=Tape and Reel to Part R4
+Added Parameter Packaging=Tape and Reel to Part R5
+Added Parameter Packaging=Tape and Reel to Part R9
+Added Parameter Packaging=Tape and Reel to Part R10
+Added Parameter Packaging=Tape and Reel to Part R11
+Added Parameter Power Rating=100mW to Part R3
+Added Parameter Power Rating=100mW to Part R4
+Added Parameter Power Rating=100mW to Part R5
+Added Parameter Power Rating=100mW to Part R9
+Added Parameter Power Rating=100mW to Part R10
+Added Parameter Power Rating=100mW to Part R11
+Added Parameter Resistance=330R to Part R3
+Added Parameter Resistance=330R to Part R4
+Added Parameter Resistance=330R to Part R5
+Added Parameter Resistance=330R to Part R9
+Added Parameter Resistance=330R to Part R10
+Added Parameter Resistance=330R to Part R11
+Added Parameter Resistance Tolerance=0.5% to Part R3
+Added Parameter Resistance Tolerance=0.5% to Part R4
+Added Parameter Resistance Tolerance=0.5% to Part R5
+Added Parameter Resistance Tolerance=0.5% to Part R9
+Added Parameter Resistance Tolerance=0.5% to Part R10
+Added Parameter Resistance Tolerance=0.5% to Part R11
+Added Parameter Resistor Type=Thin Film to Part R3
+Added Parameter Resistor Type=Thin Film to Part R4
+Added Parameter Resistor Type=Thin Film to Part R5
+Added Parameter Resistor Type=Thin Film to Part R9
+Added Parameter Resistor Type=Thin Film to Part R10
+Added Parameter Resistor Type=Thin Film to Part R11
+Added Parameter RoHS Compliant=Yes to Part R3
+Added Parameter RoHS Compliant=Yes to Part R4
+Added Parameter RoHS Compliant=Yes to Part R5
+Added Parameter RoHS Compliant=Yes to Part R9
+Added Parameter RoHS Compliant=Yes to Part R10
+Added Parameter RoHS Compliant=Yes to Part R11
+Added Parameter Series=RR to Part R3
+Added Parameter Series=RR to Part R4
+Added Parameter Series=RR to Part R5
+Added Parameter Series=RR to Part R9
+Added Parameter Series=RR to Part R10
+Added Parameter Series=RR to Part R11
+Added Parameter Size Code=0805 to Part R3
+Added Parameter Size Code=0805 to Part R4
+Added Parameter Size Code=0805 to Part R5
+Added Parameter Size Code=0805 to Part R9
+Added Parameter Size Code=0805 to Part R10
+Added Parameter Size Code=0805 to Part R11
+Added Parameter Technology=THIN FILM to Part R3
+Added Parameter Technology=THIN FILM to Part R4
+Added Parameter Technology=THIN FILM to Part R5
+Added Parameter Technology=THIN FILM to Part R9
+Added Parameter Technology=THIN FILM to Part R10
+Added Parameter Technology=THIN FILM to Part R11
+Added Parameter Temperature Coefficient=25ppm/°C to Part R3
+Added Parameter Temperature Coefficient=25ppm/°C to Part R4
+Added Parameter Temperature Coefficient=25ppm/°C to Part R5
+Added Parameter Temperature Coefficient=25ppm/°C to Part R9
+Added Parameter Temperature Coefficient=25ppm/°C to Part R10
+Added Parameter Temperature Coefficient=25ppm/°C to Part R11
+Added Parameter Termination=SMD/SMT to Part R3
+Added Parameter Termination=SMD/SMT to Part R4
+Added Parameter Termination=SMD/SMT to Part R5
+Added Parameter Termination=SMD/SMT to Part R9
+Added Parameter Termination=SMD/SMT to Part R10
+Added Parameter Termination=SMD/SMT to Part R11
+Added Parameter Tolerance=0.5% to Part R3
+Added Parameter Tolerance=0.5% to Part R4
+Added Parameter Tolerance=0.5% to Part R5
+Added Parameter Tolerance=0.5% to Part R9
+Added Parameter Tolerance=0.5% to Part R10
+Added Parameter Tolerance=0.5% to Part R11
+Added Parameter Voltage Rating (DC)=100V to Part R3
+Added Parameter Voltage Rating (DC)=100V to Part R4
+Added Parameter Voltage Rating (DC)=100V to Part R5
+Added Parameter Voltage Rating (DC)=100V to Part R9
+Added Parameter Voltage Rating (DC)=100V to Part R10
+Added Parameter Voltage Rating (DC)=100V to Part R11
+Added Parameter Voltage Rating=100V to Part R3
+Added Parameter Voltage Rating=100V to Part R4
+Added Parameter Voltage Rating=100V to Part R5
+Added Parameter Voltage Rating=100V to Part R9
+Added Parameter Voltage Rating=100V to Part R10
+Added Parameter Voltage Rating=100V to Part R11
+Added Parameter Weight=0.000194oz to Part R3
+Added Parameter Weight=0.000194oz to Part R4
+Added Parameter Weight=0.000194oz to Part R5
+Added Parameter Weight=0.000194oz to Part R9
+Added Parameter Weight=0.000194oz to Part R10
+Added Parameter Weight=0.000194oz to Part R11
+Added Parameter Width=1.25mm to Part R3
+Added Parameter Width=1.25mm to Part R4
+Added Parameter Width=1.25mm to Part R5
+Added Parameter Width=1.25mm to Part R9
+Added Parameter Width=1.25mm to Part R10
+Added Parameter Width=1.25mm to Part R11
+Update Managed Component R3 From CMP-2001-03378-2[750] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
+Update Managed Component R4 From CMP-2001-03378-2[750] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
+Update Managed Component R5 From CMP-2001-03378-2[750] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
+Update Managed Component R9 From CMP-2001-03378-2[RR1220P-331-D] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
+Update Managed Component R10 From CMP-2001-03378-2[RR1220P-331-D] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
+Update Managed Component R11 From CMP-2001-03378-2[RR1220P-331-D] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_IO.SchDoc
