@@ -2,20 +2,23 @@
 
 
 #include "I2cMessager.h"
+#include "KnobMessage.hxx"
+#include "ConstantsCommon.hpp"
 
-uint32_t messageValue{};
 	
 int main(void)
 {
-	auto& messager = I2cMessager<SercomHandle::SERCOM_3, uint32_t>::getInstance();
-	messager.begin(8, false);
-	messager.setReply(messageValue);
+	auto& messager = I2cMessager<SercomHandle::SERCOM_3, AmpedUp::KnobMessage>::getInstance();
+	messager.begin(AmpedUp::Constants::DAUGHTER_BOARD_BASE_ADDRESS, false);
 
 	while(1)
 	{
 		if (messager.hasReceivedMessage())
 		{
-			uint32_t receivedMessage = messager.takeReceivedMessage();
+			AmpedUp::KnobMessage receivedMessage = messager.takeReceivedMessage();
+			float receivedKnobPosition = receivedMessage.getValue();
+
+			AmpedUp::KnobMessage outgoingMessage(AmpedUp::KnobMessageType::CURRENT_KNOB_POSITION, receivedKnobPosition);
 			messager.setReply(receivedMessage);
 		}
 

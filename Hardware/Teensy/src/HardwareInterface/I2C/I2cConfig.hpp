@@ -25,6 +25,10 @@ using I2cPinGroup = PinConfigGroup<I2C_PIN_COUNT>;
 
 constexpr PadDriverConfiguration I2C_PAD_CONFIG(true, InputPullupMode::PULL_UP_22K, OutputImpedance::DRIVE_37_OHMS, DriveSpeed::MEDIUM_100MHZ, SlewRate::SLOW, true);
 
+//////////////////////////////////////////////////////////////////////////////////
+///
+/// @brief Consolidates the configuration constants and registers of each I2C unit
+///
 template<I2cHandle HANDLE>
 struct I2cConfig;
 
