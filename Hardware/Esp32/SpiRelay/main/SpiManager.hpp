@@ -5,21 +5,12 @@
 
 #include "driver/gpio.h"
 
-#include "RemoteMessage.hpp"
 
 namespace AmpedUp
 {
     class SpiManager
     {
     public:
-        
-        static RemoteMessage& beginOutgoingMessage();
-
-        static RemoteMessage& getOutgoingMessage();
-
-        static void finishOutgoingMessage();
-
-        static void cancelOutgoingMessage();
 
         static bool isInitialized();
 
@@ -27,19 +18,18 @@ namespace AmpedUp
 
         static void setHandshakePin(uint32_t level);
 
+        static void notifyNewConnection();
+
+        static void notifyNewDisconnection();
+
     private:
+
+        static inline bool newConnectionWasMade_{};
+
+        static inline bool connectionWasJustLost_{};
 
         static inline bool isInitialized_{false};
         static inline gpio_num_t handshakePin_{};
-
-        struct transmissionAttributes_t
-        {
-            uint32_t size_;
-            uint8_t* dataPtr_;
-        };
-
-        static transmissionAttributes_t getTransmissionAttributes(RemoteMessage& spiMessage, bool sendHeader);
-
     };
 }
 

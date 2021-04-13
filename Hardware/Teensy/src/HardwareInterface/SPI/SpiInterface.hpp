@@ -100,6 +100,7 @@ namespace AmpedUp
         };
 
         static constexpr uint8_t FIFO_SIZE = 16;
+        // Byteswap flag is needed because for some reason the Teensy puts each word onto the wire in little endian order by default?
         static constexpr uint32_t IDLE_BUS_CONFIGURATION = LPSPI_TCR_FRAMESZ(31) | LPSPI_TCR_BYSW;
         static constexpr uint32_t RUNNING_BUS_CONFIGURATION = IDLE_BUS_CONFIGURATION | LPSPI_TCR_CONT;
 

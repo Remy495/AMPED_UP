@@ -47,14 +47,15 @@
 #include "BluetoothManager.hpp"
 #include "SpiManager.hpp"
 
-#include <cstdio>
-#include <stddef.h>
+#include "CircularQueue.hpp"
 
-extern int btstack_main(int argc, const char * argv[]);
+#include <cstdio>
+#include <iostream>
+#include <stddef.h>
 
 void runSpiManager(void*)
 {
-    if (!AmpedUp::SpiManager::run(GPIO_NUM_23, GPIO_NUM_19, GPIO_NUM_18, GPIO_NUM_22, GPIO_NUM_2))
+    if (!AmpedUp::SpiManager::run(GPIO_NUM_23, GPIO_NUM_19, GPIO_NUM_18, GPIO_NUM_22, GPIO_NUM_33))
     {
         printf("Error occured in SPI manager\n");
     }
@@ -64,22 +65,11 @@ TaskHandle_t spiTaskHandle = 0;
 
 extern "C" int app_main(void){
 
+
     // Start SPI manager
     xTaskCreate(runSpiManager, "SpiManagerTask", 10240, nullptr, tskIDLE_PRIORITY, &spiTaskHandle);
     // Start Bluetooth manager
     AmpedUp::BluetoothManager::run();
-
-    // // optional: enable packet logger
-    // // hci_dump_open(NULL, HCI_DUMP_STDOUT);
-
-    // // Configure BTstack for ESP32 VHCI Controller
-    // btstack_init();
-
-    // // Setup example
-    // btstack_main(0, NULL);
-
-    // // Enter run loop (forever)
-    // btstack_run_loop_execute();
 
     return 0;
 }

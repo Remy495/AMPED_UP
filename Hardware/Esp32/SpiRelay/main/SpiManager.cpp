@@ -6,13 +6,21 @@
 
 #include "SpiManager.hpp"
 #include "BluetoothManager.hpp"
-#include "RemoteMessageQueue.hpp"
+#include "RemoteMessageHeader.hpp"
 #include "BinaryUtil.hxx"
+#include "TypedBuffer.h"
+
 
 namespace
 {
 
-    DMA_ATTR AmpedUp::RemoteMessageQueue<10> outgoingSpiMessages{};
+    DMA_ATTR uint8_t incomingMessagePayload[AmpedUp::Constants::REMOTE_MESSAGE_MTU];
+    DMA_ATTR uint8_t outgoingMessagePayload[AmpedUp::Constants::REMOTE_MESSAGE_MTU];
+
+    DMA_ATTR WordAlignedTypedBuffer<AmpedUp::RemoteMessageHeader> incomingMessageHeader;
+    DMA_ATTR WordAlignedTypedBuffer<AmpedUp::RemoteMessageHeader> outgoingMessageHeader;
+
+    uint32_t outgoingMessageBytesSent_{};
 
     void transactionReadyCallback(spi_slave_transaction_t*)
     {
@@ -25,26 +33,6 @@ namespace
     }
 }
 
-AmpedUp::RemoteMessage& AmpedUp::SpiManager::beginOutgoingMessage()
-{
-    return outgoingSpiMessages.stageEnqueue();
-}
-
-AmpedUp::RemoteMessage& AmpedUp::SpiManager::getOutgoingMessage()
-{
-    return outgoingSpiMessages.getStagedMessage();
-}
-
-void AmpedUp::SpiManager::finishOutgoingMessage()
-{
-    outgoingSpiMessages.commitStagedEnqueue();
-}
-
-void AmpedUp::SpiManager::cancelOutgoingMessage()
-{
-    outgoingSpiMessages.cancelStagedEnqueue();
-}
-
 bool AmpedUp::SpiManager::isInitialized()
 {
     return isInitialized_;
@@ -54,13 +42,6 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
 {
 
     bool status = true;
-
-    // Initialize the outgoing message queue
-    if (!outgoingSpiMessages.initialize())
-    {
-        printf("Failed to initialize outgoing SPI message queue\n");
-        status = false;
-    }
 
     // Configure the SPI peripheral
     if (status)
@@ -106,18 +87,19 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
         gpio_config(&handshakePinConfig);
     }
 
+    incomingMessageHeader = RemoteMessageHeader();
+    outgoingMessageHeader = RemoteMessageHeader();
 
+    // Initialization complete
     if (status)
     {
         isInitialized_ = true;
     }
 
-
     // Wait until Bluetooth manager is initialized before starting main loop
     while (!BluetoothManager::isInitialized());
 
-    bool outgoingMessageSendHeader = true;
-    bool incomingMessageReceiveHeader = true;
+    bool sendHeader = true;
 
     while (true)
     {
@@ -127,102 +109,165 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
             break;
         }
 
-        // If there is nothing to send, send a "nothing to report" message
-        RemoteMessage& fillerMessage = outgoingSpiMessages.stageEnqueue();
-        if (outgoingSpiMessages.isEmpty())
+        // Prepare an SPI transaction to send the data to be sent and receive the data to be received
+        spi_slave_transaction_t currentTransaction{};
+
+        if (sendHeader)
         {
-            fillerMessage.setHeader(RemoteMessageHeader(RemoteMessageType::NOTHING_TO_REPORT));
-            outgoingSpiMessages.commitStagedEnqueue();
+            // Prepare outgoing message header
+            
+            RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
+            outgoingHeader.clearFlags();
+
+            if (outgoingMessageBytesSent_ == 0)
+            {
+                // Begin the new message
+                outgoingHeader.setTotalPayloadSize(BluetoothManager::getIncomingMessageSize());
+                if (outgoingHeader.getTotalPayloadSize() > 0)
+                {
+                    outgoingHeader.setFlag(RemoteMessageFlag::FIRST_FRAGMENT);
+                }
+            }
+
+            // Determine the appropriate size for this fragment
+            RemoteMessageSize_t fragmentSize = BluetoothManager::getIncomingMessageAvailableSize();
+            fragmentSize = std::min(fragmentSize, Constants::REMOTE_MESSAGE_MTU);
+            fragmentSize = std::min(fragmentSize, outgoingHeader.getTotalPayloadSize());
+
+            outgoingHeader.setFragmentPayloadSize(fragmentSize);
+
+            // Set the "last fragment" flag if this message will finish sending the payload
+            if (outgoingHeader.hasPayload() && outgoingMessageBytesSent_ + fragmentSize >= outgoingHeader.getTotalPayloadSize())
+            {
+                outgoingHeader.setFlag(RemoteMessageFlag::LAST_FRAGMENT);
+            }
+
+            // Set the "ready to recieve" flag if the Bluetooth manager is ready to send a message
+            if (BluetoothManager::readyToSend())
+            {
+                outgoingHeader.setFlag(RemoteMessageFlag::READY_TO_RECIEVE);
+            }
+
+            // Set the "remote connected" flag if this is the first message since a new remote connected
+            if (newConnectionWasMade_)
+            {
+                outgoingHeader.setFlag(RemoteMessageFlag::REMOTE_CONNECTED);
+                newConnectionWasMade_ = false;
+            }
+
+            // Set the "remote disconnected" flag if this is the first message since the previously connected remote disconnected
+            if (connectionWasJustLost_)
+            {
+                outgoingHeader.setFlag(RemoteMessageFlag::REMOTE_DISCONNECTED);
+                connectionWasJustLost_ = false;
+            }
+
+            std::cout << "outgoing header: " << outgoingHeader << std::endl;
+
+            // Make sure the header that already exists in the incoming buffer is invalidated to ensure we don't mistake an interrupted transfer as successful
+            RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
+            incomingHeader.invalidate();
+
+            // Set the SPI transaction to send / receive the message headers
+            currentTransaction.length = BinaryUtil::bytesToBits(incomingMessageHeader.getSize());
+            currentTransaction.tx_buffer = outgoingMessageHeader.getData();
+            currentTransaction.rx_buffer = incomingMessageHeader.getData();
         }
         else
         {
-            outgoingSpiMessages.cancelStagedEnqueue();
+
+            // Prepare outgoing data and determine the size of the SPI transaction needed to transfer incoming / outoging data
+            RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
+            RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
+
+            RemoteMessageSize_t transactionSize = 0;
+
+            if (outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            {
+                transactionSize = outgoingHeader.getFragmentPayloadSize();
+                BluetoothManager::recieveIncomingMessage(outgoingMessagePayload, outgoingHeader.getFragmentPayloadSize());
+                outgoingMessageBytesSent_ += outgoingHeader.getFragmentPayloadSize();
+
+                if (outgoingMessageBytesSent_ >= outgoingHeader.getTotalPayloadSize())
+                {
+                    // If this transfer completes the message, the next payload should be the beginning of the next message
+                    outgoingMessageBytesSent_ = 0;
+                }
+            }
+
+            if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            {
+                transactionSize = std::max(transactionSize, incomingHeader.getFragmentPayloadSize());
+            }
+
+            // Set the SPI transaction to send / recieve the message payloads
+            currentTransaction.length = BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize));
+            currentTransaction.tx_buffer = outgoingMessagePayload;
+            currentTransaction.rx_buffer = incomingMessagePayload;
         }
-
-
-        // Get the size of the outgoing message and a pointer to the next data to transmit (either the header or the payload)
-        RemoteMessage& outgoingMessage = outgoingSpiMessages.peekFront();
-        auto [outgoingMessageSize, outgoingMessageDataPtr] = getTransmissionAttributes(outgoingMessage, outgoingMessageSendHeader);
-
-
-        // Get the size of the incoming message and a pointer to the next data to received. (either the header or the payload)
-        // Using stage enqueue because the resulting message is not ready to be dequeued.
-        // If we are receiving the header than start a new message, if we are receiving the payload than continue with the message in progress
-        RemoteMessage& incomingMessage = incomingMessageReceiveHeader ? BluetoothManager::beginOutgoingMessage() : BluetoothManager::getOutgoingMessage();
-        auto [incomingMessageSize, incomingMessageDataPtr] = getTransmissionAttributes(incomingMessage, incomingMessageReceiveHeader);
-
-        uint32_t transactionSize = std::max(outgoingMessageSize, incomingMessageSize);
-
-        // Prepare an SPI transaction to send the data to be sent and receive the data to be received
-        spi_slave_transaction_t currentTransaction{};
-        // Note that the transaction size is specified in bits and must be a while number of words
-        currentTransaction.length = BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize));
-        currentTransaction.tx_buffer = outgoingMessageDataPtr;
-        currentTransaction.rx_buffer = incomingMessageDataPtr;
-
 
         // Execute the SPI transaction
         spi_slave_transmit(HSPI_HOST, &currentTransaction, portMAX_DELAY);
 
-
-        // Transaction complete. Finalize it and prepare the next transaction
-
-        // If a message header was just sent and the message has a payload, send the payload next. Otherwise send the next message's header.
-        if (outgoingMessageSendHeader && outgoingMessage.getHeader().hasPayload())
+        if (sendHeader)
         {
-            outgoingMessageSendHeader = false;
+
+            // Determine whether the next transaction should be a header or a payload based on the headers that were transfered
+            RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
+            RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
+
+            std::cout << "incoming header: " << incomingHeader << std::endl;
+
+            // Payload should be transfered if at least one side has a payload to send and at least the other side is ready to recieve it
+            // If the recieved header is not valid then there probably wasn't a real transaction, just noise on the line, so ignore it and transfer another header
+            if (((outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE)) ||
+                 (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))) &&
+                 incomingHeader.isValid())
+            {
+                sendHeader = false;
+            }
+
         }
         else
         {
-            outgoingSpiMessages.dequeue();
-            outgoingMessageSendHeader = true;
+            // Process the data that was just recieved and pass it along to the bluetooth manager
+            RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
+            RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
 
-            // Alert the bluetooth manager that a message it received has finished being processed
-            BluetoothManager::messageProcessingFinished();
-        }
+            if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            {
+                std::cout << "Recieved payload (" << incomingHeader.getTotalPayloadSize() << " byte message, " << incomingHeader.getFragmentPayloadSize() << " byte fragment)" << std::endl;
 
-        // If we just received the payload, pass it along to the bluetooth manager. If we just received the header and
-        // it is valid an has a payload, receive the payload. Otherwise discard it and receive the next message header
-        if (incomingMessageReceiveHeader)
-        {
-            if (incomingMessage.headerIsValid() && incomingMessage.getHeader().hasPayload())
-            {
-                incomingMessageReceiveHeader = false;
+                if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
+                {
+                    BluetoothManager::sendNewMessage(incomingMessagePayload, incomingHeader.getTotalPayloadSize(), incomingHeader.getFragmentPayloadSize());
+                }
+                else
+                {
+                    BluetoothManager::sendContinuingMessage(incomingMessagePayload, incomingHeader.getFragmentPayloadSize());
+                }
             }
-            else
-            {
-                BluetoothManager::cancelOutgoingMessage();
-                incomingMessageReceiveHeader = true;
-            }
-            
+
+            // Always transfer header after transfering payload
+            sendHeader = true;
         }
-        else
-        {
-            BluetoothManager::finishOutgoingMessage();
-            incomingMessageReceiveHeader = true;
-        }
+        
     }
 
     return status;
 }
 
+void AmpedUp::SpiManager::notifyNewConnection()
+{
+    newConnectionWasMade_ = true;
+}
+
+void AmpedUp::SpiManager::notifyNewDisconnection()
+{
+    connectionWasJustLost_ = true;
+}
+
 void AmpedUp::SpiManager::setHandshakePin(uint32_t level)
 {
     gpio_set_level(handshakePin_, level);
-}
-
-AmpedUp::SpiManager::transmissionAttributes_t AmpedUp::SpiManager::getTransmissionAttributes(RemoteMessage& spiMessage, bool sendHeader)
-{
-    transmissionAttributes_t retVal;
-    if (sendHeader)
-    {
-        retVal.size_ = sizeof(RemoteMessageHeader);
-        retVal.dataPtr_ = spiMessage.getHeaderData();
-    }
-    else
-    {
-        retVal.size_ = spiMessage.getHeader().getFragmentPayloadSize();
-        retVal.dataPtr_ = spiMessage.getPayloadData();
-    }
-    return retVal;
 }
