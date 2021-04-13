@@ -14,7 +14,9 @@ namespace AmpedUp
         HEARTBEAT_REPLY,
         SET_KNOB_POSITION,
         CURRENT_KNOB_POSITION,
-        DO_AUTO_CALIBRATION
+        DO_AUTO_CALIBRATION,
+        TURN_CLOCKWISE,
+        TURN_COUNTERCLOCKWISE
     };
 
 

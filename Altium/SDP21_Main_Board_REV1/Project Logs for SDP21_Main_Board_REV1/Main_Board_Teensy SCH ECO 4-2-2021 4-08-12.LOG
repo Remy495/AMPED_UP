@@ -1,0 +1,31 @@
+Removed Parameter Manufacturer:Susumu from Part R1
+Removed Parameter Part Number:RR1220P-331-D from Part R1
+Added Parameter Case/Package=0805 to Part R1
+Added Parameter Case Code (Imperial)=0805 to Part R1
+Added Parameter Case Code (Metric)=2012 to Part R1
+Added Parameter Depth=1.25mm to Part R1
+Added Parameter Height=0.4mm to Part R1
+Added Parameter Lead Free=Lead Free to Part R1
+Added Parameter Length=2mm to Part R1
+Added Parameter Max Operating Temperature=125°C to Part R1
+Added Parameter Max Power Dissipation=100mW to Part R1
+Added Parameter Min Operating Temperature=-55°C to Part R1
+Added Parameter Number of Terminations=2 to Part R1
+Added Parameter Package Quantity=1 to Part R1
+Added Parameter Packaging=Tape and Reel to Part R1
+Added Parameter Power Rating=100mW to Part R1
+Added Parameter Resistance=330R to Part R1
+Added Parameter Resistance Tolerance=0.5% to Part R1
+Added Parameter Resistor Type=Thin Film to Part R1
+Added Parameter RoHS Compliant=Yes to Part R1
+Added Parameter Series=RR to Part R1
+Added Parameter Size Code=0805 to Part R1
+Added Parameter Technology=THIN FILM to Part R1
+Added Parameter Temperature Coefficient=25ppm/°C to Part R1
+Added Parameter Termination=SMD/SMT to Part R1
+Added Parameter Tolerance=0.5% to Part R1
+Added Parameter Voltage Rating (DC)=100V to Part R1
+Added Parameter Voltage Rating=100V to Part R1
+Added Parameter Weight=0.000194oz to Part R1
+Added Parameter Width=1.25mm to Part R1
+Update Managed Component R1 From CMP-2001-03378-2[90] To CMP-2001-03378-2[RR1220P-331-D] in Main_Board_Teensy.SchDoc

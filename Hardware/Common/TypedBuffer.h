@@ -5,13 +5,16 @@
 #define TYPEDBUFFER_H_
 
 #include <new>
+#include <algorithm>
+
+#include "BinaryUtil.hxx"
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
 /// @brief Represents a binary buffer containing an instance of a particular type
 ///
-template<typename T>
-class TypedBuffer
+template<typename T, bool wordAlign>
+class TypedBuffer_t
 {
 	public:
 	
@@ -19,13 +22,13 @@ class TypedBuffer
 	///
 	/// @brief Create a zero-initialized typed binary buffer
 	///
-	constexpr TypedBuffer() = default;
+	constexpr TypedBuffer_t() = default;
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	///
 	/// @brief Copy constructor
 	///
-	constexpr TypedBuffer(const TypedBuffer<T>& other) : TypedBuffer(other.getInstance())
+	constexpr TypedBuffer_t(const TypedBuffer_t<T, wordAlign>& other) : TypedBuffer_t(other.getInstance())
 	{}
 	
 	//////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +37,7 @@ class TypedBuffer
 	/// 
 	/// @param[in] instance The instance to copy into the binary buffer
 	///
-	constexpr TypedBuffer(const T& instance)
+	constexpr TypedBuffer_t(const T& instance)
 	{
 		new(data_) T(instance);
 	}
@@ -43,13 +46,13 @@ class TypedBuffer
 	///
 	/// @brief Destructor
 	///
-	~TypedBuffer() = default;
+	~TypedBuffer_t() = default;
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	///
 	/// @brief Copy assignment operator
 	///
-	constexpr TypedBuffer& operator=(const TypedBuffer<T>& other)
+	constexpr TypedBuffer_t& operator=(const TypedBuffer_t<T, wordAlign>& other)
 	{
 		operator=(other.getInstance());
 	}
@@ -60,7 +63,7 @@ class TypedBuffer
 	///
 	/// @param[in] instance The instance to copy into the binary buffer
 	///
-	constexpr TypedBuffer& operator=(const T& instance)
+	constexpr TypedBuffer_t& operator=(const T& instance)
 	{
 		new(data_) T(instance);
 		return *this;
@@ -110,12 +113,23 @@ class TypedBuffer
 	///
 	constexpr uint32_t getSize() const
 	{
-		return sizeof(T);
+		return bufferSize;
 	}
 	
 	private:
-	alignas(T) uint8_t data_[sizeof(T)]{0};
+
+	static constexpr uint32_t bufferAlignment = wordAlign ? std::max(alignof(T), alignof(AmpedUp::BinaryUtil::word_t)) : alignof(T);
+	static constexpr uint32_t bufferSize = wordAlign ? AmpedUp::BinaryUtil::bytesFillWords(sizeof(T)) : sizeof(T);
+
+
+	alignas(bufferAlignment) uint8_t data_[bufferSize]{0};
 };
+
+template<typename T>
+using TypedBuffer = TypedBuffer_t<T, false>;
+
+template<typename T>
+using WordAlignedTypedBuffer = TypedBuffer_t<T, true>;
 
 
 #endif /* TYPEDBUFFER_H_ */
