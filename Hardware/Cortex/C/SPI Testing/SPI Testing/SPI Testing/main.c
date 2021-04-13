@@ -34,6 +34,7 @@ uint8_t previous=0;
 volatile int count=0;
 volatile int steps1;
 volatile int steps2;
+int8_t currentDirection;
 bool toggle=true;
 bool isStepping;
 bool isStalled=false;
@@ -98,18 +99,18 @@ void EIC_Handler(void){
 		uint8_t bit2 = (bool)(in & PA05.bitmask);
 		previous=current;
 		current=2*bit1+bit2;
-		int8_t currentDirection = QEM[previous*4+current];
-		/*if(currentDirection == 1 && direction && !isStalled){
+		currentDirection = QEM[previous*4+current];
+		if(currentDirection == -1 && direction && !isStalled){
 			isStalled=true;
-			direction=!direction;
-			//isStepping=false;
+			delay_us(200000);
+			currentDirection=0;
 		}
-		if(currentDirection == -1 && !direction && !isStalled){
+		if(currentDirection == 1 && !direction && !isStalled){
 			isStalled=true;
-			direction=!direction;
-			//isStepping=false;
-		}*/
-		count += currentDirection;
+			delay_us(200000);
+			currentDirection=0;
+		}
+		//count += currentDirection;
 		EIC->INTFLAG.reg |= EIC_INTFLAG_EXTINT4| EIC_INTFLAG_EXTINT5;
 	}
 }
@@ -126,6 +127,40 @@ void EIC_setup(void){
 	NVIC_EnableIRQ(EIC_IRQn);
 	__enable_irq();
 }
+void findEdges(void){
+	bool ready=false;
+	isStalled=false;
+	steps1=0;
+	steps2=0;
+	while(!ready){
+		steps1=0;
+		steps2=0;
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(15);
+			}
+		isStalled=false;
+		direction=!direction;
+		writePin(DIRPIN,direction);
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(15);
+			steps1++;
+		}
+		isStalled=false;
+		direction=!direction;
+		writePin(DIRPIN,direction);
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(15);
+			steps2++;
+		}
+		if(steps1==5497 && steps2==5497){ready=true;}
+	}
+}
 int main(void)
 {
 	changeClock();
@@ -133,48 +168,60 @@ int main(void)
 	EIC_setup();
 	initRTC();
 	standalone_mode();
+	//findEdges();
+	steps1=0;
+	steps2=0;
 	int counts=0;
-	int change = 4000;
+	int change = 5500;
 	count=0;
 	direction=false;
 	unsigned long input=0;
 	isStalled=false;
-	/*
-
-	isStepping=true;
-	direction = true;
-	steps1=0;
-	while(!isStalled){
-		writePin(STEP,toggle);
-		toggle = !toggle;
-		delay_us(15);
-		steps1++;
-	}
-	steps2=0;
-	delay_us(50);
-	isStalled=false;
-	isStepping=true;
-	direction=false;
-	while(!isStalled){
-		writePin(STEP,toggle);
-		toggle = !toggle;
-		delay_us(15);
-		steps2++;
-	}
-	*/
-	
 	while (1)
     {
-		//if(!isStalled){
-		writePin(STEP,toggle);
-		toggle = !toggle;
-		delay_us(15);
-		counts++;
+		if(isStalled){
+			direction=!direction;
+			writePin(DIRPIN,direction);
+			counts=0;
+			currentDirection=0;
+			steps1++;
+			isStalled=false;
+		}
+		if(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(15);
+			counts++;
+			
+			if(counts==5400){
+				direction=!direction;
+				writePin(DIRPIN,direction);
+				
+				currentDirection=0;
+				steps2++;
+				counts=0;
+			}
+		}
+		
+		/*
+		if(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(15);
+		/*counts++;
 		if(counts>=change){
 			direction=!direction;
 			writePin(DIRPIN,direction);
 			counts=0;
+			}
 		}
+		if(isStalled){
+			direction=!direction;
+			writePin(DIRPIN,direction);
+			currentDirection=0;
+			isStalled=false;
 		}
+		*/
 	}
+}
 
