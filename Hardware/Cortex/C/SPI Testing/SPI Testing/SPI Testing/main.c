@@ -6,13 +6,15 @@
  */ 
 
 
+#include "math.h"
 #include "sam.h"
 #include "Pins_Setup.h"
 #include "Timing.h"
 #include "TempSPI.h"
+
 //#include "SercomSetup.h"
 //#include "spi_control.h"
-#define LED &PA25
+#define INTER &PA25
 #define IFA &PA04
 #define IFB &PA05
 #define IFC &PA06
@@ -34,9 +36,13 @@ uint8_t previous=0;
 volatile int count=0;
 volatile int steps1;
 volatile int steps2;
+int8_t prev2;
+int8_t prevDirection;
 int8_t currentDirection;
+int16_t floorcount;
+int16_t prevcount;
 bool toggle=true;
-bool isStepping;
+bool dirchange=false;
 bool isStalled=false;
 bool direction;
 
@@ -99,18 +105,17 @@ void EIC_Handler(void){
 		uint8_t bit2 = (bool)(in & PA05.bitmask);
 		previous=current;
 		current=2*bit1+bit2;
+		prev2=prevDirection;
+		prevDirection=currentDirection;
 		currentDirection = QEM[previous*4+current];
-		if(currentDirection == -1 && direction && !isStalled){
+		if(prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
+			writePin(&PA25,true);
 			isStalled=true;
-			delay_us(200000);
-			currentDirection=0;
 		}
-		if(currentDirection == 1 && !direction && !isStalled){
+		if(prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
+			writePin(&PA25,true);
 			isStalled=true;
-			delay_us(200000);
-			currentDirection=0;
-		}
-		//count += currentDirection;
+		}		
 		EIC->INTFLAG.reg |= EIC_INTFLAG_EXTINT4| EIC_INTFLAG_EXTINT5;
 	}
 }
@@ -168,6 +173,8 @@ int main(void)
 	EIC_setup();
 	initRTC();
 	standalone_mode();
+	setPin(&PA25,OUTPUT,NORMAL,PULL_UP);
+	setPin(&PA22,OUTPUT,NORMAL,PULL_UP);
 	//findEdges();
 	steps1=0;
 	steps2=0;
@@ -183,45 +190,17 @@ int main(void)
 			direction=!direction;
 			writePin(DIRPIN,direction);
 			counts=0;
-			currentDirection=0;
-			steps1++;
+			writePin(&PA25,false);
+			writePin(&PA22,direction);
 			isStalled=false;
+
 		}
 		if(!isStalled){
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(15);
+			delay_us(8);
 			counts++;
-			
-			if(counts==5400){
-				direction=!direction;
-				writePin(DIRPIN,direction);
-				
-				currentDirection=0;
-				steps2++;
-				counts=0;
-			}
 		}
-		
-		/*
-		if(!isStalled){
-			writePin(STEP,toggle);
-			toggle = !toggle;
-			delay_us(15);
-		/*counts++;
-		if(counts>=change){
-			direction=!direction;
-			writePin(DIRPIN,direction);
-			counts=0;
-			}
-		}
-		if(isStalled){
-			direction=!direction;
-			writePin(DIRPIN,direction);
-			currentDirection=0;
-			isStalled=false;
-		}
-		*/
 	}
 }
 
