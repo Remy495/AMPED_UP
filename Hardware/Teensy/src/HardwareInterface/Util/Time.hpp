@@ -12,21 +12,46 @@ namespace AmpedUp
 
     public:
 
-        ///////////////////////////////////////////////////////
-        /// @brief Connect this node input to a node output value
-        ///
+        Time();
+
+        Time(uint64_t ticks);
+
+        ~Time();
+
+        double getSeconds();
+
+        double getMiliseconds() const;
+
+        double getMicroseconds() const;
+
+        uint64_t getTicks() const;
+
         static void initialize();
 
-        static double getSeconds();
+        static Time now();
 
-        static uint32_t overflowCount_;
+        static void delay(const Time& time);
+
+        static void waitUntil(const Time& time);
 
     private:
 
-        static uint64_t getTicks();
+        uint64_t ticks_{};
+
+        static uint32_t overflowCount_;
+
+        static uint64_t getCurrentTimeTicks();
 
         static void overflowInterupt();
     };
 }
+
+uint64_t operator""_m(long double minutes);
+
+uint64_t operator""_s(long double seconds);
+
+uint64_t operator""_ms(long double milis);
+
+uint64_t operator""_us(long double micros);
 
 #endif

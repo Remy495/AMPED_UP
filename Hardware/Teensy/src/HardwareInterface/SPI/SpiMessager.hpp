@@ -12,6 +12,8 @@
 #include "RemoteMessageHeader.hpp"
 #include "SpiPayloadQueue.hpp"
 
+#include "TextLogging.hxx"
+
 namespace AmpedUp
 {
 
@@ -235,13 +237,7 @@ private:
 
     // Current transaction status
     static inline volatile HardwareStatus hardwareStatus_{HardwareStatus::UNINITIALIZED};
-
-    static void printMessageHeader(const RemoteMessageHeader& header)
-    {
-        std::ostringstream outputStream;
-        outputStream << header;
-        Serial.println(outputStream.str().c_str());
-    }
+    static inline volatile bool keepIncomingMessage_{true};
 
     static void finishTransaction()
     {
@@ -251,13 +247,39 @@ private:
             RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
             RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
 
-            if (((outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE)) ||
-                 (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))) &&
-                 incomingHeader.isValid())
+            TextLogging::info(__FILE__, __LINE__, "recieved header: ", incomingHeader);
+
+            if (incomingHeader.isValid() && incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            {
+                sendHeader_ = false;
+
+                 // If this transaction is flagged as the first fragment but shouldn't be, discard the current message
+                 // in progress and start a new one
+                 if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT) && incomingPayloadBytesRecieved_ > 0)
+                 {
+                     incomingPayloadBytesRecieved_ = 0;
+                     TextLogging::warning(__FILE__, __LINE__, "New remote message started before ongoing message was terminated");
+                 }
+
+                 // Similarly, If this transaction should be the first fragment but isn't flaged as such, discard the message
+                 if (incomingPayloadBytesRecieved_ == 0)
+                 {
+                     keepIncomingMessage_ = true;
+                     if (!incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
+                     {
+                        keepIncomingMessage_ = false;
+                        TextLogging::warning(__FILE__, __LINE__, "Remote message was terminated but new message was not started as expected");
+                     }
+                 }
+            }
+
+            if (incomingHeader.isValid() && outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
             {
                 // Transfer payload if at least one side has a payload to send and at least the other side is ready to recieve it
                 sendHeader_ = false;
             }
+
+            TextLogging::info(__FILE__, __LINE__, "Sent header: ", outgoingHeader);
 
         }
         else
@@ -275,10 +297,22 @@ private:
             incomingPayloadBytesRecieved_ += currentTransaction_.getIncomingSize();
             RemoteMessageSize_t incomingPayloadSize = incomingMessagePayloads_.stageEnqueue().getUsedSize();
 
-            if (incomingPayloadBytesRecieved_ >= incomingPayloadSize)
+            RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
+            if (incomingPayloadBytesRecieved_ >= incomingPayloadSize || incomingHeader.hasFlag(RemoteMessageFlag::LAST_FRAGMENT))
             {
+                // At the end of the message we should have recieved the expected number of bytes and we should have the last fragment flag.
+                // If either condition is false, discard the message
+                if (incomingPayloadBytesRecieved_ < incomingPayloadSize || !incomingHeader.hasFlag(RemoteMessageFlag::LAST_FRAGMENT))
+                {
+                    keepIncomingMessage_ = false;
+                    TextLogging::warning(__FILE__, __LINE__, "Remote message was not terminated properly");
+                }
 
-                incomingMessagePayloads_.commitStagedEnqueue();
+                // Enqueue the recieved message if it should be kept, otherwise overwrite it next transfer
+                if (keepIncomingMessage_)
+                {
+                    incomingMessagePayloads_.commitStagedEnqueue();
+                }
                 incomingPayloadBytesRecieved_ = 0;
             }
 

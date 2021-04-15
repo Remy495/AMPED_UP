@@ -30,6 +30,8 @@
 #include "SpiMessager.hpp"
 #include "SpiInterface.hpp"
 
+#include "TextLogging.hxx"
+
 void externalInterruptHandler()
 {
     // Serial.println("Rising edge!");
@@ -39,7 +41,14 @@ void externalInterruptHandler()
 
 int main(int argc, char** argv) {
 
-    Serial.begin(9600);
+    AmpedUp::TextLogging::initialize();
+    AmpedUp::TextLogging::enableDebugVerbosity();
+    AmpedUp::TextLogging::enableInfoVerbosity();
+    AmpedUp::TextLogging::enableWarningVerbosity();
+    AmpedUp::TextLogging::enableCriticalVerbosity();
+    AmpedUp::TextLogging::enableFatalVerbosity();
+    
+
     AmpedUp::Time::initialize();
 
     // GPIO6_ICR1 = 0x2 << 6;
@@ -53,6 +62,7 @@ int main(int argc, char** argv) {
     AmpedUp::SpiMessager::begin();
 
 
+   
     while (1)
     {
         AmpedUp::SpiMessager::beginTransaction();
@@ -61,7 +71,7 @@ int main(int argc, char** argv) {
         if (AmpedUp::SpiMessager::hasRecievedMessage())
         {
             const auto& recievedPayload = AmpedUp::SpiMessager::peekRecievedMessage();
-
+ 
             Serial.print("recieved message ");
             Serial.print(recievedPayload.getUsedSize());
             Serial.print(" ");

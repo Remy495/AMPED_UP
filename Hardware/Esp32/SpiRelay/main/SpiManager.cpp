@@ -204,6 +204,8 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
             currentTransaction.length = BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize));
             currentTransaction.tx_buffer = outgoingMessagePayload;
             currentTransaction.rx_buffer = incomingMessagePayload;
+
+            std::cout << "Expected transaction size: " << BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize)) / 8 << std::endl;
         }
 
         // Execute the SPI transaction
@@ -237,6 +239,7 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
             if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
             {
                 std::cout << "Recieved payload (" << incomingHeader.getTotalPayloadSize() << " byte message, " << incomingHeader.getFragmentPayloadSize() << " byte fragment)" << std::endl;
+                std::cout << "Actual transaction size: " << currentTransaction.trans_len / 8 << std::endl;
 
                 if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
                 {
