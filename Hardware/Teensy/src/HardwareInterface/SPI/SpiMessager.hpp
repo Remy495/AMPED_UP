@@ -10,7 +10,7 @@
 #include "SpiTransaction.hpp"
 #include "TypedBuffer.h"
 #include "RemoteMessageHeader.hpp"
-#include "SpiPayloadQueue.hpp"
+#include "SpiMessageQueue.hpp"
 
 #include "TextLogging.hxx"
 
@@ -37,28 +37,45 @@ public:
         // Transfer complete, recieve data high water, transmit data low water
         LPSPI4_IER = LPSPI_IER_TCIE | LPSPI_IER_RDIE;
 
+        // Set up interrupt on handshake pin so a transaction is initiated whenever the ESP32 is ready for one
+        GPIO7_ICR1 = 0x2 << 22;
+        GPIO7_IMR = 1 << 11;
+
+        attachInterruptVector(IRQ_GPIO6789, SpiMessager::handshakeInterruptHandler);
+
         SpiInterface::setInterruptHandler(SpiMessager::interruptHandler);
         SpiInterface::enableInterrupts();
 
         hardwareStatus_ = HardwareStatus::IDLE;
+
+        // Enable handshake interrupts
+        NVIC_ENABLE_IRQ(IRQ_GPIO6789);
     }
 
-    static bool isReadyToSend()
+    static bool isReadyToSend(RemoteMessageSize_t size)
     {
-        return !outgoingMessagePayloads_.isFull() && !outgoingMessageInProgress_;
+        return !outgoingMessageInProgress_ && outgoingMessagePayloads_.canEnqueue(size);
     }
 
-    static SpiPayload& stageOutgoingMessage()
+    static SpiPayload stageOutgoingMessage(RemoteMessageSize_t size)
     {
-        SpiPayload& stagedPayload = outgoingMessagePayloads_.stageEnqueue();
-        stagedPayload.setUsedSize(0);
         outgoingMessageInProgress_ = true;
-        return stagedPayload;
+        return outgoingMessagePayloads_.stageEnqueue(size);
+    }
+
+    static SpiPayload getStagedOutgoingMessage()
+    {
+        return outgoingMessagePayloads_.getStagedMessage();
+    }
+
+    static SpiPayload resizeStagedOutgoingMessage(RemoteMessageSize_t newSize, RemoteMessageSize_t headUsed = 0, RemoteMessageSize_t tailUsed = 0)
+    {
+        return outgoingMessagePayloads_.resizeStagedMessage(newSize, headUsed, tailUsed);
     }
 
     static void sendStagedMessage()
     {
-        outgoingMessagePayloads_.commitStagedEnqueue();
+        outgoingMessagePayloads_.commitStagedMessage();
         outgoingMessageInProgress_ = false;
     }
 
@@ -69,10 +86,10 @@ public:
 
     static bool hasRecievedMessage()
     {
-        return !incomingMessagePayloads_.isEmpty();
+        return !incomingMessagePayloads_.empty();
     }
 
-    static const SpiPayload& peekRecievedMessage()
+    static SpiPayload peekRecievedMessage()
     {
         return incomingMessagePayloads_.peekFront();
     }
@@ -112,7 +129,7 @@ public:
                 RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
                 outgoingHeader.clearFlags();
 
-                if(outgoingMessagePayloads_.isEmpty())
+                if(outgoingMessagePayloads_.empty())
                 {
                     // No outgoing messages to send, thus header has no acompanying payload
                     outgoingHeader.setTotalPayloadSize(0);
@@ -122,7 +139,7 @@ public:
                 {
                     // Total size is the size of the next message to send, fragment size is either the amount of message that
                     // has yet to be sent or the maximum size of a fragmnet
-                    RemoteMessageSize_t totalOutgoingSize = outgoingMessagePayloads_.peekFront().getUsedSize();
+                    RemoteMessageSize_t totalOutgoingSize = outgoingMessagePayloads_.peekFront().getSize();
                     RemoteMessageSize_t remainingOutgoingSize = totalOutgoingSize - outgoingPayloadBytesSent_;
 
                     outgoingHeader.setTotalPayloadSize(totalOutgoingSize);
@@ -142,8 +159,9 @@ public:
                     }
                 }
 
-                // If the incoming payload queue is not full, we are ready to recieve a payload, so set the ready to recieve flag
-                if (!incomingMessagePayloads_.isFull())
+                // If the incoming payload queue has enough space for the largest possible message we could recieve, set the ready to recieve flag
+                // (or if we have already started the message and thus confirmed that there is enough room)
+                if (incomingPayloadBytesRecieved_ > 0 || incomingMessagePayloads_.canEnqueue(Constants::REMOTE_MESSAGE_MAX_SIZE))
                 {
                     outgoingHeader.setFlag(RemoteMessageFlag::READY_TO_RECIEVE);
                 }
@@ -158,15 +176,14 @@ public:
             else
             {
                 // This transfer will exchange message payloads
-
                 RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
                 RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
 
                 if (outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
                 {
                     // Set the appropriate section of the outgoing payload as the data to send
-                    SpiPayload& outgoingPayload = outgoingMessagePayloads_.peekFront();
-                    currentTransaction_.setOutgoingData(outgoingPayload.data() + outgoingPayloadBytesSent_, outgoingHeader.getFragmentPayloadSize());
+                    SpiPayload outgoingPayload = outgoingMessagePayloads_.peekFront();
+                    currentTransaction_.setOutgoingData(outgoingPayload.getData(outgoingPayloadBytesSent_), outgoingHeader.getFragmentPayloadSize());
                 }
                 else
                 {
@@ -176,10 +193,17 @@ public:
 
                 if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
                 {
-                    // Set the appropriate section of the incoming payload as the data to recieve
-                    SpiPayload& incomingPayload = incomingMessagePayloads_.stageEnqueue();
-                    incomingPayload.setUsedSize(incomingHeader.getTotalPayloadSize());
-                    currentTransaction_.setIncomingData(incomingPayload.data() + incomingPayloadBytesRecieved_, incomingHeader.getFragmentPayloadSize());
+                    // Ensure there is sufficient space in the staged incoming message and set the appropriate section of the incoming payload as the data to recieve
+                    SpiPayload incomingPayload;
+                    if (incomingPayloadBytesRecieved_ == 0)
+                    {
+                        incomingPayload = incomingMessagePayloads_.stageEnqueue(incomingHeader.getTotalPayloadSize());
+                    }
+                    else
+                    {
+                        incomingPayload = incomingMessagePayloads_.getStagedMessage();
+                    }
+                    currentTransaction_.setIncomingData(incomingPayload.getData(incomingPayloadBytesRecieved_), incomingHeader.getFragmentPayloadSize());
                 }
                 else
                 {
@@ -219,8 +243,8 @@ private:
 
     // Queues of incoming and outgoing message payloads
     // These large buffers should be kept out of TCM in order to leave room for more time-sensitive variables
-    static inline __attribute__ ((section(".dmabuffers"), used)) SpiPayloadQueue<2> outgoingMessagePayloads_{};
-    static inline __attribute__ ((section(".dmabuffers"), used)) SpiPayloadQueue<2> incomingMessagePayloads_{};
+    static inline __attribute__ ((section(".dmabuffers"), used)) SpiMessageQueue<3> outgoingMessagePayloads_{};
+    static inline __attribute__ ((section(".dmabuffers"), used)) SpiMessageQueue<2> incomingMessagePayloads_{};
 
     static inline SpiTransaction currentTransaction_{};
 
@@ -247,7 +271,16 @@ private:
             RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
             RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
 
-            TextLogging::info(__FILE__, __LINE__, "recieved header: ", incomingHeader);
+            TextLogging::debug(__FILE__, __LINE__, "recieved header: ", incomingHeader);
+
+            RemoteMessageHeader defaultHeader;
+            defaultHeader.setFlag(RemoteMessageFlag::READY_TO_RECIEVE);
+
+            if (incomingHeader.isValid() && outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            {
+                // Transfer payload if at least one side has a payload to send and at least the other side is ready to recieve it
+                sendHeader_ = false;
+            }
 
             if (incomingHeader.isValid() && incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
             {
@@ -273,29 +306,25 @@ private:
                  }
             }
 
-            if (incomingHeader.isValid() && outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
-            {
-                // Transfer payload if at least one side has a payload to send and at least the other side is ready to recieve it
-                sendHeader_ = false;
-            }
-
-            TextLogging::info(__FILE__, __LINE__, "Sent header: ", outgoingHeader);
+            TextLogging::debug(__FILE__, __LINE__, "Sent header: ", outgoingHeader);
 
         }
         else
         {
             // Update the sent byte count for the outgoing message and, if it has been completed, dequeue it
             outgoingPayloadBytesSent_ += currentTransaction_.getOutgoingSize();
-            RemoteMessageSize_t outgoingPayloadSize = outgoingMessagePayloads_.peekFront().getUsedSize();
-            if (outgoingPayloadBytesSent_ >= outgoingPayloadSize)
+            RemoteMessageSize_t outgoingPayloadSize = outgoingMessagePayloads_.peekFront().getSize();
+
+            RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
+            if (outgoingHeader.hasPayload() && outgoingPayloadBytesSent_ >= outgoingPayloadSize)
             {
                 outgoingMessagePayloads_.dequeue();
                 outgoingPayloadBytesSent_ = 0;
             }
 
-            // Update recieved byte count for the incoming message and, if it has been completed finish enqueuing it
+            // Update recieved byte count for the incoming message and, if it has been completed, finish enqueuing it
             incomingPayloadBytesRecieved_ += currentTransaction_.getIncomingSize();
-            RemoteMessageSize_t incomingPayloadSize = incomingMessagePayloads_.stageEnqueue().getUsedSize();
+            RemoteMessageSize_t incomingPayloadSize = incomingMessagePayloads_.getStagedMessage().getSize();
 
             RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
             if (incomingPayloadBytesRecieved_ >= incomingPayloadSize || incomingHeader.hasFlag(RemoteMessageFlag::LAST_FRAGMENT))
@@ -311,7 +340,7 @@ private:
                 // Enqueue the recieved message if it should be kept, otherwise overwrite it next transfer
                 if (keepIncomingMessage_)
                 {
-                    incomingMessagePayloads_.commitStagedEnqueue();
+                    incomingMessagePayloads_.commitStagedMessage();
                 }
                 incomingPayloadBytesRecieved_ = 0;
             }
@@ -372,6 +401,11 @@ private:
         }
     }
     
+    static void handshakeInterruptHandler()
+    {
+        beginTransaction();
+        GPIO7_ISR = 1 << 11;
+    }
 
 };
 

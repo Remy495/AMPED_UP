@@ -45,6 +45,16 @@ namespace AmpedUp
                 flagMasks_ = 0;
             }
 
+            constexpr bool operator==(const FlagGroup& other) const
+            {
+                return flagMasks_ == other.flagMasks_;
+            }
+
+            constexpr bool operator!=(const FlagGroup& other) const
+            {
+                return !operator==(other);
+            }
+
             uint8_t flagMasks_{};
 
         private:
@@ -127,6 +137,19 @@ namespace AmpedUp
             heartbeat_ = 0;
         }
 
+        constexpr bool operator==(const RemoteMessageHeader& other) const
+        {
+            return  totalPayloadSize_ == other.totalPayloadSize_ &&
+                    fragmentPayloadSize_ == other.fragmentPayloadSize_ &&
+                    flags_ == other.flags_ &&
+                    heartbeat_ == other.heartbeat_;
+        }
+
+        constexpr bool operator!=(const RemoteMessageHeader& other) const
+        {
+            return !operator==(other);
+        }
+
     private:
 
         static constexpr uint16_t HEARTBEAT_VALUE = 0xD36C;
@@ -166,6 +189,11 @@ inline std::ostream& operator<<(std::ostream& os, const AmpedUp::RemoteMessageHe
     if (header.hasFlag(AmpedUp::RemoteMessageFlag::READY_TO_RECIEVE))
     {
         os << " READY";
+    }
+
+    if (!header.isValid())
+    {
+        os << " INVALID";
     }
 
     return os;

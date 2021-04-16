@@ -3,9 +3,7 @@
 #ifndef _SPI_PAYLOAD_
 #define _SPI_PAYLOAD_
 
-#include "ConstantsCommon.hpp"
 #include "BinaryUtil.hxx"
-#include "StaticBuffer.hxx"
 
 namespace AmpedUp
 {
@@ -14,31 +12,30 @@ namespace AmpedUp
     public:
 
         SpiPayload() = default;
+
+        SpiPayload(BinaryUtil::byte_t* dataPtr, uint16_t size) :  dataPtr_(dataPtr), size_(size)
+        {}
+
         ~SpiPayload() = default;
 
-        BinaryUtil::byte_t* data()
+        BinaryUtil::byte_t* getData(uint16_t offset = 0)
         {
-            return payloadBuffer_.data();
+            return dataPtr_ + offset;
         }
 
-        const BinaryUtil::byte_t* data() const
+        const BinaryUtil::byte_t* getData(uint16_t offset = 0) const
         {
-            return payloadBuffer_.data();
+            return dataPtr_ + offset;
         }
 
-        const uint32_t getUsedSize() const
+        uint16_t getSize() const
         {
-            return usedSize_;
-        }
-
-        void setUsedSize(uint32_t size)
-        {
-            usedSize_ = size;
+            return size_;
         }
 
     private:
-        WordAlignedStaticBuffer<Constants::REMOTE_MESSAGE_MAX_SIZE> payloadBuffer_{};
-        uint32_t usedSize_{};
+        BinaryUtil::byte_t* dataPtr_{nullptr};
+        uint16_t size_{0};
     };
 }
 

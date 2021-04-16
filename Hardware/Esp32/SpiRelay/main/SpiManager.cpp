@@ -162,8 +162,6 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
                 connectionWasJustLost_ = false;
             }
 
-            std::cout << "outgoing header: " << outgoingHeader << std::endl;
-
             // Make sure the header that already exists in the incoming buffer is invalidated to ensure we don't mistake an interrupted transfer as successful
             RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
             incomingHeader.invalidate();
@@ -204,8 +202,6 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
             currentTransaction.length = BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize));
             currentTransaction.tx_buffer = outgoingMessagePayload;
             currentTransaction.rx_buffer = incomingMessagePayload;
-
-            std::cout << "Expected transaction size: " << BinaryUtil::bitsFillWords(BinaryUtil::bytesToBits(transactionSize)) / 8 << std::endl;
         }
 
         // Execute the SPI transaction
@@ -217,8 +213,6 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
             // Determine whether the next transaction should be a header or a payload based on the headers that were transfered
             RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
             RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
-
-            std::cout << "incoming header: " << incomingHeader << std::endl;
 
             // Payload should be transfered if at least one side has a payload to send and at least the other side is ready to recieve it
             // If the recieved header is not valid then there probably wasn't a real transaction, just noise on the line, so ignore it and transfer another header
@@ -232,14 +226,13 @@ bool AmpedUp::SpiManager::run(gpio_num_t mosiPin, gpio_num_t misoPin, gpio_num_t
         }
         else
         {
+
             // Process the data that was just recieved and pass it along to the bluetooth manager
             RemoteMessageHeader& outgoingHeader = outgoingMessageHeader.getInstance();
             RemoteMessageHeader& incomingHeader = incomingMessageHeader.getInstance();
 
             if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
             {
-                std::cout << "Recieved payload (" << incomingHeader.getTotalPayloadSize() << " byte message, " << incomingHeader.getFragmentPayloadSize() << " byte fragment)" << std::endl;
-                std::cout << "Actual transaction size: " << currentTransaction.trans_len / 8 << std::endl;
 
                 if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
                 {

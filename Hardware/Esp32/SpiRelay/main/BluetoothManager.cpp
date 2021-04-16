@@ -196,7 +196,7 @@ void AmpedUp::BluetoothManager::packet_handler(uint8_t packet_type, uint16_t cha
             outgoingDataQueue_.readRaw(outgoingPacketPtr, sizeToSend);
             rfcomm_send_prepared(currentRfcommChannel_, sizeToSend);
 
-            std::cout << "Sending packet (" << sizeToSend << " bytes)" << std::endl;
+            // std::cout << "Sending packet (" << sizeToSend << " bytes)" << std::endl;
 
             sendIfNeededInternal();
         }
@@ -208,9 +208,9 @@ void AmpedUp::BluetoothManager::packet_handler(uint8_t packet_type, uint16_t cha
         incomingDataQueue_.writeRaw(packet, size);
         grantCreditsInternal();
 
-        std::cout << "Recieved packet (" << size << " bytes)" << std::endl;
-        std::cout << "Incoming queue used size: " << incomingDataQueue_.getUsedSize() << "bytes" << std::endl;
-        std::cout << incomingDataQueue_ << std::endl;
-        std::cout << "Incoming credits: " << static_cast<uint32_t>(incomingCreditCount_) << std::endl;
+        // std::cout << "Recieved packet (" << size << " bytes)" << std::endl;
+        // std::cout << "Incoming queue used size: " << incomingDataQueue_.getUsedSize() << "bytes" << std::endl;
+        // std::cout << incomingDataQueue_ << std::endl;
+        // std::cout << "Incoming credits: " << static_cast<uint32_t>(incomingCreditCount_) << std::endl;
     }
 }

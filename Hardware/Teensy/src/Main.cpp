@@ -42,7 +42,7 @@ void externalInterruptHandler()
 int main(int argc, char** argv) {
 
     AmpedUp::TextLogging::initialize();
-    AmpedUp::TextLogging::enableDebugVerbosity();
+    // AmpedUp::TextLogging::enableDebugVerbosity();
     AmpedUp::TextLogging::enableInfoVerbosity();
     AmpedUp::TextLogging::enableWarningVerbosity();
     AmpedUp::TextLogging::enableCriticalVerbosity();
@@ -57,37 +57,30 @@ int main(int argc, char** argv) {
     // attachInterruptVector(IRQ_GPIO6789, externalInterruptHandler);
     // NVIC_ENABLE_IRQ(IRQ_GPIO6789);
     
-
-
     AmpedUp::SpiMessager::begin();
 
-
-   
     while (1)
     {
-        AmpedUp::SpiMessager::beginTransaction();
-        delay(100);
-
+        // delay(1);
         if (AmpedUp::SpiMessager::hasRecievedMessage())
         {
-            const auto& recievedPayload = AmpedUp::SpiMessager::peekRecievedMessage();
+            auto recievedPayload = AmpedUp::SpiMessager::peekRecievedMessage();
  
             Serial.print("recieved message ");
-            Serial.print(recievedPayload.getUsedSize());
+            Serial.print(recievedPayload.getSize());
             Serial.print(" ");
-            const char* str = reinterpret_cast<const char*>(recievedPayload.data());
-            for (uint32_t i = 0; i < recievedPayload.getUsedSize(); i++)
+            const char* str = reinterpret_cast<const char*>(recievedPayload.getData());
+            for (uint32_t i = 0; i < recievedPayload.getSize(); i++)
             {
                 Serial.print(str[i]);
             }
             Serial.println("");
 
 
-            if (AmpedUp::SpiMessager::isReadyToSend())
+            if (AmpedUp::SpiMessager::isReadyToSend(recievedPayload.getSize()))
             {
-                auto& outgoingPayload = AmpedUp::SpiMessager::stageOutgoingMessage();
-                memcpy(outgoingPayload.data(), recievedPayload.data(), recievedPayload.getUsedSize());
-                outgoingPayload.setUsedSize(recievedPayload.getUsedSize());
+                auto outgoingPayload = AmpedUp::SpiMessager::stageOutgoingMessage(recievedPayload.getSize());
+                memcpy(outgoingPayload.getData(), recievedPayload.getData(), recievedPayload.getSize());
                 AmpedUp::SpiMessager::sendStagedMessage();
 
             }
