@@ -33,21 +33,39 @@ const uint8_t required[9][5] ={{0xEC,0x00,0x01,0x00,0xC3},{0x90,0x00,0x06,0x1F,0
 int QEM[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
 uint8_t current=0;
 uint8_t previous=0;
+int stepsSinceChange=0;
+int target = 2;
+int target2 = 10;
+int threshold=50;
 volatile int count=0;
+int counts=0;
+volatile int stepsTotal=0;
 volatile int steps1;
 volatile int steps2;
+volatile int encTot;
+int8_t identifier;
+int8_t prev3;
 int8_t prev2;
 int8_t prevDirection;
 int8_t currentDirection;
 int16_t floorcount;
 int16_t prevcount;
+bool dip0;
+bool dip1;
+bool dip2;
+bool isStepping=true;
 bool toggle=true;
+bool setup;
 bool dirchange=false;
 bool isStalled=false;
 bool direction;
 
 void standalone_mode(){
 	setPin(CFG0,OUTPUT,NORMAL,PULL_DOWN);
+	PORT->Group[0].WRCONFIG.reg =  PORT_WRCONFIG_WRPINCFG|PORT_WRCONFIG_INEN|PORT_WRCONFIG_PULLEN|PORT_WRCONFIG_PINMASK((uint16_t)PA00.bitmask);//dip0
+	PORT->Group[0].WRCONFIG.reg =  PORT_WRCONFIG_WRPINCFG|PORT_WRCONFIG_INEN|PORT_WRCONFIG_PULLEN|PORT_WRCONFIG_PINMASK((uint16_t)PA01.bitmask);//dip1
+	PORT->Group[0].WRCONFIG.reg =  PORT_WRCONFIG_WRPINCFG|PORT_WRCONFIG_INEN|PORT_WRCONFIG_PULLEN|PORT_WRCONFIG_PINMASK((uint16_t)PA02.bitmask);//dip2
+	PORT->Group[0].OUT.reg |= PORT_WRCONFIG_PINMASK((uint16_t)PA00.bitmask)|PORT_WRCONFIG_PINMASK((uint16_t)PA01.bitmask)|PORT_WRCONFIG_PINMASK((uint16_t)PA02.bitmask);
 	setPin(CFG1,OUTPUT,NORMAL,PULL_DOWN);
 	setPin(CFG2,OUTPUT,NORMAL,PULL_DOWN);
 	setPin(CFG3,OUTPUT,NORMAL,PULL_DOWN);
@@ -57,8 +75,6 @@ void standalone_mode(){
 	setPin(STEP,OUTPUT,NORMAL,PULL_DOWN);
 	setPin(DIRPIN,OUTPUT,NORMAL,PULL_DOWN);
 	setPin(SPI_MODE,OUTPUT,NORMAL,PULL_DOWN);
-	//setPin(IFA,INPUT,NORMAL,PULL_DOWN);
-	//setPin(IFB,INPUT,NORMAL,PULL_DOWN);
 	writePin(SPI_MODE,false);
 	writePin(CFG0,false);//MISO =PA08
 	writePin(CFG1,true);//MOSI = PA11
@@ -69,6 +85,11 @@ void standalone_mode(){
 	writePin(CFG6,false);
 	writePin(DIRPIN,direction);
 	writePin(STEP,false);
+	uint32_t dips = PORT->Group[0].IN.reg;
+	dip0 = readPin(&PA00);
+	dip1 = readPin(&PA01);
+	dip2 = readPin(&PA02);
+	identifier = (int)dip0|(int)dip1<<1|(int)dip2<<2;
 	return;
 }
 void spi_mode(){
@@ -106,16 +127,16 @@ void EIC_Handler(void){
 		previous=current;
 		current=2*bit1+bit2;
 		prev2=prevDirection;
+		prev3=prev2;
 		prevDirection=currentDirection;
 		currentDirection = QEM[previous*4+current];
-		if(prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
-			writePin(&PA25,true);
+		count+=currentDirection;
+		if((setup || stepsSinceChange>30) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
 			isStalled=true;
 		}
-		if(prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
-			writePin(&PA25,true);
+		if((setup || stepsSinceChange>30) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
 			isStalled=true;
-		}		
+		}
 		EIC->INTFLAG.reg |= EIC_INTFLAG_EXTINT4| EIC_INTFLAG_EXTINT5;
 	}
 }
@@ -134,73 +155,171 @@ void EIC_setup(void){
 }
 void findEdges(void){
 	bool ready=false;
-	isStalled=false;
 	steps1=0;
-	steps2=0;
-	while(!ready){
-		steps1=0;
-		steps2=0;
-		while(!isStalled){
-			writePin(STEP,toggle);
-			toggle = !toggle;
-			delay_us(15);
-			}
-		isStalled=false;
-		direction=!direction;
-		writePin(DIRPIN,direction);
-		while(!isStalled){
-			writePin(STEP,toggle);
-			toggle = !toggle;
-			delay_us(15);
-			steps1++;
+	currentDirection=0;
+	prevDirection=0;
+	prev2=0;
+	stepsSinceChange=0;
+	isStalled=false;
+	while(!isStalled){
+		writePin(STEP,toggle);
+		toggle = !toggle;
+		delay_us(60);
 		}
-		isStalled=false;
-		direction=!direction;
-		writePin(DIRPIN,direction);
-		while(!isStalled){
-			writePin(STEP,toggle);
-			toggle = !toggle;
-			delay_us(15);
-			steps2++;
-		}
-		if(steps1==5497 && steps2==5497){ready=true;}
+	count=0;
+	currentDirection=0;
+	prevDirection=0;
+	prev2=0;
+	direction=!direction;
+	writePin(DIRPIN,direction);
+	delay_us(5);
+	isStalled=false;
+	while(!isStalled){
+		writePin(STEP,toggle);
+		toggle = !toggle;
+		delay_us(60);
+		stepsTotal++;
 	}
+	encTot=count;
+	direction=!direction;
+	writePin(DIRPIN,direction);
+	delay_us(5);
 }
 int main(void)
 {
+	int swap;
 	changeClock();
 	initPins();
 	EIC_setup();
 	initRTC();
 	standalone_mode();
 	setPin(&PA25,OUTPUT,NORMAL,PULL_UP);
-	setPin(&PA22,OUTPUT,NORMAL,PULL_UP);
-	//findEdges();
-	steps1=0;
-	steps2=0;
-	int counts=0;
-	int change = 5500;
-	count=0;
+	setup=true;
+	findEdges();
+	setup=false;
+	steps1 = target*encTot/12;
+	steps2= target2*encTot/12;
+	if(target == 0){steps1+=5;}
+	if(target2 ==12){steps2-=5;}
 	direction=false;
 	unsigned long input=0;
 	isStalled=false;
 	while (1)
     {
-		if(isStalled){
-			direction=!direction;
-			writePin(DIRPIN,direction);
-			counts=0;
-			writePin(&PA25,false);
-			writePin(&PA22,direction);
-			isStalled=false;
-
-		}
+		//Step Tracking
+		/*
 		if(!isStalled){
+			if(counts<steps1){
+				direction = false;
+				writePin(DIRPIN,direction);
+				counts++;
+			}
+			if(counts>steps1){
+				direction=true;
+				writePin(DIRPIN,direction);
+				counts--;
+			}
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(8);
+			delay_us(60);
+			if(counts==steps1){
+				swap = steps1;
+				steps1 = steps2;
+				steps2 = swap;
+			}
+		}
+		if(isStalled){
+			delay_us(1000000);
+			isStalled=false;
+			
+		}
+		*/
+		//Encoder Based
+		if(!isStalled){
+			if(isStepping){
+				if(steps1>count-threshold && steps1<count+threshold){
+					isStepping=false;
+				}
+				if(steps1<count-threshold && direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction = false;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+				}
+				if((steps1>count+threshold) && !direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction=true;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+				}
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);
+			}
+		}
+		/*if(count>steps1-threshold && count<steps1+threshold){
+				swap = steps1;
+				steps1 = steps2;
+				steps2 = swap;
+			}*/
+		if(isStalled){
+				writePin(CFG6,true);
+				delay_us(1000000);
+				isStalled=false;
+				writePin(CFG6,false);
+		}
+		if(steps1>count+threshold || steps1<count-threshold){
+				isStepping=true;
+		}
+		
+		
+		/*Hard Set Step Based
+		//turn to 1 extreme
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(20);
+		}
+		delay_us(100000);
+		//change direction and step to target
+		isStalled=false;
+		direction=!direction;
+		writePin(DIRPIN, direction);
+		counts=0;
+		while(counts!=steps1){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(20);
 			counts++;
 		}
+		//Now that we've reached target, wait
+		delay_us(100000);
+		//Continue turning to opposite extreme
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(20);
+		}
+		delay_us(100000);
+		isStalled=false;
+		
+		//change direction and step to target
+		direction=!direction;
+		writePin(DIRPIN,direction);
+		counts=0;
+		while(counts!=steps2){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(20);
+			counts++;
+		}
+		delay_us(100000);
+		*/
 	}
 }
 

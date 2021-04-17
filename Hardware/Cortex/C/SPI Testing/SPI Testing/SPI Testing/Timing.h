@@ -45,19 +45,18 @@ void changeClock(){
 	while(GCLK->STATUS.bit.SYNCBUSY);
 }
 void initRTC(){
-	//A generic clock (GCLK_RTC) is required to clock the RTC. This clock must be configured and enabled in the Generic Clock Controller before using the RTC(Gen Clock ID 4, and )
+	//A generic clock (GCLK_RTC) is required to clock the RTC. This clock must be configured and enabled in the Generic Clock Controller before using the RTC(Gen Clock ID 0, and )
 	
-	GCLK->GENDIV.reg  = GCLK_GENDIV_ID(0)|GCLK_GENDIV_DIV(6);
+	GCLK->GENDIV.reg  = GCLK_GENDIV_ID(0)|GCLK_GENDIV_DIV(0);
 	GCLK->CLKCTRL.reg = GCLK_CLKCTRL_ID_RTC | GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN(0);
 	
-	/*GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(4)|  GCLK_GENCTRL_GENEN;
-	GCLK->CLKCTRL.reg = GCLK_CLKCTRL_ID_RTC |GCLK_CLKCTRL_GEN_GCLK4|GCLK_CLKCTRL_CLKEN; */
 	PM->APBAMASK.reg |= PM_APBAMASK_RTC;
 	//Setting Settings for RTC*/
 
 	RTC->MODE0.CTRL.reg = 0x0;
 	//RTC->MODE0.CTRL.reg |= RTC_MODE0_CTRL_MATCHCLR;
-	RTC->MODE0.INTENSET.reg |= RTC_MODE0_INTENSET_CMP(48);
+	RTC->MODE0.COMP->reg = 48;
+	RTC->MODE0.INTENSET.reg |= RTC_MODE0_INTENSET_CMP0;
 	//RTC->MODE0.EVCTRL.reg |= RTC_MODE0_EVCTRL_CMPEO(48);
 	RTC->MODE0.CTRL.reg |= RTC_MODE0_CTRL_ENABLE;
 	
@@ -65,8 +64,8 @@ void initRTC(){
 void delay_us(int num){
 	for(int i = num; i>0; i--){
 		RTC->MODE0.COMP->reg=0;
-		RTC->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_CMP(48);
-		while(!RTC->MODE0.INTFLAG.reg && RTC_MODE0_INTFLAG_CMP(48));
+		RTC->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_CMP0;
+		while(!RTC->MODE0.INTFLAG.reg && RTC_MODE0_INTFLAG_CMP0);
 	}
 	
 }
