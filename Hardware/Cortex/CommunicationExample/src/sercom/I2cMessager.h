@@ -65,6 +65,12 @@ public:
 		// Disable the sercom unit
 		HardwareInterface::disable();
 	}
+
+	void setAddress(uint8_t address)
+	{
+		HardwareInterface::getRegisters().I2CS.ADDR.reg = SERCOM_I2CS_ADDR_ADDR(address);
+		masterConnection_.setAddress(address);
+	}
 	
 	void setReply(const T& message)
 	{
@@ -96,7 +102,7 @@ public:
 private:
 
 	using HardwareInterface = SercomInterface<SERCOM_HANDLE>;
-	using MessageBuffer = TypedDoubleBuffer<T>;
+	using MessageBuffer = AmpedUp::TypedDoubleBuffer<T>;
 	
 	static inline I2cConnection<T> masterConnection_{};
 	static inline bool currentTransactionSuccess_{true};

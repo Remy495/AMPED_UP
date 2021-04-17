@@ -115,6 +115,17 @@ class TypedBuffer_t
 	{
 		return bufferSize;
 	}
+
+	template<typename... ArgT>
+	constexpr void emplace(const ArgT&... args)
+	{
+		new(data_) T(args...);
+	}
+
+	void deleteInstance()
+	{
+		getInstance().~T();
+	}
 	
 	private:
 

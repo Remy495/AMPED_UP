@@ -2,10 +2,14 @@
 HARDWARE_DIR := ../..
 TOOLCHAIN_PATH := $(HARDWARE_DIR)/Toolchain
 
-SOURCE_DIRS := ./Hardware ./src ./src/io ./src/sercom ./src/util
+LIB_SOURCE_DIRS := ./src/io ./src/sercom ./src/util ./src/compatability
+EXE_SOURCE_DIRS := ./Hardware ./src
+PUBLIC_INTERFACE_DIRS := ./src/compatability
 ADDITIONAL_INCLUDE_DIRS := ./Hardware/SAMD21/samd21c/include ./Hardware/CMSIS/Core/Include $(HARDWARE_DIR)/Common
 
 BIN_DIR := ./bin
+LIB_DIR := ./lib
+INC_DIR := ./include
 
 CXX_SOURCE_EXTENSION := cpp
 C_SOURCE_EXTENSION := c
@@ -16,15 +20,19 @@ PROJECT_NAME := CortexCommunicationExample
 
 ######## YOU PROBABLY DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE ########
 
+SOURCE_DIRS := $(LIB_SOURCE_DIRS) $(EXE_SOURCE_DIRS)
+
 COMPILER_PATH = $(TOOLCHAIN_PATH)/gcc-arm-none-eabi/bin
 
 CXX := $(COMPILER_PATH)/arm-none-eabi-g++
 CC := $(COMPILER_PATH)/arm-none-eabi-gcc
+AR := $(COMPILER_PATH)/arm-none-eabi-ar
 OBJ_COPY := $(COMPILER_PATH)/arm-none-eabi-objcopy
 PRINT_SIZE := $(COMPILER_PATH)/arm-none-eabi-size
 
 ELF := $(BIN_DIR)/$(PROJECT_NAME).elf
 BIN := $(BIN_DIR)/$(PROJECT_NAME).bin
+LIB := $(LIB_DIR)/$(PROJECT_NAME).a
 
 # Directory for storing intermediate files
 C_BUILD_DIR := .$(notdir $(CC))
@@ -38,13 +46,26 @@ ANSI_DEFAULT_COLOR:= \033[m
 .DEFAULT_GOAL := all
 
 #Find source files
-CXX_SOURCES := $(foreach dir, $(SOURCE_DIRS), $(wildcard $(dir)/*.$(CXX_SOURCE_EXTENSION)))
-CXX_OBJ := $(patsubst %.$(CXX_SOURCE_EXTENSION), $(CXX_BUILD_DIR)/%.o, $(CXX_SOURCES))
+LIB_CXX_SOURCES := $(foreach dir, $(LIB_SOURCE_DIRS), $(wildcard $(dir)/*.$(CXX_SOURCE_EXTENSION)))
+LIB_CXX_OBJ := $(patsubst %.$(CXX_SOURCE_EXTENSION), $(CXX_BUILD_DIR)/%.o, $(LIB_CXX_SOURCES))
 
-C_SOURCES := $(foreach dir, $(SOURCE_DIRS), $(wildcard $(dir)/*.$(C_SOURCE_EXTENSION)))
-C_OBJ := $(patsubst %.$(C_SOURCE_EXTENSION), $(C_BUILD_DIR)/%.o, $(C_SOURCES))
+LIB_C_SOURCES := $(foreach dir, $(LIB_SOURCE_DIRS), $(wildcard $(dir)/*.$(C_SOURCE_EXTENSION)))
+LIB_C_OBJ := $(patsubst %.$(C_SOURCE_EXTENSION), $(C_BUILD_DIR)/%.o, $(LIB_C_SOURCES))
 
-ALL_OBJ := $(CXX_OBJ) $(C_OBJ)
+EXE_CXX_SOURCES := $(foreach dir, $(EXE_SOURCE_DIRS), $(wildcard $(dir)/*.$(CXX_SOURCE_EXTENSION)))
+EXE_CXX_OBJ := $(patsubst %.$(CXX_SOURCE_EXTENSION), $(CXX_BUILD_DIR)/%.o, $(EXE_CXX_SOURCES))
+
+EXE_C_SOURCES := $(foreach dir, $(EXE_SOURCE_DIRS), $(wildcard $(dir)/*.$(C_SOURCE_EXTENSION)))
+EXE_C_OBJ := $(patsubst %.$(C_SOURCE_EXTENSION), $(C_BUILD_DIR)/%.o, $(EXE_C_SOURCES))
+
+LIB_OBJ := $(LIB_CXX_OBJ) $(LIB_C_OBJ)
+EXE_OBJ := $(EXE_CXX_OBJ) $(EXE_C_OBJ)
+
+HEADERS_TO_MAKE_PUBLIC := $(foreach dir, $(PUBLIC_INTERFACE_DIRS), $(wildcard $(dir)/*.h))
+PUBLIC_HEADERS := $(addprefix $(INC_DIR)/,$(notdir $(HEADERS_TO_MAKE_PUBLIC)))
+
+ALL_OBJ := $(LIB_OBJ) $(EXE_OBJ)
+
 INCLUDE_DIRS := $(SOURCE_DIRS) $(ADDITIONAL_INCLUDE_DIRS)
 
 # Compiler flags
@@ -91,9 +112,24 @@ $(C_BUILD_DIR)/%.o: %.c $(C_BUILD_DIR)/%.d
 $(BIN_DIR):
 	@mkdir $(BIN_DIR)
 
-$(ELF): $(ALL_OBJ) | $(BIN_DIR)
+$(LIB_DIR):
+	@mkdir $(LIB_DIR)
+
+$(INC_DIR):
+	@mkdir $(INC_DIR)
+
+$(PUBLIC_HEADERS) : $(HEADERS_TO_MAKE_PUBLIC) | $(INC_DIR)
+	@printf "%b" "$(ANSI_GREEN)Outputting public includes...$(ANSI_DEFAULT_COLOR)\n"
+	cp $(HEADERS_TO_MAKE_PUBLIC) $(INC_DIR)
+
+
+$(LIB): $(LIB_OBJ) $(PUBLIC_HEADERS) | $(LIB_DIR)
+	@printf "%b" "$(ANSI_GREEN)Packing static library $@...$(ANSI_DEFAULT_COLOR)\n"
+	$(AR) rcs $@ $^
+
+$(ELF): $(EXE_OBJ) $(LIB) | $(BIN_DIR)
 	@printf "%b" "$(ANSI_GREEN)Linking ELF file $@...$(ANSI_DEFAULT_COLOR)\n"
-	$(CXX) $^ $(LINK_FLAGS) -o $@
+	$(CXX) $^ $(LIB) $(LINK_FLAGS) -o $@
 
 $(BIN): $(ELF) | $(BIN_DIR)
 	@printf "%b" "$(ANSI_GREEN)Generating binary file $@...$(ANSI_DEFAULT_COLOR)\n"
@@ -107,7 +143,7 @@ program: $(BIN)
 	@JLinkExe -commanderscript program.jlink
 
 clean:
-	rm -rf $(C_BUILD_DIR) $(CXX_BUILD_DIR) $(BIN_DIR)
+	rm -rf $(C_BUILD_DIR) $(CXX_BUILD_DIR) $(BIN_DIR) $(LIB_DIR) $(INC_DIR)
 
 # Include auto-generated dependancy files
 DEPENDANCY_FILES := $(shell find . -name "*.d" 2> /dev/null)
