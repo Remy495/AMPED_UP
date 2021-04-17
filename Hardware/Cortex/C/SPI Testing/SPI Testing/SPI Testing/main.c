@@ -11,6 +11,7 @@
 #include "Pins_Setup.h"
 #include "Timing.h"
 #include "TempSPI.h"
+#include "MainBoardMessager.h"
 
 //#include "SercomSetup.h"
 //#include "spi_control.h"
@@ -131,10 +132,10 @@ void EIC_Handler(void){
 		prevDirection=currentDirection;
 		currentDirection = QEM[previous*4+current];
 		count+=currentDirection;
-		if((setup || stepsSinceChange>30) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
+		if((setup || stepsSinceChange>40) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
 			isStalled=true;
 		}
-		if((setup || stepsSinceChange>30) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
+		if((setup || stepsSinceChange>40) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
 			isStalled=true;
 		}
 		EIC->INTFLAG.reg |= EIC_INTFLAG_EXTINT4| EIC_INTFLAG_EXTINT5;
@@ -149,63 +150,65 @@ void EIC_setup(void){
 	EIC->CONFIG[0].reg |= EIC_CONFIG_FILTEN5|EIC_CONFIG_SENSE5(0x3)|EIC_CONFIG_FILTEN4|EIC_CONFIG_SENSE4(0x3);
 	EIC->INTENSET.reg|= EIC_INTENSET_EXTINT5| EIC_INTENSET_EXTINT4;
 	EIC->CTRL.reg |=  EIC_CTRL_ENABLE;
-	NVIC_SetPriority(EIC_IRQn,0);
+	NVIC_SetPriority(SERCOM3_IRQn,0);
+	NVIC_SetPriority(EIC_IRQn,1);
+	NVIC_EnableIRQ(SERCOM3_IRQn);
 	NVIC_EnableIRQ(EIC_IRQn);
 	__enable_irq();
 }
 void findEdges(void){
-	bool ready=false;
-	steps1=0;
+	stepsSinceChange=0;
 	currentDirection=0;
 	prevDirection=0;
 	prev2=0;
-	stepsSinceChange=0;
 	isStalled=false;
 	while(!isStalled){
 		writePin(STEP,toggle);
 		toggle = !toggle;
 		delay_us(60);
-		}
+		stepsSinceChange++;
+	}
+	delay_us(100);
+	stepsSinceChange=0;
 	count=0;
+	encTot=0;
+	stepsTotal=0;
 	currentDirection=0;
 	prevDirection=0;
 	prev2=0;
 	direction=!direction;
 	writePin(DIRPIN,direction);
-	delay_us(5);
 	isStalled=false;
 	while(!isStalled){
 		writePin(STEP,toggle);
 		toggle = !toggle;
 		delay_us(60);
 		stepsTotal++;
+		stepsSinceChange++;
 	}
 	encTot=count;
-	direction=!direction;
-	writePin(DIRPIN,direction);
-	delay_us(5);
 }
 int main(void)
 {
+	begin(0);
 	int swap;
 	changeClock();
 	initPins();
 	EIC_setup();
 	initRTC();
 	standalone_mode();
-	setPin(&PA25,OUTPUT,NORMAL,PULL_UP);
-	setup=true;
 	findEdges();
-	setup=false;
 	steps1 = target*encTot/12;
-	steps2= target2*encTot/12;
-	if(target == 0){steps1+=5;}
-	if(target2 ==12){steps2-=5;}
+	currentDirection=0;
+	prevDirection=0;
+	prev2=0;
 	direction=false;
+	writePin(DIRPIN,direction);
 	unsigned long input=0;
 	isStalled=false;
 	while (1)
     {
+		//steps1= requestedPosition()*encTot;
 		//Step Tracking
 		/*
 		if(!isStalled){
@@ -262,11 +265,7 @@ int main(void)
 				delay_us(60);
 			}
 		}
-		/*if(count>steps1-threshold && count<steps1+threshold){
-				swap = steps1;
-				steps1 = steps2;
-				steps2 = swap;
-			}*/
+
 		if(isStalled){
 				writePin(CFG6,true);
 				delay_us(1000000);

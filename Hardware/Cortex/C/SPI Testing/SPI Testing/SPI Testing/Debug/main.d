@@ -82,7 +82,7 @@ main.d main.o: .././main.c \
  C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include/pio/samd21e15b.h \
  .././Pins_Setup.h .././Pins.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stdbool.h \
- .././Timing.h .././TempSPI.h
+ .././Timing.h .././TempSPI.h .././MainBoardMessager.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\math.h:
 
@@ -255,3 +255,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gc
 .././Timing.h:
 
 .././TempSPI.h:
+
+.././MainBoardMessager.h:
