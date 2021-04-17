@@ -11,9 +11,37 @@ static constexpr uint64_t COUNTER_SIZE_BITS = 32;
 // Frequency of GPT clock (24MHz)
 static constexpr uint32_t TIMER_HZ = 24000000;
 
+
+AmpedUp::Time::Time() = default;
+
+AmpedUp::Time::Time(uint64_t ticks) : ticks_(ticks)
+{}
+
+AmpedUp::Time::~Time() = default;
+
+double AmpedUp::Time::getSeconds()
+{
+    return static_cast<double>(ticks_) / static_cast<double>(TIMER_HZ);
+}
+
+double AmpedUp::Time::getMiliseconds() const
+{
+    return 1000.0 * static_cast<double>(ticks_) / static_cast<double>(TIMER_HZ);
+}
+
+double AmpedUp::Time::getMicroseconds() const
+{
+    return 1000000.0 * static_cast<double>(ticks_) / static_cast<double>(TIMER_HZ);
+}
+
+uint64_t AmpedUp::Time::getTicks() const
+{
+    return ticks_;
+}
+
 void AmpedUp::Time::initialize()
 {
-    // Set GPT to use high frequency (32MHz) clock
+    // Set GPT to use high frequency (24MHz) clock
     GPT1_CR |= GPT_CR_CLKSRC(2);
     // Set GPT to reset when enabled
     GPT1_CR |= GPT_CR_ENMOD;
@@ -31,12 +59,24 @@ void AmpedUp::Time::initialize()
 	NVIC_ENABLE_IRQ(IRQ_GPT1);
 }
 
-double AmpedUp::Time::getSeconds()
+AmpedUp::Time AmpedUp::Time::now()
 {
-    return static_cast<double>(getTicks()) / static_cast<double>(TIMER_HZ);
+    return Time(getCurrentTimeTicks());
 }
 
-uint64_t AmpedUp::Time::getTicks()
+void AmpedUp::Time::delay(const Time& time)
+{
+    uint64_t endTimeTicks = getCurrentTimeTicks() + time.getTicks();
+    while(getCurrentTimeTicks() < endTimeTicks);
+}
+
+void AmpedUp::Time::waitUntil(const Time& time)
+{
+    uint64_t endTimeTicks = time.getTicks();
+    while(getCurrentTimeTicks() < endTimeTicks);
+}
+
+uint64_t AmpedUp::Time::getCurrentTimeTicks()
 {
     uint64_t ticks{0};
 
@@ -60,4 +100,24 @@ void AmpedUp::Time::overflowInterupt()
 
     // Mark overflow interrupt as handled
     GPT1_SR = GPT_SR_ROV;
+}
+
+uint64_t operator""_m(long double minutes)
+{
+    return minutes * TIMER_HZ / 60.0;
+}
+
+uint64_t operator""_s(long double seconds)
+{
+    return seconds * TIMER_HZ;
+}
+
+uint64_t operator""_ms(long double milis)
+{
+    return milis * TIMER_HZ / 1000.0;
+}
+
+uint64_t operator""_us(long double micros)
+{
+    return micros * TIMER_HZ / 1000000.0;
 }

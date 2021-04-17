@@ -16,6 +16,8 @@ namespace AmpedUp
         using word_t = int32_t;
         using uword_t = uint32_t;
 
+        using byte_t = uint8_t;
+
         static inline constexpr uint32_t BITS_PER_BYTE = 8;
         static inline constexpr uint32_t BYTES_PER_WORD = 4;
         static inline constexpr uint32_t BITS_PER_WORD = BITS_PER_BYTE * BYTES_PER_WORD;
@@ -63,6 +65,18 @@ namespace AmpedUp
         static constexpr uint32_t wordsToBites(uint32_t words)
         {
             return words * BITS_PER_WORD;
+        }
+
+        template<typename T>
+        static constexpr uint8_t* asRawData(T& item)
+        {
+            return reinterpret_cast<uint8_t*>(&item);
+        }
+
+        template<typename T>
+        static constexpr const uint8_t* asRawData(const T& item)
+        {
+            return reinterpret_cast<const uint8_t*>(&item);
         }
 
     private:

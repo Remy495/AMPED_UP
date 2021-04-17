@@ -28,13 +28,18 @@ namespace AmpedUp
             return word;
         }
 
-        bool dataIsFinished()
+        uint32_t getCurrentPos() const
         {
-            return currentByteOffset_ >= bufferSize_;
+            return currentByteOffset_;
+        }
+
+        uint32_t getSize() const
+        {
+            return bufferSize_;
         }
 
     private:
-        uint8_t* bufferPtr_{};
+        uint8_t* bufferPtr_{nullptr};
         uint32_t bufferSize_{};
 
         uint32_t currentByteOffset_{};

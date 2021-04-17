@@ -4,30 +4,34 @@
 #define TYPEDDOUBLEBUFFER_H_
 
 #include "TypedBuffer.h"
+#include "StaticBuffer.hxx"
+
+namespace AmpedUp
+{
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
-/// @brief Represents a double-buffered version of a typed buffer which can be used to lighten the synchronization burden between a reader and a writer.
+/// @brief Represents a double-buffer composed of two versions of a particular buffer type which can be used to lighten the synchronization burden between a reader and a writer.
 /// @details Maintains two buffers, one for the reader and one for the writer, which can be swapped once both sides have finished their work (thus letting
 ///          the reader see what the writer just wrote and giving the writer a fresh buffer to write to). This is useful because it reduces conflict between
 ///          the reader and the writer to a single moment: when the buffers are swapped.
 ///
 template<typename T>
-class TypedDoubleBuffer
+class DoubleBuffer_t
 {
 public:
 
 	//////////////////////////////////////////////////////////////////////////////////
 	///
-	/// @brief Create a zero-initialized typed double buffer
+	/// @brief Create a zero-initialized double buffer
 	///
-	constexpr TypedDoubleBuffer() = default;
+	constexpr DoubleBuffer_t() = default;
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	///
 	/// @brief Destructor
 	///
-	~TypedDoubleBuffer() = default;
+	~DoubleBuffer_t() = default;
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	///
@@ -35,7 +39,7 @@ public:
 	/// 
 	/// @note: Do not hold onto the reference returned by this function outside of a synchronized context, as the current reader buffer will become the next writer buffer the next time the buffers are swapped.
 	///
-	constexpr TypedBuffer<T>& getReaderBuffer()
+	constexpr T& getReaderBuffer()
 	{
 		return isSwapped_ ? buf1_ : buf2_;
 	}
@@ -46,7 +50,7 @@ public:
 	///
 	/// @note: Do not hold onto the reference returned by this function outside of a synchronized context, as the current reader buffer will become the next writer buffer the next time the buffers are swapped.
 	///
-	constexpr const TypedBuffer<T>& getReaderBuffer() const
+	constexpr const T& getReaderBuffer() const
 	{
 		return isSwapped_ ? buf1_ : buf2_;
 	}
@@ -57,7 +61,7 @@ public:
 	///
 	/// @note: Do not hold onto the reference returned by this function outside of a synchronized context, as the current writer buffer will become the next reader buffer the next time the buffers are swapped.
 	///
-	constexpr TypedBuffer<T>& getWriterBuffer()
+	constexpr T& getWriterBuffer()
 	{
 		return isSwapped_ ? buf2_ : buf1_;
 	}
@@ -68,7 +72,7 @@ public:
 	///
 	/// @note: Do not hold onto the reference returned by this function outside of a synchronized context, as the current writer buffer will become the next reader buffer the next time the buffers are swapped.
 	///
-	constexpr const TypedBuffer<T>& getWriterBuffer() const
+	constexpr const T& getWriterBuffer() const
 	{
 		return isSwapped_ ? buf2_ : buf1_;
 	}
@@ -83,10 +87,22 @@ public:
 	}
 
 private:
-	TypedBuffer<T> buf1_{};
-	TypedBuffer<T> buf2_{};
+	T buf1_{};
+	T buf2_{};
 	bool isSwapped_{false};
 };
+
+template<typename T>
+using TypedDoubleBuffer = DoubleBuffer_t<TypedBuffer<T>>;
+
+template<uint32_t size>
+using StaticDoubleBuffer = DoubleBuffer_t<StaticBuffer<size>>;
+
+template<uint32_t size>
+using WordAlignedStaticDoubleBuffer = DoubleBuffer_t<WordAlignedStaticBuffer<size>>;
+
+}
+
 
 
 

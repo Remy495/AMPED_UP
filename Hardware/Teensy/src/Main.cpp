@@ -27,37 +27,77 @@
 
 #include <cstring>
 
-#include "SpiInterface.hpp"
 #include "SpiMessager.hpp"
+#include "SpiInterface.hpp"
+
+#include "TextLogging.hxx"
+
+void externalInterruptHandler()
+{
+    // Serial.println("Rising edge!");
+    // GPIO6_ISR = 1 << 3;
+}
 
 
 int main(int argc, char** argv) {
 
-    Serial.begin(9600);
+    AmpedUp::TextLogging::initialize();
+    AmpedUp::TextLogging::enableDebugVerbosity();
+    AmpedUp::TextLogging::enableInfoVerbosity();
+    AmpedUp::TextLogging::enableWarningVerbosity();
+    AmpedUp::TextLogging::enableCriticalVerbosity();
+    AmpedUp::TextLogging::enableFatalVerbosity();
+    
+
     AmpedUp::Time::initialize();
 
-    // delay(3000);
+    // GPIO6_ICR1 = 0x2 << 6;
+    // GPIO6_IMR = 1 << 3;
 
-    // Serial.println(sizeof(AmpedUp::RemoteMessageHeader));
+    // attachInterruptVector(IRQ_GPIO6789, externalInterruptHandler);
+    // NVIC_ENABLE_IRQ(IRQ_GPIO6789);
+    
+
 
     AmpedUp::SpiMessager::begin();
 
-    auto i2cMessager = AmpedUp::I2cMessager<AmpedUp::I2cHandle::I2C_1, uint8_t, 1>::getInstance();
-    i2cMessager.begin(AmpedUp::I2cSpeed::STANDARD_100K, AmpedUp::Constants::DAUGHTER_BOARD_BASE_ADDRESS);
 
-
+   
     while (1)
     {
         AmpedUp::SpiMessager::beginTransaction();
         delay(100);
-        uint8_t recieved = *AmpedUp::SpiMessager::getIncomingMessagePayload();
-        Serial.println(recieved);
-        i2cMessager.sendToIndex(0, recieved);
+
+        if (AmpedUp::SpiMessager::hasRecievedMessage())
+        {
+            const auto& recievedPayload = AmpedUp::SpiMessager::peekRecievedMessage();
+ 
+            Serial.print("recieved message ");
+            Serial.print(recievedPayload.getUsedSize());
+            Serial.print(" ");
+            const char* str = reinterpret_cast<const char*>(recievedPayload.data());
+            for (uint32_t i = 0; i < recievedPayload.getUsedSize(); i++)
+            {
+                Serial.print(str[i]);
+            }
+            Serial.println("");
+
+
+            if (AmpedUp::SpiMessager::isReadyToSend())
+            {
+                auto& outgoingPayload = AmpedUp::SpiMessager::stageOutgoingMessage();
+                memcpy(outgoingPayload.data(), recievedPayload.data(), recievedPayload.getUsedSize());
+                outgoingPayload.setUsedSize(recievedPayload.getUsedSize());
+                AmpedUp::SpiMessager::sendStagedMessage();
+
+            }
+
+            AmpedUp::SpiMessager::discardRecievedMessage();
+        }
     }
     
 
     // AmpedUp::SpiInterface::enable();
-
     // while (1)
     // {
 
@@ -76,8 +116,9 @@ int main(int argc, char** argv) {
     //     }
     //     while(!AmpedUp::SpiInterface::canTransmitData());
     //     AmpedUp::SpiInterface::endTransaction();
-    //     // while ((LPSPI4_RSR & LPSPI_RSR_RXEMPTY))
-    //     // Serial.println(LPSPI4_RDR);
+    //     while ((LPSPI4_RSR & LPSPI_RSR_RXEMPTY))
+    //     (void)(LPSPI4_RDR);
+    //     Serial.println(tempmonGetTemp());
 
 
     //     delay(1000);
@@ -155,34 +196,31 @@ int main(int argc, char** argv) {
     //     }
     // }
 
-    // delay(2000);
-    // Serial.println("Connected");
-
-    // auto i2cMessager = AmpedUp::I2cMessager<AmpedUp::I2cHandle::I2C_1, uint8_t, 1>::getInstance();
+    // auto i2cMessager = AmpedUp::I2cMessager<AmpedUp::I2cHandle::I2C_1, uint8_t, AmpedUp::Constants::DAUGHTER_BOARD_COUNT>::getInstance();
     // i2cMessager.begin(AmpedUp::I2cSpeed::STANDARD_100K, AmpedUp::Constants::DAUGHTER_BOARD_BASE_ADDRESS);
 
     // pinMode(13, OUTPUT);
 
     // float lastToggleTime = 0;
+    // float toggleInterval = 2.0f / AmpedUp::Constants::DAUGHTER_BOARD_COUNT;
+    // uint32_t daughterBoardIndex = 0;
     // uint8_t message = 0;
+    
     // while(true)
     // {
     //     float currentTime = AmpedUp::Time::getSeconds();
 
-    //     if (currentTime > lastToggleTime + 2)
+    //     if (currentTime > lastToggleTime + toggleInterval)
     //     {
-    //         message = ~message;
     //         lastToggleTime = currentTime;
-    //         if(message)
-    //         {
-    //             digitalWrite(13, HIGH);
-    //         }
-    //         else
-    //         {
-    //             digitalWrite(13, LOW);
-    //         }
+    //         i2cMessager.sendToIndex(daughterBoardIndex, message);
 
-    //         Serial.println(tempmonGetTemp());
+    //         daughterBoardIndex++;
+    //         if (daughterBoardIndex >= AmpedUp::Constants::DAUGHTER_BOARD_COUNT)
+    //         {
+    //             daughterBoardIndex = 0;
+    //             message = ~message;
+    //         }
     //     }
 
     //     i2cMessager.sendToIndex(0, message);

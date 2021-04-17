@@ -396,10 +396,10 @@ private:
     uint8_t address_{};
 
     volatile bool outgoingMessageIsFresh_{false};
-    TypedDoubleBuffer<Message_t> outgoingMessage_{};
+    AmpedUp::TypedDoubleBuffer<Message_t> outgoingMessage_{};
 
     volatile bool incomingMessageIsFresh_{false};
-    TypedDoubleBuffer<Message_t> incomingMessage_{};
+    AmpedUp::TypedDoubleBuffer<Message_t> incomingMessage_{};
 
     volatile Status status_{Status::DISCONNECTED};
     volatile bool lastTransactionWasTransmit_{};
