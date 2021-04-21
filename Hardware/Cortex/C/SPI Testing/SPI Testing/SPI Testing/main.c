@@ -35,22 +35,20 @@ int QEM[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
 uint8_t current=0;
 uint8_t previous=0;
 int stepsSinceChange=0;
-int target = 2;
-int target2 = 10;
+int target = 8;
 int threshold=50;
 volatile int count=0;
 int counts=0;
 volatile int stepsTotal=0;
 volatile int steps1;
-volatile int steps2;
 volatile int encTot;
 int8_t identifier;
-int8_t prev3;
 int8_t prev2;
 int8_t prevDirection;
 int8_t currentDirection;
 int16_t floorcount;
 int16_t prevcount;
+uint32_t in;
 bool dip0;
 bool dip1;
 bool dip2;
@@ -86,7 +84,6 @@ void standalone_mode(){
 	writePin(CFG6,false);
 	writePin(DIRPIN,direction);
 	writePin(STEP,false);
-	uint32_t dips = PORT->Group[0].IN.reg;
 	dip0 = readPin(&PA00);
 	dip1 = readPin(&PA01);
 	dip2 = readPin(&PA02);
@@ -128,7 +125,6 @@ void EIC_Handler(void){
 		previous=current;
 		current=2*bit1+bit2;
 		prev2=prevDirection;
-		prev3=prev2;
 		prevDirection=currentDirection;
 		currentDirection = QEM[previous*4+current];
 		count+=currentDirection;
@@ -190,60 +186,35 @@ void findEdges(void){
 }
 int main(void)
 {
-	begin(0);
-	int swap;
+	
 	changeClock();
 	initPins();
 	EIC_setup();
 	initRTC();
 	standalone_mode();
 	findEdges();
-	steps1 = target*encTot/12;
+	begin(0);
+	counts=0;
+	int swap;
+	setPin(&PA25,OUTPUT,NORMAL,PULL_DOWN);
+	//steps1 = target*encTot/12;
+	//steps2=stepsTotal-steps1;
 	currentDirection=0;
 	prevDirection=0;
 	prev2=0;
 	direction=false;
+	stepsSinceChange=100;
 	writePin(DIRPIN,direction);
-	unsigned long input=0;
-	isStalled=false;
+	isStalled=false;	
 	while (1)
     {
-		//steps1= requestedPosition()*encTot;
-		//Step Tracking
-		/*
-		if(!isStalled){
-			if(counts<steps1){
-				direction = false;
-				writePin(DIRPIN,direction);
-				counts++;
-			}
-			if(counts>steps1){
-				direction=true;
-				writePin(DIRPIN,direction);
-				counts--;
-			}
-			writePin(STEP,toggle);
-			toggle = !toggle;
-			delay_us(60);
-			if(counts==steps1){
-				swap = steps1;
-				steps1 = steps2;
-				steps2 = swap;
-			}
-		}
-		if(isStalled){
-			delay_us(1000000);
-			isStalled=false;
-			
-		}
-		*/
-		//Encoder Based
+		steps1=encTot*requestedPosition();
 		if(!isStalled){
 			if(isStepping){
 				if(steps1>count-threshold && steps1<count+threshold){
 					isStepping=false;
 				}
-				if(steps1<count-threshold && direction){
+				if(steps1<count-threshold&&direction){
 					currentDirection=0;
 					prevDirection=0;
 					prev2=0;
@@ -251,7 +222,7 @@ int main(void)
 					stepsSinceChange=0;
 					writePin(DIRPIN,direction);
 				}
-				if((steps1>count+threshold) && !direction){
+				if(steps1>count+threshold&&!direction){
 					currentDirection=0;
 					prevDirection=0;
 					prev2=0;
@@ -267,58 +238,187 @@ int main(void)
 		}
 
 		if(isStalled){
+			writePin(CFG6,true);
+			delay_us(1000000);
+			isStalled=false;
+			writePin(CFG6,false);
+		}
+		if(!isStepping){
+			delay_us(2000000);
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == encTot*target/12){
+				if(!direction){
+					swap=steps1;
+					steps1=100;
+				}
+				if(direction){
+					swap=steps1;
+					steps1=encTot-100;
+				}
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == 100){
+				steps1=swap;
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 ==encTot-100){
+				steps1=swap;
+			}
+		}
+		if(steps1>count+threshold || steps1<count-threshold){
+			isStepping=true;
+		}
+	}
+}
+		//Step Tracking
+		/*
+		if(!isStalled){
+			if(counts<steps1){
+				direction = false;
+				writePin(DIRPIN,direction);
+				counts++;
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);
+			}
+			if(counts>steps1){
+				direction=true;
+				writePin(DIRPIN,direction);
+				counts--;
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);
+				}
+			}
+			if(counts==steps1){
+				delay_us(2000000);
+				if(direction&&steps1==stepsTotal*target/12){
+					swap = steps1;
+					steps1=30;
+					stepsSinceChange=0;
+				}
+				if(!direction&&steps1==stepsTotal*target/12){
+					swap=steps1;
+					steps1=stepsTotal-60;
+					stepsSinceChange=0;
+				}
+				if(steps1==30&&counts==steps1){
+					steps1=swap;
+					stepsSinceChange=0;
+				}
+				if(steps1==stepsTotal-60 && counts==steps1){
+					steps1=swap;
+					stepsSinceChange=0;
+				}
+			}
+			if(isStalled){
+			isStalled=false;
+		}
+		}
+		*/
+		
+		//Encoder Based
+		/*
+		if(!isStalled){
+			if(isStepping){
+				if(steps1>count-threshold && steps1<count+threshold){
+					isStepping=false;
+				}
+				if(steps1<count-threshold&&direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction = false;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+					}
+				if(steps1>count+threshold&&!direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction=true;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+					}		
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);	
+				}
+			}
+
+		if(isStalled){
 				writePin(CFG6,true);
-				delay_us(1000000);
+				//delay_us(1000000);
 				isStalled=false;
 				writePin(CFG6,false);
+		}
+		if(!isStepping){
+			delay_us(2000000);
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == encTot*target/12){
+				if(!direction){
+					swap=steps1;
+					steps1=100;
+				}
+				if(direction){
+					swap=steps1;
+					steps1=encTot-100;
+				}
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == 100){
+				steps1=swap;
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 ==encTot-100){
+				steps1=swap;
+			}
 		}
 		if(steps1>count+threshold || steps1<count-threshold){
 				isStepping=true;
 		}
+		*/
 		
 		
-		/*Hard Set Step Based
+		/*
+		//Hard Set Step Based
 		//turn to 1 extreme
 		while(!isStalled){
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(20);
+			delay_us(100);
 		}
-		delay_us(100000);
+		delay_us(2000000);
 		//change direction and step to target
-		isStalled=false;
+		
 		direction=!direction;
 		writePin(DIRPIN, direction);
+		isStalled=false;
 		counts=0;
 		while(counts!=steps1){
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(20);
+			delay_us(100);
 			counts++;
 		}
 		//Now that we've reached target, wait
-		delay_us(100000);
+		delay_us(2000000);
 		//Continue turning to opposite extreme
+		isStalled=false;
 		while(!isStalled){
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(20);
+			delay_us(100);
 		}
-		delay_us(100000);
-		isStalled=false;
-		
+		delay_us(2000000);
 		//change direction and step to target
 		direction=!direction;
 		writePin(DIRPIN,direction);
 		counts=0;
+		isStalled=false;
 		while(counts!=steps2){
 			writePin(STEP,toggle);
 			toggle = !toggle;
-			delay_us(20);
+			delay_us(100);
 			counts++;
 		}
-		delay_us(100000);
+		delay_us(2000000);
 		*/
-	}
-}
-
+		
