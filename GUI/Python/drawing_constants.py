@@ -19,3 +19,29 @@ class DrawingConstants:
     SLIDER_EMPTY_COLOR = QtGui.QColor(210, 210, 210)
     SLIDER_FULL_COLOR = QtGui.QColor(160, 160, 160)
     SLIDER_FOCUS_COLOR = QtGui.QColor(120, 120, 120)
+
+    PALLET_MARGIN = 100
+    PALLET_TAB_WIDTH = 100
+    PALLET_TAB_HEIGHT = 50
+    PALLET_NODE_SPACING = 20
+    PALLET_SHADED_TEXT_COLOR = QtGui.QColor(110, 110, 110)
+
+    ACCENT_COLOR_SATURATION = 200
+    ACCENT_COLOR_VALUE = 75
+    ACCENT_COLOR_HIGHLIGHTED_SATURATION = 150
+    ACCENT_COLOR_HIGHLIGHTED_VALUE = 255
+    ACCENT_COLOR_HUE_OFFSET = 137.5
+
+    @classmethod
+    def getAccentColor(cls, index, isHighlighted):
+        color = QtGui.QColor()
+
+        hue = index * cls.ACCENT_COLOR_HUE_OFFSET
+        if isHighlighted:
+            saturation = cls.ACCENT_COLOR_HIGHLIGHTED_SATURATION
+            value = cls.ACCENT_COLOR_HIGHLIGHTED_VALUE
+        else:
+            saturation = cls.ACCENT_COLOR_SATURATION
+            value = cls.ACCENT_COLOR_VALUE
+        color.setHsv(hue, saturation, value)
+        return color

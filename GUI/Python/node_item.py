@@ -17,10 +17,6 @@ class Node(QtWidgets.QGraphicsItem):
 
 		self.inputTable = inputs
 		self.outputTable = outputs
-
-		self.x = x
-		self.y = y
-
 		self.isDeleteable = isDeleteable
 
 		# Calculate the positions at which each of the connection points should be drawn (relative to the node)
@@ -58,6 +54,7 @@ class Node(QtWidgets.QGraphicsItem):
 
 	def rebuild(self):
 
+		# If this node is part of a node scene and it's not in the pallet, parent it to the background so it will respond to background drags
 		if self.scene() is not None and not self.isInPallet:
 			self.setParentTranslated(self.scene().background)
 
@@ -84,7 +81,7 @@ class Node(QtWidgets.QGraphicsItem):
 			connectionPoint.indexNumber = connectionPointIndex
 
 			if self.scene() is not None:
-				inputTextItem = Slider(inputRange, self)
+				inputTextItem = Slider(inputRange, connectionPointIndex, self)
 				textItemX = self.width / 2
 				textItemY = connectionPointY
 				inputTextItem.setPos(textItemX, textItemY)
@@ -150,7 +147,7 @@ class Node(QtWidgets.QGraphicsItem):
 		return hasUnmarkedEdges
 
 	def copy(self, x, y):
-		newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, False, self.x, self.y, True)
+		newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, False, self.x(), self.y(), True)
 		self.scene().addNode(newNode)
 		return newNode
 
@@ -212,8 +209,9 @@ class Node(QtWidgets.QGraphicsItem):
 			self.isInPallet = False
 			self.isDeleteable = True
 
-			newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, True, self.x, self.y, False)
+			newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, True, self.x(), self.y(), False)
 			self.scene().addNode(newNode)
+			self.scene().replacePalletNode(self, newNode)
 
 			# Connection points cannot be used when a node is in the pallet, so selectedConnectionPoint should be None
 			selectedConnectionPoint = None

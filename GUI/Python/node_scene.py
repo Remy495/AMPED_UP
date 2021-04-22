@@ -2,14 +2,18 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 from node_item import *
+from node_pallet_item import *
+from node_scene_background import *
 
 import flatbuffers
-from node_graph_serializer import *
+from node_graph_serializer import NodeGraphSerializer, NodeGraph
 
 class NodeScene(QtWidgets.QGraphicsScene):
-	def __init__(self, parent = None):
+	def __init__(self, context, parent = None):
 		# Initialize super class
 		super(NodeScene,self).__init__(parent)
+
+		self.context = context
 
 		# Set default values for mouse position (will be updates when mouse moves)
 		self.mousePos = QtCore.QPointF(0, 0)
@@ -22,8 +26,13 @@ class NodeScene(QtWidgets.QGraphicsScene):
 
 		self.sceneRectChanged.connect(self.onSceneRectChanged)
 
-		self.pallet = None
-		self.background = None
+		self.pallet = NodePallet()
+		self.addItem(self.pallet)
+		self.pallet.rebuildDimensions()
+
+		self.background = NodeSceneBackground()
+		self.addItem(self.background)
+		self.background.rebuild()
 
 		self.sortNumber = 0
 
@@ -31,6 +40,14 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		self.nodes.append(node)
 		self.addItem(node)
 		node.rebuild()
+
+	def addPalletNode(self, name, nodeType, inputs, outputs, palletTab):
+		newNode = Node(name, nodeType, inputs, outputs)
+		self.addNode(newNode)
+		self.pallet.addNode(newNode, palletTab)
+
+	def replacePalletNode(self, oldPalletNode, newPalletNode):
+		self.pallet.replaceNode(oldPalletNode, newPalletNode)
 
 	def removeNode(self, node):
 		# Remove all of the node connections
@@ -159,6 +176,8 @@ class NodeScene(QtWidgets.QGraphicsScene):
 			nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
 			builder.Finish(nodeGraphOffset)
 			buf = builder.Output()
+
+			print("Data size:", len(buf))
 
 			nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
 			NodeGraphSerializer.deserialize(nodeGraph, self)

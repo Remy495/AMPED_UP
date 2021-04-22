@@ -26,29 +26,11 @@ from AmpedUpMessaging import Message, MessagePayload, LogMessage, LogSeverity
 # print(len(buf))
 
 
-
-payload1String = str([i for i in range(0, 300)])
-payload2String = str([i for i in range(300, 600)])
-
 btsock = BluetoothSocket(RFCOMM)
 btsock.connect(("E8:DB:84:03:F1:32", 1))
 
 i = 0
 while True:
-
-    payload1 = payload1String.encode('utf-8')
-    payload2 = payload2String.encode('utf-8')
-
-    payload = payload1 + payload2
-    print(len(payload))
-
-    payloadSizeBytes = len(payload).to_bytes(2, 'little')
-    packet1 = payloadSizeBytes + payload1
-    packet2 = payload2
-
-    btsock.send(packet1 + packet2)
-    # time.sleep(1)
-    # btsock.send(packet2)
 
     recievedSizeBytes = btsock.recv(2)
     recievedSize = int.from_bytes(recievedSizeBytes, 'little')
@@ -59,17 +41,20 @@ while True:
         newData = btsock.recv(remainingSize)
         remainingSize -= len(newData)
         recievedData += newData
-        print("recieved")
 
-    if (recievedData == payload):
-        print("Recieved correct response")
+    print(recievedData)
+
+    message = Message.Message.GetRootAsMessage(recievedData, 0)
+    if (message.PayloadType() == MessagePayload.MessagePayload().LogMessage):
+        logMessage = LogMessage.LogMessage()
+        logMessage.Init(message.Payload().Bytes, message.Payload().Pos)
+
+        if (logMessage.Severity() == LogSeverity.LogSeverity().WARNING):
+            print("WARN: ")
+
+        print(logMessage.FileName(), ":", logMessage.LineNumber())
+        print(logMessage.Message())
     else:
-        print("Error: Recieved incorrect response: " + str(recievedSize))
-        print(len(recievedData))
-        print(recievedData)
-
-    time.sleep(1)
-
-    i += 1
-
+        print("Wrong message type:", message.PayloadType())
+        
 btsock.close()

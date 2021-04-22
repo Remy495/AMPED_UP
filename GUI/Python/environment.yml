@@ -6,4 +6,7 @@ dependencies:
   - pyqt
   - pyserial
   - flatbuffers
+  - colorama
   - pip
+  - pip:
+    - PyBluez

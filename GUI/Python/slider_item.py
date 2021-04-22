@@ -3,8 +3,10 @@ from drawing_constants import *
 
 class Slider(QtWidgets.QGraphicsTextItem):
 
-    def __init__(self, range, parent = None):
+    def __init__(self, range, index, parent = None):
         super(Slider, self).__init__(parent)
+
+        self.index = index
 
         # self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
         self.setTextInteractionFlags(QtCore.Qt.TextEditable)
