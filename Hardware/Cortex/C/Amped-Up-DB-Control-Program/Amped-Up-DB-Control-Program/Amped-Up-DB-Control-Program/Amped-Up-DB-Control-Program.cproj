@@ -89,6 +89,7 @@
     <ListValues>
       <Value>%24(ProjectDir)\Device_Startup</Value>
       <Value>C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program</Value>
+      <Value>C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program</Value>
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
@@ -141,6 +142,7 @@
     <ListValues>
       <Value>%24(ProjectDir)\Device_Startup</Value>
       <Value>C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program</Value>
+      <Value>C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program</Value>
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
