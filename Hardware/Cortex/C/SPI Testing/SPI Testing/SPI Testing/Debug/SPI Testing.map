@@ -2,6 +2,7 @@ Archive member included to satisfy reference by file (symbol)
 
 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
                               main.o (begin)
+<<<<<<< HEAD
 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(SercomInterrupts.o)
                               C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o) (SercomInterruptsForgetMeNot())
 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
@@ -70,6 +71,42 @@ h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/
                               h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o) (__retarget_lock_acquire_recursive)
 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
                               h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o) (__register_exitproc)
+=======
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+                              C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o) (__aeabi_uidivmod)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+                              main.o (__aeabi_idiv)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_dvmd_tls.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+                              main.o (__aeabi_fmul)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+                              main.o (__aeabi_f2iz)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+                              main.o (__aeabi_i2f)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_clzsi2.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o) (__clzsi2)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/crt0.o (exit)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o) (_global_impure_ptr)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-init.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/crt0.o (__libc_init_array)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-memcpy-stub.o)
+                              C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o) (memcpy)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-memset.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/crt0.o (memset)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o) (__call_exitprocs)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o) (atexit)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-fini.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o) (__libc_fini_array)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o) (__retarget_lock_acquire_recursive)
+c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o) (__register_exitproc)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 
 Allocating common symbols
 Common symbol       size              file
@@ -80,7 +117,6 @@ __lock___atexit_recursive_mutex
                     0x1               h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
 PA04                0x14              main.o
 PA16                0x14              main.o
-steps2              0x4               main.o
 __lock___arc4random_mutex
                     0x1               h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
 in                  0x4               main.o
@@ -536,6 +572,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x361 main.o
  .debug_macro   0x00000000     0x101b main.o
  .debug_macro   0x00000000       0x7b main.o
+<<<<<<< HEAD
  .group         0x00000000        0x8 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .group         0x00000000        0x8 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .group         0x00000000        0x8 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
@@ -546,9 +583,21 @@ Discarded input sections
  .text          0x00000000        0x0 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .data          0x00000000        0x0 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .bss           0x00000000        0x8 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+=======
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .group         0x00000000        0x8 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .text          0x00000000        0x0 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .data          0x00000000        0x0 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
  .text._ZN11I2cMessagerIL12SercomHandle3EN7AmpedUp11KnobMessageEE3endEv
                 0x00000000       0x38 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .text._ZN11I2cMessagerIL12SercomHandle3EN7AmpedUp11KnobMessageEE5beginEhb
+<<<<<<< HEAD
                 0x00000000       0x9c C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
  .text.setAddress
                 0x00000000       0x58 C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
@@ -641,6 +690,37 @@ Discarded input sections
  .text          0x00000000        0x0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
  .data          0x00000000        0x0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
  .bss           0x00000000        0x0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+=======
+                0x00000000       0x94 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .text.setAddress
+                0x00000000       0x1c C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .text.actualPosition
+                0x00000000       0x6c C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_dvmd_tls.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_dvmd_tls.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_clzsi2.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_clzsi2.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .text.exit     0x00000000       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .debug_frame   0x00000000       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .ARM.attributes
+                0x00000000       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
  .data._impure_ptr
                 0x00000000        0x4 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
  .text          0x00000000        0x0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-init.o)
@@ -720,9 +800,14 @@ LOAD Device_Startup/startup_samd21.o
 LOAD Device_Startup/system_samd21.o
 LOAD main.o
 START GROUP
+<<<<<<< HEAD
 LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libm.a
 LOAD C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a
 LOAD C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a
+=======
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libm.a
+LOAD C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 END GROUP
 START GROUP
 LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a
@@ -732,7 +817,11 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
 LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtn.o
                 0x00000400                STACK_SIZE = DEFINED (STACK_SIZE)?STACK_SIZE:DEFINED (__stack_size__)?__stack_size__:0x400
 
+<<<<<<< HEAD
 .text           0x00000000     0x3bbc
+=======
+.text           0x00000000     0x1fd8
+>>>>>>> parent of 4e8aedb (Added new project for final product)
                 0x00000000                . = ALIGN (0x4)
                 0x00000000                _sfixed = .
  *(.vectors .vectors.*)
@@ -766,6 +855,7 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
                 0x0000020c                PM_Handler
                 0x0000020c                TCC2_Handler
                 0x0000020c                EVSYS_Handler
+                0x0000020c                SERCOM3_Handler
                 0x0000020c                I2S_Handler
                 0x0000020c                NVMCTRL_Handler
                 0x0000020c                SERCOM0_Handler
@@ -817,6 +907,7 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
                 0x00000c14      0x1ec main.o
                 0x00000c14                standalone_mode
  .text.EIC_Handler
+<<<<<<< HEAD
                 0x00000e00      0x198 main.o
                 0x00000e00                EIC_Handler
  .text.EIC_setup
@@ -936,10 +1027,97 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
  .init_array    0x00003ba8        0x4 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
                 0x00003bac                __init_array_end = .
                 0x00003bac                . = ALIGN (0x4)
+=======
+                0x00000e00      0x18c main.o
+                0x00000e00                EIC_Handler
+ .text.EIC_setup
+                0x00000f8c       0xb8 main.o
+                0x00000f8c                EIC_setup
+ .text.findEdges
+                0x00001044      0x168 main.o
+                0x00001044                findEdges
+ .text.main     0x000011ac      0x380 main.o
+                0x000011ac                main
+ .text._ZN11I2cMessagerIL12SercomHandle3EN7AmpedUp11KnobMessageEE16processInterruptEv
+                0x0000152c      0x184 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x0000152c                I2cMessager<(SercomHandle)3, AmpedUp::KnobMessage>::processInterrupt()
+ .text.begin    0x000016b0       0x80 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x000016b0                begin
+ .text.requestedPosition
+                0x00001730       0x58 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x00001730                requestedPosition
+ .text          0x00001788      0x114 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+                0x00001788                __aeabi_uidiv
+                0x00001788                __udivsi3
+                0x00001894                __aeabi_uidivmod
+ .text          0x0000189c      0x1d4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+                0x0000189c                __divsi3
+                0x0000189c                __aeabi_idiv
+                0x00001a68                __aeabi_idivmod
+ .text          0x00001a70        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_dvmd_tls.o)
+                0x00001a70                __aeabi_idiv0
+                0x00001a70                __aeabi_ldiv0
+ .text          0x00001a74      0x240 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+                0x00001a74                __aeabi_fmul
+ .text          0x00001cb4       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+                0x00001cb4                __aeabi_f2iz
+ .text          0x00001cf4       0xa0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+                0x00001cf4                __aeabi_i2f
+ .text          0x00001d94       0x3c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_clzsi2.o)
+                0x00001d94                __clzsi2
+ .text.__libc_init_array
+                0x00001dd0       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-init.o)
+                0x00001dd0                __libc_init_array
+ .text.startup.register_fini
+                0x00001e18       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o)
+ .text.atexit   0x00001e30       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o)
+                0x00001e30                atexit
+ .text.__libc_fini_array
+                0x00001e40       0x34 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-fini.o)
+                0x00001e40                __libc_fini_array
+ .text.__retarget_lock_acquire_recursive
+                0x00001e74        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+                0x00001e74                __retarget_lock_acquire_recursive
+ .text.__retarget_lock_release_recursive
+                0x00001e78        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+                0x00001e78                __retarget_lock_release_recursive
+ .text.__register_exitproc
+                0x00001e7c       0xf4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
+                0x00001e7c                __register_exitproc
+ *(.glue_7t)
+ .glue_7t       0x00001f70        0x0 linker stubs
+ *(.glue_7)
+ .glue_7        0x00001f70        0x0 linker stubs
+ *(.rodata .rodata* .gnu.linkonce.r.*)
+ .rodata        0x00001f70       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+ .rodata._global_impure_ptr
+                0x00001fb0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+                0x00001fb0                _global_impure_ptr
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x00001fb4                . = ALIGN (0x4)
+ *(.init)
+ .init          0x00001fb4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crti.o
+                0x00001fb4                _init
+ .init          0x00001fb8        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtn.o
+                0x00001fc0                . = ALIGN (0x4)
+                0x00001fc0                __preinit_array_start = .
+ *(.preinit_array)
+                0x00001fc0                __preinit_array_end = .
+                0x00001fc0                . = ALIGN (0x4)
+                0x00001fc0                __init_array_start = .
+ *(SORT(.init_array.*))
+ .init_array.00000
+                0x00001fc0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o)
+ *(.init_array)
+ .init_array    0x00001fc4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+                0x00001fc8                __init_array_end = .
+                0x00001fc8                . = ALIGN (0x4)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *crtend.o(.ctors)
+<<<<<<< HEAD
                 0x00003bac                . = ALIGN (0x4)
  *(.fini)
  .fini          0x00003bac        0x4 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crti.o
@@ -951,10 +1129,24 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
  .fini_array    0x00003bb8        0x4 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
  *(SORT(.fini_array.*))
                 0x00003bbc                __fini_array_end = .
+=======
+                0x00001fc8                . = ALIGN (0x4)
+ *(.fini)
+ .fini          0x00001fc8        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crti.o
+                0x00001fc8                _fini
+ .fini          0x00001fcc        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtn.o
+                0x00001fd4                . = ALIGN (0x4)
+                0x00001fd4                __fini_array_start = .
+ *(.fini_array)
+ .fini_array    0x00001fd4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+ *(SORT(.fini_array.*))
+                0x00001fd8                __fini_array_end = .
+>>>>>>> parent of 4e8aedb (Added new project for final product)
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *crtend.o(.dtors)
+<<<<<<< HEAD
                 0x00003bbc                . = ALIGN (0x4)
                 0x00003bbc                _efixed = .
                 [!provide]                PROVIDE (__exidx_start, .)
@@ -979,14 +1171,47 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
 
 .igot.plt       0x00003bbc        0x0
  .igot.plt      0x00003bbc        0x0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+=======
+                0x00001fd8                . = ALIGN (0x4)
+                0x00001fd8                _efixed = .
+                [!provide]                PROVIDE (__exidx_start, .)
+
+.vfp11_veneer   0x00001fd8        0x0
+ .vfp11_veneer  0x00001fd8        0x0 linker stubs
+
+.v4_bx          0x00001fd8        0x0
+ .v4_bx         0x00001fd8        0x0 linker stubs
+
+.iplt           0x00001fd8        0x0
+ .iplt          0x00001fd8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+
+.eh_frame       0x00001fd8        0x0
+ .eh_frame      0x00001fd8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+
+.rel.dyn        0x00001fd8        0x0
+ .rel.iplt      0x00001fd8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+
+.jcr            0x00001fd8        0x0
+ .jcr           0x00001fd8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+
+.igot.plt       0x00001fd8        0x0
+ .igot.plt      0x00001fd8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
                 [!provide]                PROVIDE (__exidx_end, .)
+<<<<<<< HEAD
                 0x00003bbc                . = ALIGN (0x4)
                 0x00003bbc                _etext = .
 
 .relocate       0x20000000      0x484 load address 0x00003bbc
+=======
+                0x00001fd8                . = ALIGN (0x4)
+                0x00001fd8                _etext = .
+
+.relocate       0x20000000      0x47c load address 0x00001fd8
+>>>>>>> parent of 4e8aedb (Added new project for final product)
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _srelocate = .
  *(.ramfunc .ramfunc.*)
@@ -1014,6 +1239,7 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
                 0x20000484                . = ALIGN (0x4)
                 0x20000484                _erelocate = .
 
+<<<<<<< HEAD
 .bss            0x20000484      0x308 load address 0x00004040
                 0x20000484                . = ALIGN (0x4)
                 0x20000484                _sbss = .
@@ -1107,6 +1333,101 @@ LOAD h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6
                 0x20000b90                _estack = .
                 0x20000b90                . = ALIGN (0x4)
                 0x20000b90                _end = .
+=======
+.bss            0x2000047c      0x30c load address 0x00002454
+                0x2000047c                . = ALIGN (0x4)
+                0x2000047c                _sbss = .
+                0x2000047c                _szero = .
+ *(.bss .bss.*)
+ .bss           0x2000047c       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtbegin.o
+ .bss           0x20000498       0x42 main.o
+                0x20000498                recv
+                0x200004c5                current
+                0x200004c6                previous
+                0x200004c8                stepsSinceChange
+                0x200004cc                count
+                0x200004d0                counts
+                0x200004d4                stepsTotal
+                0x200004d8                dirchange
+                0x200004d9                isStalled
+ *fill*         0x200004da        0x2 
+ .bss           0x200004dc        0x4 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x200004dc                lastRequestedPosition
+ .bss._ZN11I2cMessagerIL12SercomHandle3EN7AmpedUp11KnobMessageEE17masterConnection_E
+                0x200004e0       0x34 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x200004e0                I2cMessager<(SercomHandle)3, AmpedUp::KnobMessage>::masterConnection_
+ .bss._ZN12SercomConfigIL12SercomHandle3EE16interruptHandlerE
+                0x20000514        0x4 C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
+                0x20000514                SercomConfig<(SercomHandle)3>::interruptHandler
+ *(COMMON)
+ COMMON         0x20000518      0x24c main.o
+                0x20000518                PA18
+                0x2000052c                PA31
+                0x20000540                PA04
+                0x20000554                PA16
+                0x20000568                in
+                0x2000056c                dip0
+                0x20000570                PA28
+                0x20000584                PA01
+                0x20000598                PA00
+                0x200005ac                floorcount
+                0x200005ae                currentDirection
+                0x200005b0                PA10
+                0x200005c4                PA22
+                0x200005d8                PA14
+                0x200005ec                dip2
+                0x200005f0                PA19
+                0x20000604                PA17
+                0x20000618                direction
+                0x2000061c                steps1
+                0x20000620                PA25
+                0x20000634                PA02
+                0x20000648                PA05
+                0x2000065c                PA11
+                0x20000670                prevcount
+                0x20000674                PA29
+                0x20000688                PA07
+                0x2000069c                PA15
+                0x200006b0                identifier
+                0x200006b4                PA23
+                0x200006c8                prevDirection
+                0x200006cc                encTot
+                0x200006d0                PA30
+                0x200006e4                PA03
+                0x200006f8                dip1
+                0x200006f9                setup
+                0x200006fc                PA27
+                0x20000710                PA06
+                0x20000724                prev2
+                0x20000725                port
+                0x20000728                PA09
+                0x2000073c                PA08
+                0x20000750                PA24
+ COMMON         0x20000764       0x21 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+                0x20000764                __lock___atexit_recursive_mutex
+                0x20000768                __lock___arc4random_mutex
+                0x2000076c                __lock___env_recursive_mutex
+                0x20000770                __lock___sinit_recursive_mutex
+                0x20000774                __lock___malloc_recursive_mutex
+                0x20000778                __lock___at_quick_exit_mutex
+                0x2000077c                __lock___dd_hash_mutex
+                0x20000780                __lock___tz_mutex
+                0x20000784                __lock___sfp_recursive_mutex
+                0x20000788                . = ALIGN (0x4)
+ *fill*         0x20000785        0x3 
+                0x20000788                _ebss = .
+                0x20000788                _ezero = .
+
+.stack          0x20000788      0x400 load address 0x00002760
+                0x20000788                . = ALIGN (0x8)
+                0x20000788                _sstack = .
+                0x20000b88                . = (. + STACK_SIZE)
+ *fill*         0x20000788      0x400 
+                0x20000b88                . = ALIGN (0x8)
+                0x20000b88                _estack = .
+                0x20000b88                . = ALIGN (0x4)
+                0x20000b88                _end = .
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 OUTPUT(SPI Testing.elf elf32-littlearm)
 
 .ARM.attributes
@@ -1150,6 +1471,7 @@ OUTPUT(SPI Testing.elf elf32-littlearm)
  .ARM.attributes
                 0x000002de       0x2c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(ledf2.o)
  .ARM.attributes
+<<<<<<< HEAD
                 0x0000030a       0x2c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(muldf3.o)
  .ARM.attributes
                 0x00000336       0x2c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(subdf3.o)
@@ -1173,6 +1495,37 @@ OUTPUT(SPI Testing.elf elf32-littlearm)
                 0x000004b4       0x2c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
  .ARM.attributes
                 0x000004e0       0x1e h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtn.o
+=======
+                0x000000da       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+ .ARM.attributes
+                0x000000f8       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+ .ARM.attributes
+                0x00000116       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x00000134       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+ .ARM.attributes
+                0x00000160       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+ .ARM.attributes
+                0x0000018c       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+ .ARM.attributes
+                0x000001b8       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_clzsi2.o)
+ .ARM.attributes
+                0x000001d6       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-impure.o)
+ .ARM.attributes
+                0x00000202       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-init.o)
+ .ARM.attributes
+                0x0000022e       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o)
+ .ARM.attributes
+                0x0000025a       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o)
+ .ARM.attributes
+                0x00000286       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-fini.o)
+ .ARM.attributes
+                0x000002b2       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+ .ARM.attributes
+                0x000002de       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
+ .ARM.attributes
+                0x0000030a       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m/crtn.o
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 
 .comment        0x00000000       0xa6
  .comment       0x00000000       0x59 Device_Startup/startup_samd21.o
@@ -1180,11 +1533,18 @@ OUTPUT(SPI Testing.elf elf32-littlearm)
  .comment       0x00000059       0x5a main.o
  .comment       0x00000059       0x4d C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(MainBoardMessager.o)
                                  0x4e (size before relaxing)
+<<<<<<< HEAD
  .comment       0x000000a6       0x4e C:\Users\hanle\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\SPI Testing\SPI Testing\SPI Testing\libCortexCommunicationExample.a(SercomInterrupts.o)
 
 .debug_info     0x00000000     0xb9c4
  .debug_info    0x00000000     0x3a42 Device_Startup/startup_samd21.o
  .debug_info    0x00003a42     0x7f82 main.o
+=======
+
+.debug_info     0x00000000     0xb964
+ .debug_info    0x00000000     0x3a42 Device_Startup/startup_samd21.o
+ .debug_info    0x00003a42     0x7f22 main.o
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 
 .debug_abbrev   0x00000000      0x5ec
  .debug_abbrev  0x00000000      0x227 Device_Startup/startup_samd21.o
@@ -1294,6 +1654,7 @@ OUTPUT(SPI Testing.elf elf32-littlearm)
  .debug_macro   0x000110b9       0x22 main.o
  .debug_macro   0x000110db       0x10 main.o
 
+<<<<<<< HEAD
 .debug_line     0x00000000     0x10cd
  .debug_line    0x00000000      0x5f6 Device_Startup/startup_samd21.o
  .debug_line    0x000005f6      0xad7 main.o
@@ -1327,3 +1688,29 @@ OUTPUT(SPI Testing.elf elf32-littlearm)
  .debug_frame   0x000006bc       0x2c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-fini.o)
  .debug_frame   0x000006e8       0xb0 h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
  .debug_frame   0x00000798       0x3c h:/atmel/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
+=======
+.debug_line     0x00000000     0x12a8
+ .debug_line    0x00000000      0x6e9 Device_Startup/startup_samd21.o
+ .debug_line    0x000006e9      0xbbf main.o
+
+.debug_str      0x00000000    0x6f862
+ .debug_str     0x00000000    0x6a5bd Device_Startup/startup_samd21.o
+                              0x6a9e9 (size before relaxing)
+ .debug_str     0x0006a5bd     0x52a5 main.o
+                              0x6ef53 (size before relaxing)
+
+.debug_frame    0x00000000      0x5d8
+ .debug_frame   0x00000000       0x4c Device_Startup/startup_samd21.o
+ .debug_frame   0x0000004c      0x304 main.o
+ .debug_frame   0x00000350       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_udivsi3.o)
+ .debug_frame   0x00000370       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(_divsi3.o)
+ .debug_frame   0x00000390       0x3c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(mulsf3.o)
+ .debug_frame   0x000003cc       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(fixsfsi.o)
+ .debug_frame   0x000003ec       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m\libgcc.a(floatsisf.o)
+ .debug_frame   0x00000418       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-init.o)
+ .debug_frame   0x00000444       0x54 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__call_atexit.o)
+ .debug_frame   0x00000498       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-atexit.o)
+ .debug_frame   0x000004c0       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-fini.o)
+ .debug_frame   0x000004ec       0xb0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-lock.o)
+ .debug_frame   0x0000059c       0x3c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v6-m\libc.a(lib_a-__atexit.o)
+>>>>>>> parent of 4e8aedb (Added new project for final product)

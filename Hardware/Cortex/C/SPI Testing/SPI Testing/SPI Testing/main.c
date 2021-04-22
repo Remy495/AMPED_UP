@@ -40,8 +40,12 @@ int threshold=50;
 volatile int count=0;
 int counts=0;
 volatile int stepsTotal=0;
+<<<<<<< HEAD
 volatile int steps1=-1;
 volatile int steps2;
+=======
+volatile int steps1;
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 volatile int encTot;
 int8_t identifier;
 int8_t prev2;
@@ -132,12 +136,19 @@ void EIC_Handler(void){
 		prevDirection=currentDirection;
 		currentDirection = QEM[previous*4+current];
 		count+=currentDirection;
+<<<<<<< HEAD
 		if((setup || !(counts==steps1)) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
 			//writePin(&PA25,true);
 			isStalled=true;
 		}
 		if((setup || !(counts==steps1)) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
 			//writePin(&PA25,true);
+=======
+		if((setup || stepsSinceChange>40) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
+			isStalled=true;
+		}
+		if((setup || stepsSinceChange>40) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 			isStalled=true;
 		}
 		EIC->INTFLAG.reg |= EIC_INTFLAG_EXTINT4| EIC_INTFLAG_EXTINT5;
@@ -167,7 +178,7 @@ void findEdges(void){
 	while(!isStalled){
 		writePin(STEP,toggle);
 		toggle = !toggle;
-		delay_us(100);
+		delay_us(60);
 		stepsSinceChange++;
 	}
 	delay_us(100);
@@ -184,7 +195,7 @@ void findEdges(void){
 	while(!isStalled){
 		writePin(STEP,toggle);
 		toggle = !toggle;
-		delay_us(100);
+		delay_us(60);
 		stepsTotal++;
 		stepsSinceChange++;
 	}
@@ -193,27 +204,47 @@ void findEdges(void){
 }
 int main(void)
 {
+<<<<<<< HEAD
+=======
+	
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 	changeClock();
 	initPins();
 	EIC_setup();
 	initRTC();
 	standalone_mode();
+<<<<<<< HEAD
 	setup=true;
 	findEdges();
 	setup=false;
 	begin(identifier);
+=======
+	findEdges();
+	begin(0);
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 	counts=0;
+	int swap;
 	setPin(&PA25,OUTPUT,NORMAL,PULL_DOWN);
+<<<<<<< HEAD
 	steps1 = target*stepsTotal/12;
 	steps2 = target*encTot/12;
 	int val1=0;
 	int val2=0;
 	int val3=0;
+=======
+	//steps1 = target*encTot/12;
+	//steps2=stepsTotal-steps1;
+	currentDirection=0;
+	prevDirection=0;
+	prev2=0;
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 	direction=false;
+	stepsSinceChange=100;
 	writePin(DIRPIN,direction);
 	isStalled=false;	
 	while (1)
     {
+<<<<<<< HEAD
 		steps2=steps1;
 		counts = (int)((1 -(float)count/encTot) * stepsTotal);
 		//steps1 = stepsTotal*requestedPosition();
@@ -222,6 +253,78 @@ int main(void)
 				writePin(DIRPIN,false);
 				stepsSinceChange=0;
 				direction=true;
+=======
+		steps1=encTot*requestedPosition();
+		if(!isStalled){
+			if(isStepping){
+				if(steps1>count-threshold && steps1<count+threshold){
+					isStepping=false;
+				}
+				if(steps1<count-threshold&&direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction = false;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+				}
+				if(steps1>count+threshold&&!direction){
+					currentDirection=0;
+					prevDirection=0;
+					prev2=0;
+					direction=true;
+					stepsSinceChange=0;
+					writePin(DIRPIN,direction);
+				}
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);
+			}
+		}
+
+		if(isStalled){
+			writePin(CFG6,true);
+			delay_us(1000000);
+			isStalled=false;
+			writePin(CFG6,false);
+		}
+		if(!isStepping){
+			delay_us(2000000);
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == encTot*target/12){
+				if(!direction){
+					swap=steps1;
+					steps1=100;
+				}
+				if(direction){
+					swap=steps1;
+					steps1=encTot-100;
+				}
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 == 100){
+				steps1=swap;
+			}
+			if(steps1<count+threshold && steps1>count-threshold&& steps1 ==encTot-100){
+				steps1=swap;
+			}
+		}
+		if(steps1>count+threshold || steps1<count-threshold){
+			isStepping=true;
+		}
+	}
+}
+		//Step Tracking
+		/*
+		if(!isStalled){
+			if(counts<steps1){
+				direction = false;
+				writePin(DIRPIN,direction);
+				counts++;
+				stepsSinceChange++;
+				writePin(STEP,toggle);
+				toggle = !toggle;
+				delay_us(60);
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 			}
 			if(counts>steps1 && !direction){
 				writePin(DIRPIN,true);
@@ -282,6 +385,7 @@ int main(void)
 				isStalled = false;
 			}
 		}
+<<<<<<< HEAD
 		else if(isGrabbed){
 			writePin(CFG6,true);
 			val3=val2;
@@ -306,3 +410,56 @@ int main(void)
 		}
 	}
 }
+=======
+		if(steps1>count+threshold || steps1<count-threshold){
+				isStepping=true;
+		}
+		*/
+		
+		
+		/*
+		//Hard Set Step Based
+		//turn to 1 extreme
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(100);
+		}
+		delay_us(2000000);
+		//change direction and step to target
+		
+		direction=!direction;
+		writePin(DIRPIN, direction);
+		isStalled=false;
+		counts=0;
+		while(counts!=steps1){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(100);
+			counts++;
+		}
+		//Now that we've reached target, wait
+		delay_us(2000000);
+		//Continue turning to opposite extreme
+		isStalled=false;
+		while(!isStalled){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(100);
+		}
+		delay_us(2000000);
+		//change direction and step to target
+		direction=!direction;
+		writePin(DIRPIN,direction);
+		counts=0;
+		isStalled=false;
+		while(counts!=steps2){
+			writePin(STEP,toggle);
+			toggle = !toggle;
+			delay_us(100);
+			counts++;
+		}
+		delay_us(2000000);
+		*/
+		
+>>>>>>> parent of 4e8aedb (Added new project for final product)
