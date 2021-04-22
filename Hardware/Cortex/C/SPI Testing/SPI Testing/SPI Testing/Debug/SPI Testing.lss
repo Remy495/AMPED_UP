@@ -4,6 +4,7 @@ SPI Testing.elf:     file format elf32-littlearm
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
 <<<<<<< HEAD
+<<<<<<< HEAD
   0 .text         00003bbc  00000000  00000000  00010000  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
   1 .relocate     00000484  20000000  00003bbc  00020000  2**3
@@ -20,11 +21,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   3 .stack        00000400  20000788  00002760  0002047c  2**0
 >>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
+  0 .text         00001fd8  00000000  00000000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .relocate     0000047c  20000000  00001fd8  00020000  2**3
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000030c  2000047c  00002454  0002047c  2**2
+                  ALLOC
+  3 .stack        00000400  20000788  00002760  0002047c  2**0
+>>>>>>> parent of 4e8aedb (Added new project for final product)
                   ALLOC
   4 .ARM.attributes 00000028  00000000  00000000  00020484  2**0
                   CONTENTS, READONLY
   5 .comment      000000a6  00000000  00000000  000204ac  2**0
                   CONTENTS, READONLY
+<<<<<<< HEAD
 <<<<<<< HEAD
   6 .debug_info   0000b9c4  00000000  00000000  00020552  2**0
                   CONTENTS, READONLY, DEBUGGING
@@ -62,6 +73,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  14 .debug_frame  000005d8  00000000  00000000  000ae7d8  2**2
 >>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
+  6 .debug_info   0000b964  00000000  00000000  0002054a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000005ec  00000000  00000000  0002beae  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    00000568  00000000  00000000  0002c49a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_aranges 00000100  00000000  00000000  0002ca02  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_ranges 000000e0  00000000  00000000  0002cb02  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_macro  000110eb  00000000  00000000  0002cbe2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_line   000012a8  00000000  00000000  0003dccd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_str    0006f862  00000000  00000000  0003ef75  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_frame  000005d8  00000000  00000000  000ae7d8  2**2
+>>>>>>> parent of 4e8aedb (Added new project for final product)
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -74,7 +104,11 @@ Disassembly of section .text:
       4c:	0d 02 00 00 01 0e 00 00 0d 02 00 00 0d 02 00 00     ................
       5c:	0d 02 00 00 0d 02 00 00 0d 02 00 00 0d 02 00 00     ................
 <<<<<<< HEAD
+<<<<<<< HEAD
       6c:	0d 02 00 00 89 18 00 00 00 00 00 00 00 00 00 00     ................
+=======
+      6c:	0d 02 00 00 0d 02 00 00 00 00 00 00 00 00 00 00     ................
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
       6c:	0d 02 00 00 0d 02 00 00 00 00 00 00 00 00 00 00     ................
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -101,7 +135,11 @@ Disassembly of section .text:
       d0:	20000484 	.word	0x20000484
       d4:	00000000 	.word	0x00000000
 <<<<<<< HEAD
+<<<<<<< HEAD
       d8:	00003bbc 	.word	0x00003bbc
+=======
+      d8:	00001fd8 	.word	0x00001fd8
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
       d8:	00001fd8 	.word	0x00001fd8
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -134,6 +172,9 @@ Disassembly of section .text:
      104:	20000480 	.word	0x20000480
      108:	00001fd8 	.word	0x00001fd8
      10c:	00001fd8 	.word	0x00001fd8
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)
      110:	00000000 	.word	0x00000000
 
@@ -287,7 +328,11 @@ void Reset_Handler(void)
         while (1);
      1d6:	e7fe      	b.n	1d6 <Reset_Handler+0xc2>
 <<<<<<< HEAD
+<<<<<<< HEAD
      1d8:	00003bbc 	.word	0x00003bbc
+=======
+     1d8:	00001fd8 	.word	0x00001fd8
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      1d8:	00001fd8 	.word	0x00001fd8
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -302,8 +347,13 @@ void Reset_Handler(void)
      1fc:	41004800 	.word	0x41004800
      200:	41004000 	.word	0x41004000
 <<<<<<< HEAD
+<<<<<<< HEAD
      204:	000038f5 	.word	0x000038f5
      208:	000011bd 	.word	0x000011bd
+=======
+     204:	00001dd1 	.word	0x00001dd1
+     208:	000011ad 	.word	0x000011ad
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      204:	00001dd1 	.word	0x00001dd1
      208:	000011ad 	.word	0x000011ad
@@ -1646,6 +1696,9 @@ setPinNum(&PA31,Num);
      a9c:	20000674 	.word	0x20000674
      aa0:	200006d0 	.word	0x200006d0
      aa4:	2000052c 	.word	0x2000052c
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)
      aa8:	00000349 	.word	0x00000349
 
@@ -2177,7 +2230,11 @@ void EIC_Handler(void){
      e04:	af00      	add	r7, sp, #0
 		if((EIC->INTFLAG.reg & EIC_INTFLAG_EXTINT5)||(EIC->INTFLAG.reg & EIC_INTFLAG_EXTINT4)){
 <<<<<<< HEAD
+<<<<<<< HEAD
      e06:	4b54      	ldr	r3, [pc, #336]	; (f58 <EIC_Handler+0x158>)
+=======
+     e06:	4b52      	ldr	r3, [pc, #328]	; (f50 <EIC_Handler+0x150>)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      e06:	4b52      	ldr	r3, [pc, #328]	; (f50 <EIC_Handler+0x150>)
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -2186,7 +2243,11 @@ void EIC_Handler(void){
      e0c:	4013      	ands	r3, r2
      e0e:	d105      	bne.n	e1c <EIC_Handler+0x1c>
 <<<<<<< HEAD
+<<<<<<< HEAD
      e10:	4b51      	ldr	r3, [pc, #324]	; (f58 <EIC_Handler+0x158>)
+=======
+     e10:	4b4f      	ldr	r3, [pc, #316]	; (f50 <EIC_Handler+0x150>)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      e10:	4b4f      	ldr	r3, [pc, #316]	; (f50 <EIC_Handler+0x150>)
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -2194,6 +2255,7 @@ void EIC_Handler(void){
      e14:	2210      	movs	r2, #16
      e16:	4013      	ands	r3, r2
      e18:	d100      	bne.n	e1c <EIC_Handler+0x1c>
+<<<<<<< HEAD
 <<<<<<< HEAD
      e1a:	e098      	b.n	f4e <EIC_Handler+0x14e>
 		uint32_t in = PORT->Group[0].IN.reg;
@@ -2203,6 +2265,8 @@ void EIC_Handler(void){
 		uint8_t bit1 = (bool)(in & PA04.bitmask); 
      e22:	4b4f      	ldr	r3, [pc, #316]	; (f60 <EIC_Handler+0x160>)
 =======
+=======
+>>>>>>> parent of 4e8aedb (Added new project for final product)
      e1a:	e094      	b.n	f46 <EIC_Handler+0x146>
 		uint32_t in = PORT->Group[0].IN.reg;
      e1c:	4b4d      	ldr	r3, [pc, #308]	; (f54 <EIC_Handler+0x154>)
@@ -2210,6 +2274,9 @@ void EIC_Handler(void){
      e20:	607b      	str	r3, [r7, #4]
 		uint8_t bit1 = (bool)(in & PA04.bitmask); 
      e22:	4b4d      	ldr	r3, [pc, #308]	; (f58 <EIC_Handler+0x158>)
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)
      e24:	681b      	ldr	r3, [r3, #0]
      e26:	687a      	ldr	r2, [r7, #4]
@@ -2221,7 +2288,11 @@ void EIC_Handler(void){
      e32:	701a      	strb	r2, [r3, #0]
 		uint8_t bit2 = (bool)(in & PA05.bitmask);
 <<<<<<< HEAD
+<<<<<<< HEAD
      e34:	4b4b      	ldr	r3, [pc, #300]	; (f64 <EIC_Handler+0x164>)
+=======
+     e34:	4b49      	ldr	r3, [pc, #292]	; (f5c <EIC_Handler+0x15c>)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      e34:	4b49      	ldr	r3, [pc, #292]	; (f5c <EIC_Handler+0x15c>)
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -2235,9 +2306,15 @@ void EIC_Handler(void){
      e44:	701a      	strb	r2, [r3, #0]
 		previous=current;
 <<<<<<< HEAD
+<<<<<<< HEAD
      e46:	4b48      	ldr	r3, [pc, #288]	; (f68 <EIC_Handler+0x168>)
      e48:	781a      	ldrb	r2, [r3, #0]
      e4a:	4b48      	ldr	r3, [pc, #288]	; (f6c <EIC_Handler+0x16c>)
+=======
+     e46:	4b46      	ldr	r3, [pc, #280]	; (f60 <EIC_Handler+0x160>)
+     e48:	781a      	ldrb	r2, [r3, #0]
+     e4a:	4b46      	ldr	r3, [pc, #280]	; (f64 <EIC_Handler+0x164>)
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
      e46:	4b46      	ldr	r3, [pc, #280]	; (f60 <EIC_Handler+0x160>)
      e48:	781a      	ldrb	r2, [r3, #0]
@@ -2253,6 +2330,7 @@ void EIC_Handler(void){
      e58:	781b      	ldrb	r3, [r3, #0]
      e5a:	18d3      	adds	r3, r2, r3
      e5c:	b2da      	uxtb	r2, r3
+<<<<<<< HEAD
 <<<<<<< HEAD
      e5e:	4b42      	ldr	r3, [pc, #264]	; (f68 <EIC_Handler+0x168>)
      e60:	701a      	strb	r2, [r3, #0]
@@ -2529,6 +2607,43 @@ void EIC_setup(void){
      e96:	4b38      	ldr	r3, [pc, #224]	; (f78 <EIC_Handler+0x178>)
      e98:	681b      	ldr	r3, [r3, #0]
      e9a:	18d2      	adds	r2, r2, r3
+=======
+     e5e:	4b40      	ldr	r3, [pc, #256]	; (f60 <EIC_Handler+0x160>)
+     e60:	701a      	strb	r2, [r3, #0]
+		prev2=prevDirection;
+     e62:	4b41      	ldr	r3, [pc, #260]	; (f68 <EIC_Handler+0x168>)
+     e64:	2200      	movs	r2, #0
+     e66:	569a      	ldrsb	r2, [r3, r2]
+     e68:	4b40      	ldr	r3, [pc, #256]	; (f6c <EIC_Handler+0x16c>)
+     e6a:	701a      	strb	r2, [r3, #0]
+		prevDirection=currentDirection;
+     e6c:	4b40      	ldr	r3, [pc, #256]	; (f70 <EIC_Handler+0x170>)
+     e6e:	2200      	movs	r2, #0
+     e70:	569a      	ldrsb	r2, [r3, r2]
+     e72:	4b3d      	ldr	r3, [pc, #244]	; (f68 <EIC_Handler+0x168>)
+     e74:	701a      	strb	r2, [r3, #0]
+		currentDirection = QEM[previous*4+current];
+     e76:	4b3b      	ldr	r3, [pc, #236]	; (f64 <EIC_Handler+0x164>)
+     e78:	781b      	ldrb	r3, [r3, #0]
+     e7a:	009b      	lsls	r3, r3, #2
+     e7c:	4a38      	ldr	r2, [pc, #224]	; (f60 <EIC_Handler+0x160>)
+     e7e:	7812      	ldrb	r2, [r2, #0]
+     e80:	189a      	adds	r2, r3, r2
+     e82:	4b3c      	ldr	r3, [pc, #240]	; (f74 <EIC_Handler+0x174>)
+     e84:	0092      	lsls	r2, r2, #2
+     e86:	58d3      	ldr	r3, [r2, r3]
+     e88:	b25a      	sxtb	r2, r3
+     e8a:	4b39      	ldr	r3, [pc, #228]	; (f70 <EIC_Handler+0x170>)
+     e8c:	701a      	strb	r2, [r3, #0]
+		count+=currentDirection;
+     e8e:	4b38      	ldr	r3, [pc, #224]	; (f70 <EIC_Handler+0x170>)
+     e90:	781b      	ldrb	r3, [r3, #0]
+     e92:	b25b      	sxtb	r3, r3
+     e94:	001a      	movs	r2, r3
+     e96:	4b38      	ldr	r3, [pc, #224]	; (f78 <EIC_Handler+0x178>)
+     e98:	681b      	ldr	r3, [r3, #0]
+     e9a:	18d2      	adds	r2, r2, r3
+>>>>>>> parent of 4e8aedb (Added new project for final product)
      e9c:	4b36      	ldr	r3, [pc, #216]	; (f78 <EIC_Handler+0x178>)
      e9e:	601a      	str	r2, [r3, #0]
 		if((setup || stepsSinceChange>40) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
@@ -2726,6 +2841,9 @@ void EIC_setup(void){
     100e:	2004      	movs	r0, #4
     1010:	4b0b      	ldr	r3, [pc, #44]	; (1040 <EIC_setup+0xb4>)
     1012:	4798      	blx	r3
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)
   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
            Can only be executed in Privileged modes.
@@ -2733,6 +2851,7 @@ void EIC_setup(void){
 __STATIC_FORCEINLINE void __enable_irq(void)
 {
   __ASM volatile ("cpsie i" : : : "memory");
+<<<<<<< HEAD
 <<<<<<< HEAD
     1020:	b662      	cpsie	i
 	__enable_irq();
@@ -8560,6 +8679,262 @@ int main(void)
     11d4:	601a      	str	r2, [r3, #0]
 	int swap;
 	setPin(&PA25,OUTPUT,NORMAL,PULL_DOWN);
+=======
+    1014:	b662      	cpsie	i
+	__enable_irq();
+}
+    1016:	46c0      	nop			; (mov r8, r8)
+    1018:	46bd      	mov	sp, r7
+    101a:	bd80      	pop	{r7, pc}
+    101c:	40000400 	.word	0x40000400
+    1020:	40000c00 	.word	0x40000c00
+    1024:	00004005 	.word	0x00004005
+    1028:	41004400 	.word	0x41004400
+    102c:	20000648 	.word	0x20000648
+    1030:	50030000 	.word	0x50030000
+    1034:	20000540 	.word	0x20000540
+    1038:	40001800 	.word	0x40001800
+    103c:	00000249 	.word	0x00000249
+    1040:	00000215 	.word	0x00000215
+
+00001044 <findEdges>:
+void findEdges(void){
+    1044:	b580      	push	{r7, lr}
+    1046:	af00      	add	r7, sp, #0
+	stepsSinceChange=0;
+    1048:	4b4a      	ldr	r3, [pc, #296]	; (1174 <findEdges+0x130>)
+    104a:	2200      	movs	r2, #0
+    104c:	601a      	str	r2, [r3, #0]
+	currentDirection=0;
+    104e:	4b4a      	ldr	r3, [pc, #296]	; (1178 <findEdges+0x134>)
+    1050:	2200      	movs	r2, #0
+    1052:	701a      	strb	r2, [r3, #0]
+	prevDirection=0;
+    1054:	4b49      	ldr	r3, [pc, #292]	; (117c <findEdges+0x138>)
+    1056:	2200      	movs	r2, #0
+    1058:	701a      	strb	r2, [r3, #0]
+	prev2=0;
+    105a:	4b49      	ldr	r3, [pc, #292]	; (1180 <findEdges+0x13c>)
+    105c:	2200      	movs	r2, #0
+    105e:	701a      	strb	r2, [r3, #0]
+	isStalled=false;
+    1060:	4b48      	ldr	r3, [pc, #288]	; (1184 <findEdges+0x140>)
+    1062:	2200      	movs	r2, #0
+    1064:	701a      	strb	r2, [r3, #0]
+	while(!isStalled){
+    1066:	e01c      	b.n	10a2 <findEdges+0x5e>
+		writePin(STEP,toggle);
+    1068:	4b47      	ldr	r3, [pc, #284]	; (1188 <findEdges+0x144>)
+    106a:	781a      	ldrb	r2, [r3, #0]
+    106c:	4b47      	ldr	r3, [pc, #284]	; (118c <findEdges+0x148>)
+    106e:	0011      	movs	r1, r2
+    1070:	0018      	movs	r0, r3
+    1072:	4b47      	ldr	r3, [pc, #284]	; (1190 <findEdges+0x14c>)
+    1074:	4798      	blx	r3
+		toggle = !toggle;
+    1076:	4b44      	ldr	r3, [pc, #272]	; (1188 <findEdges+0x144>)
+    1078:	781b      	ldrb	r3, [r3, #0]
+    107a:	1e5a      	subs	r2, r3, #1
+    107c:	4193      	sbcs	r3, r2
+    107e:	b2db      	uxtb	r3, r3
+    1080:	2201      	movs	r2, #1
+    1082:	4053      	eors	r3, r2
+    1084:	b2db      	uxtb	r3, r3
+    1086:	1c1a      	adds	r2, r3, #0
+    1088:	2301      	movs	r3, #1
+    108a:	4013      	ands	r3, r2
+    108c:	b2da      	uxtb	r2, r3
+    108e:	4b3e      	ldr	r3, [pc, #248]	; (1188 <findEdges+0x144>)
+    1090:	701a      	strb	r2, [r3, #0]
+		delay_us(60);
+    1092:	203c      	movs	r0, #60	; 0x3c
+    1094:	4b3f      	ldr	r3, [pc, #252]	; (1194 <findEdges+0x150>)
+    1096:	4798      	blx	r3
+		stepsSinceChange++;
+    1098:	4b36      	ldr	r3, [pc, #216]	; (1174 <findEdges+0x130>)
+    109a:	681b      	ldr	r3, [r3, #0]
+    109c:	1c5a      	adds	r2, r3, #1
+    109e:	4b35      	ldr	r3, [pc, #212]	; (1174 <findEdges+0x130>)
+    10a0:	601a      	str	r2, [r3, #0]
+	while(!isStalled){
+    10a2:	4b38      	ldr	r3, [pc, #224]	; (1184 <findEdges+0x140>)
+    10a4:	781b      	ldrb	r3, [r3, #0]
+    10a6:	2201      	movs	r2, #1
+    10a8:	4053      	eors	r3, r2
+    10aa:	b2db      	uxtb	r3, r3
+    10ac:	2b00      	cmp	r3, #0
+    10ae:	d1db      	bne.n	1068 <findEdges+0x24>
+	}
+	delay_us(100);
+    10b0:	2064      	movs	r0, #100	; 0x64
+    10b2:	4b38      	ldr	r3, [pc, #224]	; (1194 <findEdges+0x150>)
+    10b4:	4798      	blx	r3
+	stepsSinceChange=0;
+    10b6:	4b2f      	ldr	r3, [pc, #188]	; (1174 <findEdges+0x130>)
+    10b8:	2200      	movs	r2, #0
+    10ba:	601a      	str	r2, [r3, #0]
+	count=0;
+    10bc:	4b36      	ldr	r3, [pc, #216]	; (1198 <findEdges+0x154>)
+    10be:	2200      	movs	r2, #0
+    10c0:	601a      	str	r2, [r3, #0]
+	encTot=0;
+    10c2:	4b36      	ldr	r3, [pc, #216]	; (119c <findEdges+0x158>)
+    10c4:	2200      	movs	r2, #0
+    10c6:	601a      	str	r2, [r3, #0]
+	stepsTotal=0;
+    10c8:	4b35      	ldr	r3, [pc, #212]	; (11a0 <findEdges+0x15c>)
+    10ca:	2200      	movs	r2, #0
+    10cc:	601a      	str	r2, [r3, #0]
+	currentDirection=0;
+    10ce:	4b2a      	ldr	r3, [pc, #168]	; (1178 <findEdges+0x134>)
+    10d0:	2200      	movs	r2, #0
+    10d2:	701a      	strb	r2, [r3, #0]
+	prevDirection=0;
+    10d4:	4b29      	ldr	r3, [pc, #164]	; (117c <findEdges+0x138>)
+    10d6:	2200      	movs	r2, #0
+    10d8:	701a      	strb	r2, [r3, #0]
+	prev2=0;
+    10da:	4b29      	ldr	r3, [pc, #164]	; (1180 <findEdges+0x13c>)
+    10dc:	2200      	movs	r2, #0
+    10de:	701a      	strb	r2, [r3, #0]
+	direction=!direction;
+    10e0:	4b30      	ldr	r3, [pc, #192]	; (11a4 <findEdges+0x160>)
+    10e2:	781b      	ldrb	r3, [r3, #0]
+    10e4:	1e5a      	subs	r2, r3, #1
+    10e6:	4193      	sbcs	r3, r2
+    10e8:	b2db      	uxtb	r3, r3
+    10ea:	2201      	movs	r2, #1
+    10ec:	4053      	eors	r3, r2
+    10ee:	b2db      	uxtb	r3, r3
+    10f0:	1c1a      	adds	r2, r3, #0
+    10f2:	2301      	movs	r3, #1
+    10f4:	4013      	ands	r3, r2
+    10f6:	b2da      	uxtb	r2, r3
+    10f8:	4b2a      	ldr	r3, [pc, #168]	; (11a4 <findEdges+0x160>)
+    10fa:	701a      	strb	r2, [r3, #0]
+	writePin(DIRPIN,direction);
+    10fc:	4b29      	ldr	r3, [pc, #164]	; (11a4 <findEdges+0x160>)
+    10fe:	781a      	ldrb	r2, [r3, #0]
+    1100:	4b29      	ldr	r3, [pc, #164]	; (11a8 <findEdges+0x164>)
+    1102:	0011      	movs	r1, r2
+    1104:	0018      	movs	r0, r3
+    1106:	4b22      	ldr	r3, [pc, #136]	; (1190 <findEdges+0x14c>)
+    1108:	4798      	blx	r3
+	isStalled=false;
+    110a:	4b1e      	ldr	r3, [pc, #120]	; (1184 <findEdges+0x140>)
+    110c:	2200      	movs	r2, #0
+    110e:	701a      	strb	r2, [r3, #0]
+	while(!isStalled){
+    1110:	e021      	b.n	1156 <findEdges+0x112>
+		writePin(STEP,toggle);
+    1112:	4b1d      	ldr	r3, [pc, #116]	; (1188 <findEdges+0x144>)
+    1114:	781a      	ldrb	r2, [r3, #0]
+    1116:	4b1d      	ldr	r3, [pc, #116]	; (118c <findEdges+0x148>)
+    1118:	0011      	movs	r1, r2
+    111a:	0018      	movs	r0, r3
+    111c:	4b1c      	ldr	r3, [pc, #112]	; (1190 <findEdges+0x14c>)
+    111e:	4798      	blx	r3
+		toggle = !toggle;
+    1120:	4b19      	ldr	r3, [pc, #100]	; (1188 <findEdges+0x144>)
+    1122:	781b      	ldrb	r3, [r3, #0]
+    1124:	1e5a      	subs	r2, r3, #1
+    1126:	4193      	sbcs	r3, r2
+    1128:	b2db      	uxtb	r3, r3
+    112a:	2201      	movs	r2, #1
+    112c:	4053      	eors	r3, r2
+    112e:	b2db      	uxtb	r3, r3
+    1130:	1c1a      	adds	r2, r3, #0
+    1132:	2301      	movs	r3, #1
+    1134:	4013      	ands	r3, r2
+    1136:	b2da      	uxtb	r2, r3
+    1138:	4b13      	ldr	r3, [pc, #76]	; (1188 <findEdges+0x144>)
+    113a:	701a      	strb	r2, [r3, #0]
+		delay_us(60);
+    113c:	203c      	movs	r0, #60	; 0x3c
+    113e:	4b15      	ldr	r3, [pc, #84]	; (1194 <findEdges+0x150>)
+    1140:	4798      	blx	r3
+		stepsTotal++;
+    1142:	4b17      	ldr	r3, [pc, #92]	; (11a0 <findEdges+0x15c>)
+    1144:	681b      	ldr	r3, [r3, #0]
+    1146:	1c5a      	adds	r2, r3, #1
+    1148:	4b15      	ldr	r3, [pc, #84]	; (11a0 <findEdges+0x15c>)
+    114a:	601a      	str	r2, [r3, #0]
+		stepsSinceChange++;
+    114c:	4b09      	ldr	r3, [pc, #36]	; (1174 <findEdges+0x130>)
+    114e:	681b      	ldr	r3, [r3, #0]
+    1150:	1c5a      	adds	r2, r3, #1
+    1152:	4b08      	ldr	r3, [pc, #32]	; (1174 <findEdges+0x130>)
+    1154:	601a      	str	r2, [r3, #0]
+	while(!isStalled){
+    1156:	4b0b      	ldr	r3, [pc, #44]	; (1184 <findEdges+0x140>)
+    1158:	781b      	ldrb	r3, [r3, #0]
+    115a:	2201      	movs	r2, #1
+    115c:	4053      	eors	r3, r2
+    115e:	b2db      	uxtb	r3, r3
+    1160:	2b00      	cmp	r3, #0
+    1162:	d1d6      	bne.n	1112 <findEdges+0xce>
+	}
+	encTot=count;
+    1164:	4b0c      	ldr	r3, [pc, #48]	; (1198 <findEdges+0x154>)
+    1166:	681a      	ldr	r2, [r3, #0]
+    1168:	4b0c      	ldr	r3, [pc, #48]	; (119c <findEdges+0x158>)
+    116a:	601a      	str	r2, [r3, #0]
+}
+    116c:	46c0      	nop			; (mov r8, r8)
+    116e:	46bd      	mov	sp, r7
+    1170:	bd80      	pop	{r7, pc}
+    1172:	46c0      	nop			; (mov r8, r8)
+    1174:	200004c8 	.word	0x200004c8
+    1178:	200005ae 	.word	0x200005ae
+    117c:	200006c8 	.word	0x200006c8
+    1180:	20000724 	.word	0x20000724
+    1184:	200004d9 	.word	0x200004d9
+    1188:	20000049 	.word	0x20000049
+    118c:	200005d8 	.word	0x200005d8
+    1190:	00000601 	.word	0x00000601
+    1194:	00000bd1 	.word	0x00000bd1
+    1198:	200004cc 	.word	0x200004cc
+    119c:	200006cc 	.word	0x200006cc
+    11a0:	200004d4 	.word	0x200004d4
+    11a4:	20000618 	.word	0x20000618
+    11a8:	2000069c 	.word	0x2000069c
+
+000011ac <main>:
+int main(void)
+{
+    11ac:	b590      	push	{r4, r7, lr}
+    11ae:	b083      	sub	sp, #12
+    11b0:	af00      	add	r7, sp, #0
+	
+	changeClock();
+    11b2:	4bbb      	ldr	r3, [pc, #748]	; (14a0 <main+0x2f4>)
+    11b4:	4798      	blx	r3
+	initPins();
+    11b6:	4bbb      	ldr	r3, [pc, #748]	; (14a4 <main+0x2f8>)
+    11b8:	4798      	blx	r3
+	EIC_setup();
+    11ba:	4bbb      	ldr	r3, [pc, #748]	; (14a8 <main+0x2fc>)
+    11bc:	4798      	blx	r3
+	initRTC();
+    11be:	4bbb      	ldr	r3, [pc, #748]	; (14ac <main+0x300>)
+    11c0:	4798      	blx	r3
+	standalone_mode();
+    11c2:	4bbb      	ldr	r3, [pc, #748]	; (14b0 <main+0x304>)
+    11c4:	4798      	blx	r3
+	findEdges();
+    11c6:	4bbb      	ldr	r3, [pc, #748]	; (14b4 <main+0x308>)
+    11c8:	4798      	blx	r3
+	begin(0);
+    11ca:	2000      	movs	r0, #0
+    11cc:	4bba      	ldr	r3, [pc, #744]	; (14b8 <main+0x30c>)
+    11ce:	4798      	blx	r3
+	counts=0;
+    11d0:	4bba      	ldr	r3, [pc, #744]	; (14bc <main+0x310>)
+    11d2:	2200      	movs	r2, #0
+    11d4:	601a      	str	r2, [r3, #0]
+	int swap;
+	setPin(&PA25,OUTPUT,NORMAL,PULL_DOWN);
+>>>>>>> parent of 4e8aedb (Added new project for final product)
     11d6:	48ba      	ldr	r0, [pc, #744]	; (14c0 <main+0x314>)
     11d8:	2302      	movs	r3, #2
     11da:	2200      	movs	r2, #0
@@ -10362,4 +10737,7 @@ int main(void)
 
 00001fd4 <__fini_array_start>:
     1fd4:	000000b5 	.word	0x000000b5
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)

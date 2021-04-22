@@ -41,8 +41,12 @@ volatile int count=0;
 int counts=0;
 volatile int stepsTotal=0;
 <<<<<<< HEAD
+<<<<<<< HEAD
 volatile int steps1=-1;
 volatile int steps2;
+=======
+volatile int steps1;
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
 volatile int steps1;
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -137,12 +141,19 @@ void EIC_Handler(void){
 		currentDirection = QEM[previous*4+current];
 		count+=currentDirection;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if((setup || !(counts==steps1)) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
 			//writePin(&PA25,true);
 			isStalled=true;
 		}
 		if((setup || !(counts==steps1)) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
 			//writePin(&PA25,true);
+=======
+		if((setup || stepsSinceChange>40) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
+			isStalled=true;
+		}
+		if((setup || stepsSinceChange>40) && prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction && !isStalled){
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
 		if((setup || stepsSinceChange>40) && prev2 == -1 && prevDirection==-1 && currentDirection == -1 && direction && !isStalled){
 			isStalled=true;
@@ -205,6 +216,10 @@ void findEdges(void){
 int main(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 =======
 	
 >>>>>>> parent of 4e8aedb (Added new project for final product)
@@ -213,6 +228,7 @@ int main(void)
 	EIC_setup();
 	initRTC();
 	standalone_mode();
+<<<<<<< HEAD
 <<<<<<< HEAD
 	setup=true;
 	findEdges();
@@ -232,6 +248,13 @@ int main(void)
 	int val2=0;
 	int val3=0;
 =======
+=======
+	findEdges();
+	begin(0);
+	counts=0;
+	int swap;
+	setPin(&PA25,OUTPUT,NORMAL,PULL_DOWN);
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 	//steps1 = target*encTot/12;
 	//steps2=stepsTotal-steps1;
 	currentDirection=0;
@@ -245,6 +268,7 @@ int main(void)
 	while (1)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		steps2=steps1;
 		counts = (int)((1 -(float)count/encTot) * stepsTotal);
 		//steps1 = stepsTotal*requestedPosition();
@@ -254,6 +278,8 @@ int main(void)
 				stepsSinceChange=0;
 				direction=true;
 =======
+=======
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 		steps1=encTot*requestedPosition();
 		if(!isStalled){
 			if(isStepping){
@@ -414,6 +440,12 @@ int main(void)
 		if(steps1>count+threshold || steps1<count-threshold){
 				isStepping=true;
 		}
+<<<<<<< HEAD
+=======
+		if(steps1>count+threshold || steps1<count-threshold){
+				isStepping=true;
+		}
+>>>>>>> parent of 4e8aedb (Added new project for final product)
 		*/
 		
 		
@@ -462,4 +494,7 @@ int main(void)
 		delay_us(2000000);
 		*/
 		
+<<<<<<< HEAD
+>>>>>>> parent of 4e8aedb (Added new project for final product)
+=======
 >>>>>>> parent of 4e8aedb (Added new project for final product)
