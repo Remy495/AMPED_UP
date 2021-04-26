@@ -67,6 +67,11 @@ void start_timer_us(uint32_t num)
 	RTC->MODE0.COUNT.reg = 0;
 }
 
+void update_timer_us(uint32_t num)
+{
+	RTC->MODE0.COMP->reg=num * 48;
+}
+
 bool timer_is_complete()
 {
 	return RTC->MODE0.INTFLAG.reg & RTC_MODE0_INTFLAG_CMP0;

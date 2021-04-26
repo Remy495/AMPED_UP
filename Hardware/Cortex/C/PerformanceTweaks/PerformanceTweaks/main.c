@@ -32,12 +32,12 @@
 #define DIRPIN &PA15
 
 #define START_STEP_SPEED 3000
-#define MAX_STEP_SPEED 400000
+#define MAX_STEP_SPEED 500000
 //#define MAX_STEP_SPEED 3000
-#define STEP_SPEED_INCREMENT 200
-#define STEP_SPEED_DECREMENT 500
+#define STEP_SPEED_INCREMENT 120
+#define STEP_SPEED_DECREMENT 120
 
-#define COUNT_BUFFER_SIZE 100
+#define COUNT_HISTORY_LENGTH 20
 
 volatile uint8_t recv[9][5] = {{0x00,0x00,0x00,0x00,0x00},{0x00,0x00,0x00,0x00,0x00},{0x00,0x00,0x00,0x00,0x00},{0x00,0x00,0x00,0x00,0x00},{0x00,0x00,0x00,0x00,0x00}};
 const uint8_t required[9][5] ={{0xEC,0x00,0x01,0x00,0xC3},{0x90,0x00,0x06,0x1F,0x0A},{0x80,0x00,0x00,0x00,0x03},{0x93,0x00,0x00,0x00,0x00},{0xF0,0x00,0x04,0x01,0xC8},{0x6F,0x00,0x00,0x00,0x00}};
@@ -73,6 +73,21 @@ bool direction;
 bool isGrabbed=false;
 int countdelta;
 uint32_t stepSpeed;
+
+int countHistory[COUNT_HISTORY_LENGTH] = {0};
+int countHistoryCurrentIndex = 0;
+
+void recordCurrentCount()
+{
+	countHistoryCurrentIndex = (countHistoryCurrentIndex + 1) % COUNT_HISTORY_LENGTH;
+	countHistory[countHistoryCurrentIndex] = count;
+}
+
+int getOldestCount()
+{
+	return countHistory[(countHistoryCurrentIndex + 1) % COUNT_HISTORY_LENGTH];
+}
+
 
 uint32_t stepTimeUs(uint32_t stepsPerSecond)
 {
@@ -166,10 +181,25 @@ void EIC_Handler(void){
 		currentDirection = QEM[previous*4+current];
 		count+=currentDirection;
 		countdelta++;
-		if(setup && stepsSinceChange>50 && ((prev2 == -1 && prevDirection==-1 && currentDirection == -1&&direction)|| (prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction)) && !isStalled){
-			writePin(&PA25,true);
+		recordCurrentCount();
+		//if(setup && stepsSinceChange>50 && ((prev2 == -1 && prevDirection==-1 && currentDirection == -1&&direction)|| (prev2 == 1 && prevDirection==1 && currentDirection == 1 && !direction)) && !isStalled){
+			//writePin(&PA25,true);
+			//isStalled=true;
+		//}
+		
+		int totalCachedTravel = count - getOldestCount();
+		if (setup && stepsSinceChange>50 && ((direction && totalCachedTravel < -10) || (!direction && totalCachedTravel > 10)))
+		{
+			//writePin(&PA25,true);
 			isStalled=true;
 		}
+
+		if (!setup && stepsSinceChange>50 && ((direction && totalCachedTravel < -10) || (!direction && totalCachedTravel > 10)))
+		{
+			//writePin(&PA25,true);
+			//isStalled=true;
+		}
+
 		if(!isStepping && countdelta >= threshold){
 			isGrabbed=true;
 		}
@@ -251,41 +281,41 @@ int main(void)
 	bool oldIsStepping = false;
 	int oldDirection = 0;
 	
-	volatile int predCount;
 
 	while(1){
 		
-		predCount = expectedCount();
 		
 		//steps1=(int)((float)stepsTotal*requestedPosition());
 		//counts=(int)((1-(float)count/encTot)*stepsTotal);
 		
-		//if(isGrabbed || isStalled){
-			//writePin(CFG6,true);
-			//delay_us(2000000);
-			//
-			//writePin(CFG6,false);
-			//isGrabbed=false;
-			//countdelta=0;
-			//isStalled=false;
-			//counts = (int)((1-(float)count/encTot)*stepsTotal);
-		//}
+		if(isGrabbed || isStalled){
+			writePin(CFG6,true);
+			delay_us(2000000);
+			
+			writePin(CFG6,false);
+			isGrabbed=false;
+			countdelta=0;
+			isStalled=false;
+			stepsSinceChange = 0;
+			stepSpeed = START_STEP_SPEED;
+			counts = (int)((1-(float)count/encTot)*stepsTotal);
+		}
 		
 		if (counts == steps1)
 		{
 			if (steps1 > stepsTotal / 2)
 			{
-				delay_us(1000000);
+				//delay_us(1000000);
 				steps1 = 200;
 				counts = encoderToSteps(count);
-				delay_us(500000);
+				//delay_us(500000);
 			}
 			else
 			{
-				delay_us(1000000);
+				//delay_us(1000000);
 				steps1 = stepsTotal - 200;
 				counts = encoderToSteps(count);
-				delay_us(500000);
+				//delay_us(500000);
 			}
 		}
 		
@@ -326,33 +356,40 @@ int main(void)
 			// Slow down if we are above the min speed and either we need to start slowing down for the target or we are moving in the wrong direction
 			stepSpeed -= STEP_SPEED_DECREMENT;
 		}
+		
+		start_timer_us(stepTimeUs(stepSpeed));
+		
 		oldIsStepping = isStepping;
 		oldDirection = direction;
 		
 		if(!isStalled){
 			if(isStepping){
 				if(counts<steps1 && direction && stepSpeed <= START_STEP_SPEED){
-					writePin(DIRPIN,false);
+					//writePin(DIRPIN,false);
+					PORT_IOBUS->Group[0].OUTCLR.reg = 1 << 15;
 					stepsSinceChange=0;
-					currentDirection=0;
-					prevDirection=0;
-					prev2=0;
-					prev3=0;
+					//currentDirection=0;
+					//prevDirection=0;
+					//prev2=0;
+					//prev3=0;
 					direction=false;
 				}
 				if(counts>steps1 && !direction && stepSpeed <= START_STEP_SPEED){
-					writePin(DIRPIN,true);
+					//writePin(DIRPIN,true);
+					PORT_IOBUS->Group[0].OUTSET.reg = 1 << 15;
 					stepsSinceChange=0;
-					currentDirection=0;
-					prevDirection=0;
-					prev2=0;
-					prev3=0;
+					//currentDirection=0;
+					//prevDirection=0;
+					//prev2=0;
+					//prev3=0;
 					direction=true;
 				}
 				stepsSinceChange++;
-				writePin(STEP,toggle);
+				PORT_IOBUS->Group[0].OUTTGL.reg = 1 << 14;
+				//writePin(STEP,toggle);
 				toggle=!toggle; 
-				delay_us(stepTimeUs(stepSpeed));
+				
+				while(!timer_is_complete());
 				if(direction){
 					counts--;
 				}
