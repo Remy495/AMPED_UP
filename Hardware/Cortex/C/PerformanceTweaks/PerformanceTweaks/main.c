@@ -32,10 +32,15 @@
 #define DIRPIN &PA15
 
 #define START_STEP_SPEED 3000
+#define TRANSITION_SPEED 50000
 #define MAX_STEP_SPEED 500000
 //#define MAX_STEP_SPEED 3000
-#define STEP_SPEED_INCREMENT 120
-#define STEP_SPEED_DECREMENT 120
+#define STEP_SPEED_INCREMENT 220
+#define STEP_SPEED_DECREMENT 220
+
+#define STEP_SPEED_INCREMENT_SLOW 100
+#define STEP_SPEED_DECREMENT_SLOW 100
+
 
 #define COUNT_HISTORY_LENGTH 20
 
@@ -46,7 +51,7 @@ uint8_t current=0;
 uint8_t previous=0;
 int stepsSinceChange=0;
 float target = 0.5;
-int threshold=2000;
+int threshold=150;
 volatile int count=0;
 int counts=0;
 volatile int stepsTotal=0;
@@ -74,6 +79,7 @@ bool isGrabbed=false;
 int countdelta;
 uint32_t stepSpeed;
 
+int stationaryCount;
 int countHistory[COUNT_HISTORY_LENGTH] = {0};
 int countHistoryCurrentIndex = 0;
 
@@ -188,19 +194,19 @@ void EIC_Handler(void){
 		//}
 		
 		int totalCachedTravel = count - getOldestCount();
-		if (setup && stepsSinceChange>50 && ((direction && totalCachedTravel < -10) || (!direction && totalCachedTravel > 10)))
+		if (setup && stepsSinceChange>50 && ((direction && totalCachedTravel < 0) || (!direction && totalCachedTravel > 0)))
 		{
 			//writePin(&PA25,true);
 			isStalled=true;
 		}
 
-		if (!setup && stepsSinceChange>50 && ((direction && totalCachedTravel < -10) || (!direction && totalCachedTravel > 10)))
+		if (!setup && stepsSinceChange>50 && ((direction && totalCachedTravel < 0) || (!direction && totalCachedTravel > 0)))
 		{
 			//writePin(&PA25,true);
-			//isStalled=true;
+			isStalled=true;
 		}
 
-		if(!isStepping && countdelta >= threshold){
+		if(!isStepping && abs(stationaryCount - count) > threshold){
 			isGrabbed=true;
 		}
 	}
@@ -276,6 +282,7 @@ int main(void)
 	writePin(DIRPIN,direction);
 	isStepping=true;
 	isStalled=false;
+	stationaryCount = count;
 	stepSpeed = START_STEP_SPEED;
 	
 	bool oldIsStepping = false;
@@ -285,39 +292,49 @@ int main(void)
 	while(1){
 		
 		
-		//steps1=(int)((float)stepsTotal*requestedPosition());
+		steps1=(int)((float)stepsTotal*requestedPosition());
 		//counts=(int)((1-(float)count/encTot)*stepsTotal);
 		
 		if(isGrabbed || isStalled){
 			writePin(CFG6,true);
-			delay_us(2000000);
+			
+			int lastCount;
+			do 
+			{
+				lastCount = count;
+				start_timer_us(1000000);
+				while(!timer_is_complete() && abs(lastCount - count) < threshold);
+			} while (abs(lastCount - count) >= threshold);
+			
+			//delay_us(200000);
 			
 			writePin(CFG6,false);
 			isGrabbed=false;
 			countdelta=0;
 			isStalled=false;
 			stepsSinceChange = 0;
+			stationaryCount = count;
 			stepSpeed = START_STEP_SPEED;
 			counts = (int)((1-(float)count/encTot)*stepsTotal);
 		}
-		
-		if (counts == steps1)
-		{
-			if (steps1 > stepsTotal / 2)
-			{
-				//delay_us(1000000);
-				steps1 = 200;
-				counts = encoderToSteps(count);
-				//delay_us(500000);
-			}
-			else
-			{
-				//delay_us(1000000);
-				steps1 = stepsTotal - 200;
-				counts = encoderToSteps(count);
-				//delay_us(500000);
-			}
-		}
+		//
+		//if (counts == steps1)
+		//{
+			//if (steps1 > stepsTotal / 2)
+			//{
+				////delay_us(1000000);
+				//steps1 = 0;
+				//counts = encoderToSteps(count);
+				////delay_us(500000);
+			//}
+			//else
+			//{
+				////delay_us(1000000);
+				//steps1 = stepsTotal - 0;
+				//counts = encoderToSteps(count);
+				////delay_us(500000);
+			//}
+		//}
 		
 		
 		//if (counts > 3 * stepsTotal / 4)
@@ -332,29 +349,55 @@ int main(void)
 		
 		if(counts==steps1 && isStepping){
 			//writePin(CFG6,true);
+			stationaryCount = count;
 			isStepping = false;
+			stepsSinceChange = 0;
 		}
 		else if (counts!=steps1 && !isStepping)
 		{
 			//writePin(CFG6,false);
 			isStepping = true;
+			stepsSinceChange = 0;
 		}
 		
-		
+		int slowdownSteps;
+		if (stepSpeed <= TRANSITION_SPEED)
+		{
+			slowdownSteps = (stepSpeed - START_STEP_SPEED) / STEP_SPEED_DECREMENT + 1;
+		}
+		else
+		{
+			slowdownSteps = (stepSpeed - TRANSITION_SPEED) / STEP_SPEED_DECREMENT_SLOW + (TRANSITION_SPEED - START_STEP_SPEED) / STEP_SPEED_DECREMENT + 1;
+			
+		}
 		
 		if (isStepping != oldIsStepping || direction != oldDirection)
 		{
 			stepSpeed = START_STEP_SPEED;
 		}
-		else if (stepSpeed < MAX_STEP_SPEED && ((steps1 < counts) == direction) && stepSpeed < STEP_SPEED_DECREMENT * abs(counts-steps1))
+		else if (stepSpeed < MAX_STEP_SPEED && ((steps1 < counts) == direction) && abs(counts-steps1) > slowdownSteps)
 		{
 			// Speed up if we are below the max speed, we are traveling toward the target, and we have enough room to slow down
-			stepSpeed += STEP_SPEED_INCREMENT;
+			if (stepSpeed < TRANSITION_SPEED)
+			{
+				stepSpeed += STEP_SPEED_INCREMENT;
+			}
+			else
+			{
+				stepSpeed += STEP_SPEED_INCREMENT_SLOW;
+			}
 		}
-		else if (stepSpeed > START_STEP_SPEED && (stepSpeed > STEP_SPEED_DECREMENT * abs(counts-steps1) + START_STEP_SPEED || ((steps1 > counts) == direction)))
+		else if (stepSpeed > START_STEP_SPEED && (abs(counts-steps1) < slowdownSteps || ((steps1 > counts) == direction)))
 		{
 			// Slow down if we are above the min speed and either we need to start slowing down for the target or we are moving in the wrong direction
-			stepSpeed -= STEP_SPEED_DECREMENT;
+			if (stepSpeed < TRANSITION_SPEED)
+			{
+				stepSpeed -= STEP_SPEED_DECREMENT;
+			}
+			else
+			{
+				stepSpeed -= STEP_SPEED_DECREMENT_SLOW;
+			}
 		}
 		
 		start_timer_us(stepTimeUs(stepSpeed));
