@@ -7,7 +7,7 @@ ANSI_GREEN := \033[1;92m
 ANSI_DEFAULT_COLOR:= \033[m
 
 PROJECT_ROOT_DIR := ./..
-CPP_OUTPUT_DIR := $(PROJECT_ROOT_DIR)/TeensyCode/generated
+CPP_OUTPUT_DIR := $(PROJECT_ROOT_DIR)/Hardware/Teensy/src/generated
 PYTHON_OUTPUT_DIR := $(PROJECT_ROOT_DIR)/GUI/Python
 
 CPP_FLAGS := --cpp --scoped-enums -o $(CPP_OUTPUT_DIR)
@@ -24,10 +24,10 @@ clean:
 	rm -rf $(CPP_OUTPUT_FILES) $(PYTHON_OUTPUT_FILES)
 
 $(CPP_OUTPUT_DIR)/%_generated.h: %.fbs $(INPUT_FILES) | $(CPP_OUTPUT_DIR)
-	flatc $(CPP_FLAGS) $<
+	./toolchain/flatc $(CPP_FLAGS) $<
 
 $(PYTHON_OUTPUT_DIR)/%: %.fbs $(INPUT_FILES)
-	flatc $(PYTHON_FLAGS) $<
+	./toolchain/flatc $(PYTHON_FLAGS) $<
 
 $(CPP_OUTPUT_DIR):
 	mkdir $@

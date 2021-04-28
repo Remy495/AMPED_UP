@@ -7,6 +7,7 @@ from node_scene_background import *
 
 import flatbuffers
 from node_graph_serializer import NodeGraphSerializer, NodeGraph
+from AmpedUpMessaging import Message, MessagePayload, SavePresetMessage
 
 class NodeScene(QtWidgets.QGraphicsScene):
 	def __init__(self, context, parent = None):
@@ -174,13 +175,26 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		if e.key() == QtCore.Qt.Key_Space:
 			builder = flatbuffers.Builder(1024)
 			nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
-			builder.Finish(nodeGraphOffset)
+			
+			SavePresetMessage.SavePresetMessageStart(builder)
+			SavePresetMessage.SavePresetMessageAddId(builder, 2)
+			SavePresetMessage.SavePresetMessageAddValue(builder, nodeGraphOffset)
+			savePresetMessageOffset = SavePresetMessage.SavePresetMessageEnd(builder)
+
+			Message.MessageStart(builder)
+			Message.MessageAddPayloadType(builder, MessagePayload.MessagePayload.SavePresetMessage)
+			Message.MessageAddPayload(builder, savePresetMessageOffset)
+			messageOffset = Message.MessageEnd(builder)
+
+			builder.Finish(messageOffset)
 			buf = builder.Output()
 
 			print("Data size:", len(buf))
 
-			nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
-			NodeGraphSerializer.deserialize(nodeGraph, self)
+			self.context.comms.sendMessage(bytes(buf))
+
+			# nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
+			# NodeGraphSerializer.deserialize(nodeGraph, self)
 			
 
 	def onSceneRectChanged(self, rect):
