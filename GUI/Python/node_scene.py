@@ -35,6 +35,8 @@ class NodeScene(QtWidgets.QGraphicsScene):
 		self.addItem(self.background)
 		self.background.rebuild()
 
+		self.isEditingText = False
+
 		self.sortNumber = 0
 
 	def addNode(self, node):
@@ -163,38 +165,37 @@ class NodeScene(QtWidgets.QGraphicsScene):
 
 	def keyPressEvent(self, e):
 		super(NodeScene, self).keyPressEvent(e)
-		if e.key() == QtCore.Qt.Key_Delete or e.key() == QtCore.Qt.Key_Backspace:
-			for item in self.selectedItems():
-				# For now, the only things that are selectable are nodes. So just run deleteNode on each one (if it is deleteable)
-				if item.isDeleteable:
-					self.removeNode(item)
+		if not self.isEditingText:
+			if e.key() == QtCore.Qt.Key_Delete or e.key() == QtCore.Qt.Key_Backspace:
+				for item in self.selectedItems():
+					# For now, the only things that are selectable are nodes. So just run deleteNode on each one (if it is deleteable)
+					if item.isDeleteable:
+						self.removeNode(item)
 
-			# Any non-deleteable nodes should be deselected
-			self.clearSelection()
+				# Any non-deleteable nodes should be deselected
+				self.clearSelection()
 
-		if e.key() == QtCore.Qt.Key_Space:
-			builder = flatbuffers.Builder(1024)
-			nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
-			
-			SavePresetMessage.SavePresetMessageStart(builder)
-			SavePresetMessage.SavePresetMessageAddId(builder, 2)
-			SavePresetMessage.SavePresetMessageAddValue(builder, nodeGraphOffset)
-			savePresetMessageOffset = SavePresetMessage.SavePresetMessageEnd(builder)
+			if e.key() == QtCore.Qt.Key_Space:
+				builder = flatbuffers.Builder(1024)
+				nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
+				
+				SavePresetMessage.SavePresetMessageStart(builder)
+				SavePresetMessage.SavePresetMessageAddId(builder, 2)
+				SavePresetMessage.SavePresetMessageAddValue(builder, nodeGraphOffset)
+				savePresetMessageOffset = SavePresetMessage.SavePresetMessageEnd(builder)
 
-			Message.MessageStart(builder)
-			Message.MessageAddPayloadType(builder, MessagePayload.MessagePayload.SavePresetMessage)
-			Message.MessageAddPayload(builder, savePresetMessageOffset)
-			messageOffset = Message.MessageEnd(builder)
+				Message.MessageStart(builder)
+				Message.MessageAddPayloadType(builder, MessagePayload.MessagePayload.SavePresetMessage)
+				Message.MessageAddPayload(builder, savePresetMessageOffset)
+				messageOffset = Message.MessageEnd(builder)
 
-			builder.Finish(messageOffset)
-			buf = builder.Output()
+				builder.Finish(messageOffset)
+				buf = builder.Output()
 
-			print("Data size:", len(buf))
+				self.context.comms.sendMessage(bytes(buf))
 
-			self.context.comms.sendMessage(bytes(buf))
-
-			# nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
-			# NodeGraphSerializer.deserialize(nodeGraph, self)
+				# nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
+				# NodeGraphSerializer.deserialize(nodeGraph, self)
 			
 
 	def onSceneRectChanged(self, rect):

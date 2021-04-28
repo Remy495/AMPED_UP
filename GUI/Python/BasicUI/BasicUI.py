@@ -27,8 +27,8 @@ class basicUI(QWidget):
                     self.buttons[i][j].clicked.connect(self.loadButtonClicked)
         for i in range(len(self.valueFields)):
             self.valueFields[i][1].editingFinished.connect(self.textChanged)
-        for i in range(len(knobs)):
-            self.dials.append(Qdial())
+        for i in range(len(self.knobs)):
+            self.dials.append(QDial())
 
     def buildLayout(self):
         k=0
@@ -41,8 +41,8 @@ class basicUI(QWidget):
             for j in range(len(self.valueFields[i])):
                 self.layout.addWidget(self.valueFields[i][j],10,k)
                 k+=1
-        for i in range(len(dials)):
-            self.layout.addWidget(self.dials[i],11,i)
+        for i in range(len(self.dials)):
+            self.layout.addWidget(self.dials[i],11,2*i+1)
     def saveButtonClicked(self,preset=0):
         send=self.sender()
         ##print("clicked save button "+ str(send.preset))

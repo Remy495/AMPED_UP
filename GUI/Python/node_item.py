@@ -204,6 +204,7 @@ class Node(QtWidgets.QGraphicsItem):
 				self.updateConnections()
 
 	def mousePressEvent(self, e):
+		self.scene().clearFocus()
 		if self.isInPallet:
 			# If this node is in the pallet, make a copy to leave behind and let the user drag it out of the pallet
 			self.isInPallet = False
@@ -259,6 +260,7 @@ class Node(QtWidgets.QGraphicsItem):
 
 	def mouseReleaseEvent(self, e):
 		super(Node, self).mouseReleaseEvent(e)
+		self.scene().clearFocus()
 		if self.dragStartPos is not None:
 			# Check if the user was dragging the node
 

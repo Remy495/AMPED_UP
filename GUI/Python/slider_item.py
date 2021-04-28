@@ -43,11 +43,14 @@ class Slider(QtWidgets.QGraphicsTextItem):
             cursor.movePosition(QtGui.QTextCursor.Start)
             cursor.movePosition(QtGui.QTextCursor.End, QtGui.QTextCursor.KeepAnchor)
             self.setTextCursor(cursor)
+            self.scene().isEditingText = True
         else:
             self.clearFocus()
 
     def focusOutEvent(self, e):
         super(Slider, self).focusInEvent(e)
+
+        self.scene().isEditingText = False
 
         # Get the text the user entered
         enteredText = self.toPlainText()
