@@ -1,43 +1,69 @@
-include "AmpedUpPresets.fbs";
+include "AmpedUpNodes.fbs";
 
 namespace AmpedUpMessaging;
 
-table SetKnobValuesMessage {
-    knobValues: AmpedUpPresets.KnobValues;
+table SetKnobValueMessage
+{
+    knobIndex: uint8;
+    value: float;
 }
 
-table SavePresetMessage {
-    preset: AmpedUpPresets.Preset;
+table SavePresetMessage
+{
+    id: uint16;
+    value: AmpedUpNodes.NodeGraph;
 }
 
-table SaveCurrentAsPresetMessage {
+table SaveCurrentAsPresetMessage
+{
     id: uint16;
 }
 
-table LoadPresetMessage {
+table LoadPresetMessage
+{
     id: uint16;
 }
 
-enum LogSeverity: uint8 {
+enum LogSeverity: uint8
+{
     DEBUG,
+    INFO,
     WARNING,
     CRITICAL,
     FATAL
 }
 
-table LogMessage {
+table LogMessage
+{
     severity: LogSeverity;
+    fileName: string;
+    lineNumber: uint32;
     message: string;
 }
 
-union MessagePayload {
-    SetKnobValuesMessage,
+struct WaveformData
+{
+    values: [uint8:100];
+}
+
+table WaveformMessage
+{
+    data: WaveformData;
+}
+
+union MessagePayload
+{
+    SetKnobValueMessage,
     SavePresetMessage,
     SaveCurrentAsPresetMessage,
     LoadPresetMessage,
-    LogMessage
+    LogMessage,
+    WaveformMessage
 }
 
-table Message {
+table Message
+{
     payload: MessagePayload;
 }
+
+root_type Message;

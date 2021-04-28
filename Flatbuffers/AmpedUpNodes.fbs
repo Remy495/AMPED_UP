@@ -1,31 +1,37 @@
 
 namespace AmpedUpNodes;
 
-table Connection {
+table Connection
+{
     nodeIndex: uint16;
     outputIndex: uint8;
 }
 
-table ConstantValueFloat {
+table ConstantValueFloat
+{
     value: float32;
 }
 
-table ConstantValueInt {
+table ConstantValueInt
+{
     value: int32;
 }
 
-union InputValue {
+union InputValue
+{
     Connection,
     ConstantValueFloat,
     ConstantValueInt
 }
 
 // Python does not support vectors of unions, so it is necessary to wrap InputValue in a table
-table Input {
+table Input
+{
     value: InputValue;
 }
 
-enum NodeType: uint8 {
+enum NodeType: uint8
+{
     //Input Nodes
     GUITAR_SIGNAL,
     EFFECTS_PEDAL,
@@ -44,13 +50,13 @@ enum NodeType: uint8 {
     KNOB_POSITIONS
 }
 
-table Node {
+table Node
+{
     type: NodeType;
     inputs: [Input];
 }
 
-table NodeGraph {
+table NodeGraph
+{
     nodes: [Node];
 }
-
-root_type Node;
