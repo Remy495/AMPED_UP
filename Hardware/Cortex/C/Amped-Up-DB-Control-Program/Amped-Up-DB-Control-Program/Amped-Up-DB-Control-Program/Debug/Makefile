@@ -78,7 +78,7 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 LIB_DEP+=  \
-C:/Users/hanle/Documents/GitHub/AMPED_UP/Hardware/Cortex/C/Amped-Up-DB-Control-Program/Amped-Up-DB-Control-Program/Amped-Up-DB-Control-Program/libCortexCommunicationExample.a
+C:/Users/Aaron/Documents/GitHub/AMPED_UP/Hardware/Cortex/C/Amped-Up-DB-Control-Program/Amped-Up-DB-Control-Program/Amped-Up-DB-Control-Program/libCortexCommunicationExample.a
 
 LINKER_SCRIPT_DEP+=  \
 ../Device_Startup/samd21e15b_flash.ld \
@@ -89,21 +89,21 @@ LINKER_SCRIPT_DEP+=  \
 Device_Startup/startup_samd21.o: ../Device_Startup/startup_samd21.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
-	$(QUOTE)H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"H:\Atmel\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"H:\Atmel\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Device_Startup/system_samd21.o: ../Device_Startup/system_samd21.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
-	$(QUOTE)H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"H:\Atmel\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"H:\Atmel\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 ./main.o: .././main.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
-	$(QUOTE)H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"H:\Atmel\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"H:\Atmel\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21E15B__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21c\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
@@ -133,14 +133,14 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: ARM/GNU Linker : 6.3.1
-	$(QUOTE)H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="Amped-Up-DB-Control-Program.map" -Wl,--start-group -lm -lCortexCommunicationExample  -Wl,--end-group -L"..\\Device_Startup" -L"C:\Users\Aaron\Documents\GitHub\AMPED_UP\Hardware\Cortex\C\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program\Amped-Up-DB-Control-Program" -L"C:\Users\hanle\DOCUME~1\GitHub\AMPED_UP\Hardware\Cortex\C\AMPED-~1\AMPED-~1\AMPED-~1"  -Wl,--gc-sections -mcpu=cortex-m0plus -Tsamd21e15b_flash.ld  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="Amped-Up-DB-Control-Program.map" -Wl,--start-group -lm -lCortexCommunicationExample  -Wl,--end-group -L"..\\Device_Startup" -L"C:\Users\Aaron\DOCUME~1\GitHub\AMPED_UP\Hardware\Cortex\C\AMPED-~1\AMPED-~1\AMPED-~1"  -Wl,--gc-sections -mcpu=cortex-m0plus -Tsamd21e15b_flash.ld  
 	@echo Finished building target: $@
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.bin"
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.hex"
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.eep" || exit 0
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "Amped-Up-DB-Control-Program.elf" > "Amped-Up-DB-Control-Program.lss"
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.srec"
-	"H:\Atmel\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "Amped-Up-DB-Control-Program.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.bin"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "Amped-Up-DB-Control-Program.elf" > "Amped-Up-DB-Control-Program.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "Amped-Up-DB-Control-Program.elf" "Amped-Up-DB-Control-Program.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "Amped-Up-DB-Control-Program.elf"
 	
 	
 
