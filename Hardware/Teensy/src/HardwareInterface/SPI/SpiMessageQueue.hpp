@@ -26,6 +26,7 @@ namespace AmpedUp
         {
             frontIndex_ = 0;
             usedSize_ = 0;
+            messageCount_ = 0;
         }
 
         SpiPayload stageEnqueue(RemoteMessageSize_t size)
@@ -85,11 +86,29 @@ namespace AmpedUp
             return SpiPayload(newPayloadPtr, newSize);  
         }
 
+        SpiPayload trimStagedMessage(const BinaryUtil::byte_t* dataWithinStagedPayload, RemoteMessageSize_t size)
+        {
+            // Find the size tag for the existing staged message
+            uint32_t sizeTagIndex = getBlockIndexFollowing(endIndex(), sizeof(RemoteMessageSize_t));
+            RemoteMessageSize_t* sizeTagPtr = reinterpret_cast<RemoteMessageSize_t*>(buffer_ + sizeTagIndex);
+
+            // Update the size tag to reflect the new size
+            *sizeTagPtr = size;
+
+            // Find the new location for the staged message
+            uint32_t newPayloadIndex = getBlockIndexFollowing(sizeTagIndex + sizeof(RemoteMessageSize_t), size);
+            BinaryUtil::byte_t* newPayloadPtr = buffer_ + newPayloadIndex;
+            memmove(newPayloadPtr, dataWithinStagedPayload, size);
+
+            return SpiPayload(newPayloadPtr, size);
+        }
+
         void commitStagedMessage()
         {
             uint32_t sizeTagIndex = getBlockIndexFollowing(endIndex(), sizeof(RemoteMessageSize_t));
             RemoteMessageSize_t* sizeTagPtr = reinterpret_cast<RemoteMessageSize_t*>(buffer_ + sizeTagIndex);
             usedSize_ += sizeof(RemoteMessageSize_t) + *sizeTagPtr;
+            messageCount_++;
         }
 
         SpiPayload peekFront()
@@ -120,11 +139,12 @@ namespace AmpedUp
             {
                 frontIndex_ = 0;
             }
+            messageCount_--;
         }
 
         bool empty()
         {
-            return usedSize_ == 0;
+            return messageCount_ == 0;
         }
 
         RemoteMessageSize_t getMaximumEnqueueSize() const
@@ -145,12 +165,18 @@ namespace AmpedUp
             return size <= getMaximumEnqueueSize();
         }
 
+        uint32_t getMessageCount() const
+        {
+            return messageCount_;
+        }
+
     private:
         static constexpr uint32_t CAPACITY_BYTES = BinaryUtil::bytesFillWords(messageCapacity * Constants::REMOTE_MESSAGE_MAX_SIZE);
 
         alignas(BinaryUtil::word_t) BinaryUtil::byte_t buffer_[CAPACITY_BYTES];
         volatile uint32_t frontIndex_{};
         volatile uint32_t usedSize_{};
+        volatile uint32_t messageCount_{};
 
         uint32_t endIndex() const
         {

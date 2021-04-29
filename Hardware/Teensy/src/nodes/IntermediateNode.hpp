@@ -45,8 +45,8 @@ namespace AmpedUp {
             return outputs_;
         }
 
-        NodeInput inputs_[nInputs];
-        NodeValue outputs_[nOutputs];
+        NodeInput inputs_[nInputs]{};
+        NodeValue outputs_[nOutputs]{};
     };
 }
 

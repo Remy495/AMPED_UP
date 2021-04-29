@@ -19,7 +19,7 @@ AmpedUp::Time::Time(uint64_t ticks) : ticks_(ticks)
 
 AmpedUp::Time::~Time() = default;
 
-double AmpedUp::Time::getSeconds()
+double AmpedUp::Time::getSeconds() const
 {
     return static_cast<double>(ticks_) / static_cast<double>(TIMER_HZ);
 }
@@ -37,6 +37,38 @@ double AmpedUp::Time::getMicroseconds() const
 uint64_t AmpedUp::Time::getTicks() const
 {
     return ticks_;
+}
+
+bool AmpedUp::Time::operator<(const Time& other) const
+{
+    return ticks_ < other.ticks_;
+}
+
+bool AmpedUp::Time::operator>(const Time& other) const
+{
+    return ticks_ > other.ticks_;
+}
+
+bool AmpedUp::Time::operator<=(const Time& other) const
+{
+    return ticks_ <= other.ticks_;
+}
+
+bool AmpedUp::Time::operator>=(const Time& other) const
+{
+    return ticks_ >= other.ticks_;
+}
+
+AmpedUp::Time& AmpedUp::Time::operator+=(const Time& other)
+{
+    ticks_ += other.ticks_;
+    return *this;
+}
+
+AmpedUp::Time& AmpedUp::Time::operator-=(const Time& other)
+{
+    ticks_ -= other.ticks_;
+    return *this;
 }
 
 void AmpedUp::Time::initialize()
@@ -62,6 +94,21 @@ void AmpedUp::Time::initialize()
 AmpedUp::Time AmpedUp::Time::now()
 {
     return Time(getCurrentTimeTicks());
+}
+
+AmpedUp::Time AmpedUp::Time::seconds(float seconds)
+{
+    return Time(seconds * TIMER_HZ);
+}
+
+AmpedUp::Time AmpedUp::Time::miliseconds(float miliseconds)
+{
+    return Time(miliseconds * TIMER_HZ / 1000.0);
+}
+
+AmpedUp::Time AmpedUp::Time::microseconds(float microseconds)
+{
+    return Time(microseconds * TIMER_HZ / 1000000.0);
 }
 
 void AmpedUp::Time::delay(const Time& time)
@@ -104,7 +151,7 @@ void AmpedUp::Time::overflowInterupt()
 
 uint64_t operator""_m(long double minutes)
 {
-    return minutes * TIMER_HZ / 60.0;
+    return minutes * TIMER_HZ * 60.0;
 }
 
 uint64_t operator""_s(long double seconds)
@@ -120,4 +167,34 @@ uint64_t operator""_ms(long double milis)
 uint64_t operator""_us(long double micros)
 {
     return micros * TIMER_HZ / 1000000.0;
+}
+
+uint64_t operator""_m(unsigned long long minutes)
+{
+    return minutes * TIMER_HZ * 60;
+}
+
+uint64_t operator""_s(unsigned long long seconds)
+{
+    return seconds * TIMER_HZ;
+}
+
+uint64_t operator""_ms(unsigned long long milis)
+{
+    return milis * TIMER_HZ / 1000;
+}
+
+uint64_t operator""_us(unsigned long long micros)
+{
+    return micros * TIMER_HZ / 1000000;
+}
+
+AmpedUp::Time operator+(AmpedUp::Time lhs, const AmpedUp::Time& rhs)
+{
+    return (lhs += rhs);
+}
+
+AmpedUp::Time operator-(AmpedUp::Time lhs, const AmpedUp::Time& rhs)
+{
+    return (lhs -= rhs);
 }

@@ -23,6 +23,9 @@ struct InputBuilder;
 struct Node;
 struct NodeBuilder;
 
+struct OutputRange;
+struct OutputRangeBuilder;
+
 struct NodeGraph;
 struct NodeGraphBuilder;
 
@@ -88,16 +91,15 @@ enum class NodeType : uint8_t {
   SQUARE_WAVE = 3,
   MULTIPLY = 4,
   ADD = 5,
-  SUBTRACT = 6,
-  DIVIDE = 7,
-  MEAN = 8,
-  REMAP_RANGE = 9,
-  KNOB_POSITIONS = 10,
+  AVERAGE = 6,
+  REMAP_RANGE = 7,
+  REVERSE = 8,
+  KNOB_POSITIONS = 9,
   MIN = GUITAR_SIGNAL,
   MAX = KNOB_POSITIONS
 };
 
-inline const NodeType (&EnumValuesNodeType())[11] {
+inline const NodeType (&EnumValuesNodeType())[10] {
   static const NodeType values[] = {
     NodeType::GUITAR_SIGNAL,
     NodeType::EFFECTS_PEDAL,
@@ -105,27 +107,25 @@ inline const NodeType (&EnumValuesNodeType())[11] {
     NodeType::SQUARE_WAVE,
     NodeType::MULTIPLY,
     NodeType::ADD,
-    NodeType::SUBTRACT,
-    NodeType::DIVIDE,
-    NodeType::MEAN,
+    NodeType::AVERAGE,
     NodeType::REMAP_RANGE,
+    NodeType::REVERSE,
     NodeType::KNOB_POSITIONS
   };
   return values;
 }
 
 inline const char * const *EnumNamesNodeType() {
-  static const char * const names[12] = {
+  static const char * const names[11] = {
     "GUITAR_SIGNAL",
     "EFFECTS_PEDAL",
     "SINE_WAVE",
     "SQUARE_WAVE",
     "MULTIPLY",
     "ADD",
-    "SUBTRACT",
-    "DIVIDE",
-    "MEAN",
+    "AVERAGE",
     "REMAP_RANGE",
+    "REVERSE",
     "KNOB_POSITIONS",
     nullptr
   };
@@ -409,19 +409,77 @@ inline flatbuffers::Offset<Node> CreateNodeDirect(
       inputs__);
 }
 
+struct OutputRange FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef OutputRangeBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MINIMUM = 4,
+    VT_MAXIMUM = 6
+  };
+  float minimum() const {
+    return GetField<float>(VT_MINIMUM, 0.0f);
+  }
+  float maximum() const {
+    return GetField<float>(VT_MAXIMUM, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<float>(verifier, VT_MINIMUM) &&
+           VerifyField<float>(verifier, VT_MAXIMUM) &&
+           verifier.EndTable();
+  }
+};
+
+struct OutputRangeBuilder {
+  typedef OutputRange Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_minimum(float minimum) {
+    fbb_.AddElement<float>(OutputRange::VT_MINIMUM, minimum, 0.0f);
+  }
+  void add_maximum(float maximum) {
+    fbb_.AddElement<float>(OutputRange::VT_MAXIMUM, maximum, 0.0f);
+  }
+  explicit OutputRangeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<OutputRange> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OutputRange>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OutputRange> CreateOutputRange(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float minimum = 0.0f,
+    float maximum = 0.0f) {
+  OutputRangeBuilder builder_(_fbb);
+  builder_.add_maximum(maximum);
+  builder_.add_minimum(minimum);
+  return builder_.Finish();
+}
+
 struct NodeGraph FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef NodeGraphBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NODES = 4
+    VT_NODES = 4,
+    VT_OUTPUTRANGES = 6
   };
   const flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::Node>> *nodes() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::Node>> *>(VT_NODES);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::OutputRange>> *outputRanges() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::OutputRange>> *>(VT_OUTPUTRANGES);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NODES) &&
            verifier.VerifyVector(nodes()) &&
            verifier.VerifyVectorOfTables(nodes()) &&
+           VerifyOffset(verifier, VT_OUTPUTRANGES) &&
+           verifier.VerifyVector(outputRanges()) &&
+           verifier.VerifyVectorOfTables(outputRanges()) &&
            verifier.EndTable();
   }
 };
@@ -432,6 +490,9 @@ struct NodeGraphBuilder {
   flatbuffers::uoffset_t start_;
   void add_nodes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::Node>>> nodes) {
     fbb_.AddOffset(NodeGraph::VT_NODES, nodes);
+  }
+  void add_outputRanges(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::OutputRange>>> outputRanges) {
+    fbb_.AddOffset(NodeGraph::VT_OUTPUTRANGES, outputRanges);
   }
   explicit NodeGraphBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -446,19 +507,24 @@ struct NodeGraphBuilder {
 
 inline flatbuffers::Offset<NodeGraph> CreateNodeGraph(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::Node>>> nodes = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::Node>>> nodes = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AmpedUpNodes::OutputRange>>> outputRanges = 0) {
   NodeGraphBuilder builder_(_fbb);
+  builder_.add_outputRanges(outputRanges);
   builder_.add_nodes(nodes);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<NodeGraph> CreateNodeGraphDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<AmpedUpNodes::Node>> *nodes = nullptr) {
+    const std::vector<flatbuffers::Offset<AmpedUpNodes::Node>> *nodes = nullptr,
+    const std::vector<flatbuffers::Offset<AmpedUpNodes::OutputRange>> *outputRanges = nullptr) {
   auto nodes__ = nodes ? _fbb.CreateVector<flatbuffers::Offset<AmpedUpNodes::Node>>(*nodes) : 0;
+  auto outputRanges__ = outputRanges ? _fbb.CreateVector<flatbuffers::Offset<AmpedUpNodes::OutputRange>>(*outputRanges) : 0;
   return AmpedUpNodes::CreateNodeGraph(
       _fbb,
-      nodes__);
+      nodes__,
+      outputRanges__);
 }
 
 inline bool VerifyInputValue(flatbuffers::Verifier &verifier, const void *obj, InputValue type) {
@@ -492,36 +558,6 @@ inline bool VerifyInputValueVector(flatbuffers::Verifier &verifier, const flatbu
     }
   }
   return true;
-}
-
-inline const AmpedUpNodes::Node *GetNode(const void *buf) {
-  return flatbuffers::GetRoot<AmpedUpNodes::Node>(buf);
-}
-
-inline const AmpedUpNodes::Node *GetSizePrefixedNode(const void *buf) {
-  return flatbuffers::GetSizePrefixedRoot<AmpedUpNodes::Node>(buf);
-}
-
-inline bool VerifyNodeBuffer(
-    flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<AmpedUpNodes::Node>(nullptr);
-}
-
-inline bool VerifySizePrefixedNodeBuffer(
-    flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<AmpedUpNodes::Node>(nullptr);
-}
-
-inline void FinishNodeBuffer(
-    flatbuffers::FlatBufferBuilder &fbb,
-    flatbuffers::Offset<AmpedUpNodes::Node> root) {
-  fbb.Finish(root);
-}
-
-inline void FinishSizePrefixedNodeBuffer(
-    flatbuffers::FlatBufferBuilder &fbb,
-    flatbuffers::Offset<AmpedUpNodes::Node> root) {
-  fbb.FinishSizePrefixed(root);
 }
 
 }  // namespace AmpedUpNodes

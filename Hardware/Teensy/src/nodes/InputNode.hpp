@@ -14,6 +14,8 @@ namespace AmpedUp {
     class InputNode: public Node {
     public:
 
+        InputNode() = default;
+
         ///////////////////////////////////////////////////////
         /// @brief Virtual destructor
         ///////////////////////////////////////////////////////
@@ -30,7 +32,7 @@ namespace AmpedUp {
         /// @brief Get the number of inputs this node has (0, as this is an input node)
         ///////////////////////////////////////////////////////
         size_t numInputs() const {
-            return 0
+            return 0;
         }
 
     protected:

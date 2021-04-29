@@ -6,6 +6,8 @@
 #include "imxrt.h"
 
 #include "StringUtil.hxx"
+#include "Time.hpp"
+#include "Arduino.h"
 
 namespace AmpedUp
 {
@@ -14,7 +16,7 @@ namespace AmpedUp
     public:
 
         template<typename... VarType>
-        static void debug(const std::string& file, uint32_t line, const VarType&... values)
+        static void debug(const char* file, uint32_t line, const VarType&... values)
         {
             if (isDebugEnabled_)
             {
@@ -23,7 +25,7 @@ namespace AmpedUp
         }
 
         template<typename... VarType>
-        static void info(const std::string& file, uint32_t line, const VarType&... values)
+        static void info(const char* file, uint32_t line, const VarType&... values)
         {
             if (isInfoEnabled_)
             {
@@ -32,7 +34,7 @@ namespace AmpedUp
         }
 
         template<typename... VarType>
-        static void warning(const std::string& file, uint32_t line, const VarType&... values)
+        static void warning(const char*file, uint32_t line, const VarType&... values)
         {
             if (isWarningEnabled_)
             {
@@ -41,7 +43,7 @@ namespace AmpedUp
         }
 
         template<typename... VarType>
-        static void critical(const std::string& file, uint32_t line, const VarType&... values)
+        static void critical(const char* file, uint32_t line, const VarType&... values)
         {
             if (isCriticalEnabled_)
             {
@@ -50,7 +52,7 @@ namespace AmpedUp
         }
 
         template<typename... VarType>
-        static void fatal(const std::string& file, uint32_t line, const VarType&... values)
+        static void fatal(const char* file, uint32_t line, const VarType&... values)
         {
             if (isFatalEnabled_)
             {
@@ -83,7 +85,7 @@ namespace AmpedUp
 
     private:
         
-        enum class LogSeverity
+        enum class LogSeverity : uint32_t
         {
             DEBUG,
             INFO,
@@ -98,7 +100,7 @@ namespace AmpedUp
         static inline bool isCriticalEnabled_{};
         static inline bool isFatalEnabled_{};
 
-        static void logMessage(LogSeverity severity, const std::string& file, uint32_t line, const std::string& message, bool allowRecursion = true);
+        static void logMessage(LogSeverity severity, const char* file, uint32_t line, const std::string& message, bool allowRecursion = true);
 
         static void panic();
 

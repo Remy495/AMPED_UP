@@ -7,12 +7,11 @@
 #include "flatbuffers/flatbuffers.h"
 
 #include "AmpedUpNodes_generated.h"
-#include "AmpedUpPresets_generated.h"
 
 namespace AmpedUpMessaging {
 
-struct SetKnobValuesMessage;
-struct SetKnobValuesMessageBuilder;
+struct SetKnobValueMessage;
+struct SetKnobValueMessageBuilder;
 
 struct SavePresetMessage;
 struct SavePresetMessageBuilder;
@@ -26,21 +25,28 @@ struct LoadPresetMessageBuilder;
 struct LogMessage;
 struct LogMessageBuilder;
 
+struct WaveformData;
+
+struct WaveformMessage;
+struct WaveformMessageBuilder;
+
 struct Message;
 struct MessageBuilder;
 
 enum class LogSeverity : uint8_t {
   DEBUG = 0,
-  WARNING = 1,
-  CRITICAL = 2,
-  FATAL = 3,
+  INFO = 1,
+  WARNING = 2,
+  CRITICAL = 3,
+  FATAL = 4,
   MIN = DEBUG,
   MAX = FATAL
 };
 
-inline const LogSeverity (&EnumValuesLogSeverity())[4] {
+inline const LogSeverity (&EnumValuesLogSeverity())[5] {
   static const LogSeverity values[] = {
     LogSeverity::DEBUG,
+    LogSeverity::INFO,
     LogSeverity::WARNING,
     LogSeverity::CRITICAL,
     LogSeverity::FATAL
@@ -49,8 +55,9 @@ inline const LogSeverity (&EnumValuesLogSeverity())[4] {
 }
 
 inline const char * const *EnumNamesLogSeverity() {
-  static const char * const names[5] = {
+  static const char * const names[6] = {
     "DEBUG",
+    "INFO",
     "WARNING",
     "CRITICAL",
     "FATAL",
@@ -67,42 +74,45 @@ inline const char *EnumNameLogSeverity(LogSeverity e) {
 
 enum class MessagePayload : uint8_t {
   NONE = 0,
-  SetKnobValuesMessage = 1,
+  SetKnobValueMessage = 1,
   SavePresetMessage = 2,
   SaveCurrentAsPresetMessage = 3,
   LoadPresetMessage = 4,
   LogMessage = 5,
+  WaveformMessage = 6,
   MIN = NONE,
-  MAX = LogMessage
+  MAX = WaveformMessage
 };
 
-inline const MessagePayload (&EnumValuesMessagePayload())[6] {
+inline const MessagePayload (&EnumValuesMessagePayload())[7] {
   static const MessagePayload values[] = {
     MessagePayload::NONE,
-    MessagePayload::SetKnobValuesMessage,
+    MessagePayload::SetKnobValueMessage,
     MessagePayload::SavePresetMessage,
     MessagePayload::SaveCurrentAsPresetMessage,
     MessagePayload::LoadPresetMessage,
-    MessagePayload::LogMessage
+    MessagePayload::LogMessage,
+    MessagePayload::WaveformMessage
   };
   return values;
 }
 
 inline const char * const *EnumNamesMessagePayload() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "NONE",
-    "SetKnobValuesMessage",
+    "SetKnobValueMessage",
     "SavePresetMessage",
     "SaveCurrentAsPresetMessage",
     "LoadPresetMessage",
     "LogMessage",
+    "WaveformMessage",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameMessagePayload(MessagePayload e) {
-  if (flatbuffers::IsOutRange(e, MessagePayload::NONE, MessagePayload::LogMessage)) return "";
+  if (flatbuffers::IsOutRange(e, MessagePayload::NONE, MessagePayload::WaveformMessage)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesMessagePayload()[index];
 }
@@ -111,8 +121,8 @@ template<typename T> struct MessagePayloadTraits {
   static const MessagePayload enum_value = MessagePayload::NONE;
 };
 
-template<> struct MessagePayloadTraits<AmpedUpMessaging::SetKnobValuesMessage> {
-  static const MessagePayload enum_value = MessagePayload::SetKnobValuesMessage;
+template<> struct MessagePayloadTraits<AmpedUpMessaging::SetKnobValueMessage> {
+  static const MessagePayload enum_value = MessagePayload::SetKnobValueMessage;
 };
 
 template<> struct MessagePayloadTraits<AmpedUpMessaging::SavePresetMessage> {
@@ -131,88 +141,98 @@ template<> struct MessagePayloadTraits<AmpedUpMessaging::LogMessage> {
   static const MessagePayload enum_value = MessagePayload::LogMessage;
 };
 
+template<> struct MessagePayloadTraits<AmpedUpMessaging::WaveformMessage> {
+  static const MessagePayload enum_value = MessagePayload::WaveformMessage;
+};
+
 bool VerifyMessagePayload(flatbuffers::Verifier &verifier, const void *obj, MessagePayload type);
 bool VerifyMessagePayloadVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
 
-struct SetKnobValuesMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef SetKnobValuesMessageBuilder Builder;
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) WaveformData FLATBUFFERS_FINAL_CLASS {
+ private:
+  uint8_t values_[100];
+
+ public:
+  WaveformData()
+      : values_() {
+  }
+  WaveformData(flatbuffers::span<const uint8_t, 100> _values) {
+    flatbuffers::CastToArray(values_).CopyFromSpan(_values);
+  }
+  const flatbuffers::Array<uint8_t, 100> *values() const {
+    return &flatbuffers::CastToArray(values_);
+  }
+};
+FLATBUFFERS_STRUCT_END(WaveformData, 100);
+
+struct SetKnobValueMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef SetKnobValueMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_KNOBVALUES_TYPE = 4,
-    VT_KNOBVALUES = 6
+    VT_KNOBINDEX = 4,
+    VT_VALUE = 6
   };
-  AmpedUpPresets::KnobValues knobValues_type() const {
-    return static_cast<AmpedUpPresets::KnobValues>(GetField<uint8_t>(VT_KNOBVALUES_TYPE, 0));
+  uint8_t knobIndex() const {
+    return GetField<uint8_t>(VT_KNOBINDEX, 0);
   }
-  const void *knobValues() const {
-    return GetPointer<const void *>(VT_KNOBVALUES);
-  }
-  template<typename T> const T *knobValues_as() const;
-  const AmpedUpPresets::FixedKnobValues *knobValues_as_FixedKnobValues() const {
-    return knobValues_type() == AmpedUpPresets::KnobValues::FixedKnobValues ? static_cast<const AmpedUpPresets::FixedKnobValues *>(knobValues()) : nullptr;
-  }
-  const AmpedUpNodes::NodeGraph *knobValues_as_AmpedUpNodes_NodeGraph() const {
-    return knobValues_type() == AmpedUpPresets::KnobValues::AmpedUpNodes_NodeGraph ? static_cast<const AmpedUpNodes::NodeGraph *>(knobValues()) : nullptr;
+  float value() const {
+    return GetField<float>(VT_VALUE, 0.0f);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_KNOBVALUES_TYPE) &&
-           VerifyOffset(verifier, VT_KNOBVALUES) &&
-           VerifyKnobValues(verifier, knobValues(), knobValues_type()) &&
+           VerifyField<uint8_t>(verifier, VT_KNOBINDEX) &&
+           VerifyField<float>(verifier, VT_VALUE) &&
            verifier.EndTable();
   }
 };
 
-template<> inline const AmpedUpPresets::FixedKnobValues *SetKnobValuesMessage::knobValues_as<AmpedUpPresets::FixedKnobValues>() const {
-  return knobValues_as_FixedKnobValues();
-}
-
-template<> inline const AmpedUpNodes::NodeGraph *SetKnobValuesMessage::knobValues_as<AmpedUpNodes::NodeGraph>() const {
-  return knobValues_as_AmpedUpNodes_NodeGraph();
-}
-
-struct SetKnobValuesMessageBuilder {
-  typedef SetKnobValuesMessage Table;
+struct SetKnobValueMessageBuilder {
+  typedef SetKnobValueMessage Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_knobValues_type(AmpedUpPresets::KnobValues knobValues_type) {
-    fbb_.AddElement<uint8_t>(SetKnobValuesMessage::VT_KNOBVALUES_TYPE, static_cast<uint8_t>(knobValues_type), 0);
+  void add_knobIndex(uint8_t knobIndex) {
+    fbb_.AddElement<uint8_t>(SetKnobValueMessage::VT_KNOBINDEX, knobIndex, 0);
   }
-  void add_knobValues(flatbuffers::Offset<void> knobValues) {
-    fbb_.AddOffset(SetKnobValuesMessage::VT_KNOBVALUES, knobValues);
+  void add_value(float value) {
+    fbb_.AddElement<float>(SetKnobValueMessage::VT_VALUE, value, 0.0f);
   }
-  explicit SetKnobValuesMessageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+  explicit SetKnobValueMessageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  flatbuffers::Offset<SetKnobValuesMessage> Finish() {
+  flatbuffers::Offset<SetKnobValueMessage> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<SetKnobValuesMessage>(end);
+    auto o = flatbuffers::Offset<SetKnobValueMessage>(end);
     return o;
   }
 };
 
-inline flatbuffers::Offset<SetKnobValuesMessage> CreateSetKnobValuesMessage(
+inline flatbuffers::Offset<SetKnobValueMessage> CreateSetKnobValueMessage(
     flatbuffers::FlatBufferBuilder &_fbb,
-    AmpedUpPresets::KnobValues knobValues_type = AmpedUpPresets::KnobValues::NONE,
-    flatbuffers::Offset<void> knobValues = 0) {
-  SetKnobValuesMessageBuilder builder_(_fbb);
-  builder_.add_knobValues(knobValues);
-  builder_.add_knobValues_type(knobValues_type);
+    uint8_t knobIndex = 0,
+    float value = 0.0f) {
+  SetKnobValueMessageBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_knobIndex(knobIndex);
   return builder_.Finish();
 }
 
 struct SavePresetMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef SavePresetMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_PRESET = 4
+    VT_ID = 4,
+    VT_VALUE = 6
   };
-  const AmpedUpPresets::Preset *preset() const {
-    return GetPointer<const AmpedUpPresets::Preset *>(VT_PRESET);
+  uint16_t id() const {
+    return GetField<uint16_t>(VT_ID, 0);
+  }
+  const AmpedUpNodes::NodeGraph *value() const {
+    return GetPointer<const AmpedUpNodes::NodeGraph *>(VT_VALUE);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_PRESET) &&
-           verifier.VerifyTable(preset()) &&
+           VerifyField<uint16_t>(verifier, VT_ID) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyTable(value()) &&
            verifier.EndTable();
   }
 };
@@ -221,8 +241,11 @@ struct SavePresetMessageBuilder {
   typedef SavePresetMessage Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_preset(flatbuffers::Offset<AmpedUpPresets::Preset> preset) {
-    fbb_.AddOffset(SavePresetMessage::VT_PRESET, preset);
+  void add_id(uint16_t id) {
+    fbb_.AddElement<uint16_t>(SavePresetMessage::VT_ID, id, 0);
+  }
+  void add_value(flatbuffers::Offset<AmpedUpNodes::NodeGraph> value) {
+    fbb_.AddOffset(SavePresetMessage::VT_VALUE, value);
   }
   explicit SavePresetMessageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -237,9 +260,11 @@ struct SavePresetMessageBuilder {
 
 inline flatbuffers::Offset<SavePresetMessage> CreateSavePresetMessage(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<AmpedUpPresets::Preset> preset = 0) {
+    uint16_t id = 0,
+    flatbuffers::Offset<AmpedUpNodes::NodeGraph> value = 0) {
   SavePresetMessageBuilder builder_(_fbb);
-  builder_.add_preset(preset);
+  builder_.add_value(value);
+  builder_.add_id(id);
   return builder_.Finish();
 }
 
@@ -329,10 +354,18 @@ struct LogMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef LogMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_SEVERITY = 4,
-    VT_MESSAGE = 6
+    VT_FILENAME = 6,
+    VT_LINENUMBER = 8,
+    VT_MESSAGE = 10
   };
   AmpedUpMessaging::LogSeverity severity() const {
     return static_cast<AmpedUpMessaging::LogSeverity>(GetField<uint8_t>(VT_SEVERITY, 0));
+  }
+  const flatbuffers::String *fileName() const {
+    return GetPointer<const flatbuffers::String *>(VT_FILENAME);
+  }
+  uint32_t lineNumber() const {
+    return GetField<uint32_t>(VT_LINENUMBER, 0);
   }
   const flatbuffers::String *message() const {
     return GetPointer<const flatbuffers::String *>(VT_MESSAGE);
@@ -340,6 +373,9 @@ struct LogMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SEVERITY) &&
+           VerifyOffset(verifier, VT_FILENAME) &&
+           verifier.VerifyString(fileName()) &&
+           VerifyField<uint32_t>(verifier, VT_LINENUMBER) &&
            VerifyOffset(verifier, VT_MESSAGE) &&
            verifier.VerifyString(message()) &&
            verifier.EndTable();
@@ -352,6 +388,12 @@ struct LogMessageBuilder {
   flatbuffers::uoffset_t start_;
   void add_severity(AmpedUpMessaging::LogSeverity severity) {
     fbb_.AddElement<uint8_t>(LogMessage::VT_SEVERITY, static_cast<uint8_t>(severity), 0);
+  }
+  void add_fileName(flatbuffers::Offset<flatbuffers::String> fileName) {
+    fbb_.AddOffset(LogMessage::VT_FILENAME, fileName);
+  }
+  void add_lineNumber(uint32_t lineNumber) {
+    fbb_.AddElement<uint32_t>(LogMessage::VT_LINENUMBER, lineNumber, 0);
   }
   void add_message(flatbuffers::Offset<flatbuffers::String> message) {
     fbb_.AddOffset(LogMessage::VT_MESSAGE, message);
@@ -370,9 +412,13 @@ struct LogMessageBuilder {
 inline flatbuffers::Offset<LogMessage> CreateLogMessage(
     flatbuffers::FlatBufferBuilder &_fbb,
     AmpedUpMessaging::LogSeverity severity = AmpedUpMessaging::LogSeverity::DEBUG,
+    flatbuffers::Offset<flatbuffers::String> fileName = 0,
+    uint32_t lineNumber = 0,
     flatbuffers::Offset<flatbuffers::String> message = 0) {
   LogMessageBuilder builder_(_fbb);
   builder_.add_message(message);
+  builder_.add_lineNumber(lineNumber);
+  builder_.add_fileName(fileName);
   builder_.add_severity(severity);
   return builder_.Finish();
 }
@@ -380,12 +426,58 @@ inline flatbuffers::Offset<LogMessage> CreateLogMessage(
 inline flatbuffers::Offset<LogMessage> CreateLogMessageDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     AmpedUpMessaging::LogSeverity severity = AmpedUpMessaging::LogSeverity::DEBUG,
+    const char *fileName = nullptr,
+    uint32_t lineNumber = 0,
     const char *message = nullptr) {
+  auto fileName__ = fileName ? _fbb.CreateString(fileName) : 0;
   auto message__ = message ? _fbb.CreateString(message) : 0;
   return AmpedUpMessaging::CreateLogMessage(
       _fbb,
       severity,
+      fileName__,
+      lineNumber,
       message__);
+}
+
+struct WaveformMessage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef WaveformMessageBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DATA = 4
+  };
+  const AmpedUpMessaging::WaveformData *data() const {
+    return GetStruct<const AmpedUpMessaging::WaveformData *>(VT_DATA);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<AmpedUpMessaging::WaveformData>(verifier, VT_DATA) &&
+           verifier.EndTable();
+  }
+};
+
+struct WaveformMessageBuilder {
+  typedef WaveformMessage Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_data(const AmpedUpMessaging::WaveformData *data) {
+    fbb_.AddStruct(WaveformMessage::VT_DATA, data);
+  }
+  explicit WaveformMessageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<WaveformMessage> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<WaveformMessage>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<WaveformMessage> CreateWaveformMessage(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const AmpedUpMessaging::WaveformData *data = 0) {
+  WaveformMessageBuilder builder_(_fbb);
+  builder_.add_data(data);
+  return builder_.Finish();
 }
 
 struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -401,8 +493,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return GetPointer<const void *>(VT_PAYLOAD);
   }
   template<typename T> const T *payload_as() const;
-  const AmpedUpMessaging::SetKnobValuesMessage *payload_as_SetKnobValuesMessage() const {
-    return payload_type() == AmpedUpMessaging::MessagePayload::SetKnobValuesMessage ? static_cast<const AmpedUpMessaging::SetKnobValuesMessage *>(payload()) : nullptr;
+  const AmpedUpMessaging::SetKnobValueMessage *payload_as_SetKnobValueMessage() const {
+    return payload_type() == AmpedUpMessaging::MessagePayload::SetKnobValueMessage ? static_cast<const AmpedUpMessaging::SetKnobValueMessage *>(payload()) : nullptr;
   }
   const AmpedUpMessaging::SavePresetMessage *payload_as_SavePresetMessage() const {
     return payload_type() == AmpedUpMessaging::MessagePayload::SavePresetMessage ? static_cast<const AmpedUpMessaging::SavePresetMessage *>(payload()) : nullptr;
@@ -416,6 +508,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const AmpedUpMessaging::LogMessage *payload_as_LogMessage() const {
     return payload_type() == AmpedUpMessaging::MessagePayload::LogMessage ? static_cast<const AmpedUpMessaging::LogMessage *>(payload()) : nullptr;
   }
+  const AmpedUpMessaging::WaveformMessage *payload_as_WaveformMessage() const {
+    return payload_type() == AmpedUpMessaging::MessagePayload::WaveformMessage ? static_cast<const AmpedUpMessaging::WaveformMessage *>(payload()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE) &&
@@ -425,8 +520,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
 };
 
-template<> inline const AmpedUpMessaging::SetKnobValuesMessage *Message::payload_as<AmpedUpMessaging::SetKnobValuesMessage>() const {
-  return payload_as_SetKnobValuesMessage();
+template<> inline const AmpedUpMessaging::SetKnobValueMessage *Message::payload_as<AmpedUpMessaging::SetKnobValueMessage>() const {
+  return payload_as_SetKnobValueMessage();
 }
 
 template<> inline const AmpedUpMessaging::SavePresetMessage *Message::payload_as<AmpedUpMessaging::SavePresetMessage>() const {
@@ -443,6 +538,10 @@ template<> inline const AmpedUpMessaging::LoadPresetMessage *Message::payload_as
 
 template<> inline const AmpedUpMessaging::LogMessage *Message::payload_as<AmpedUpMessaging::LogMessage>() const {
   return payload_as_LogMessage();
+}
+
+template<> inline const AmpedUpMessaging::WaveformMessage *Message::payload_as<AmpedUpMessaging::WaveformMessage>() const {
+  return payload_as_WaveformMessage();
 }
 
 struct MessageBuilder {
@@ -481,8 +580,8 @@ inline bool VerifyMessagePayload(flatbuffers::Verifier &verifier, const void *ob
     case MessagePayload::NONE: {
       return true;
     }
-    case MessagePayload::SetKnobValuesMessage: {
-      auto ptr = reinterpret_cast<const AmpedUpMessaging::SetKnobValuesMessage *>(obj);
+    case MessagePayload::SetKnobValueMessage: {
+      auto ptr = reinterpret_cast<const AmpedUpMessaging::SetKnobValueMessage *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case MessagePayload::SavePresetMessage: {
@@ -501,6 +600,10 @@ inline bool VerifyMessagePayload(flatbuffers::Verifier &verifier, const void *ob
       auto ptr = reinterpret_cast<const AmpedUpMessaging::LogMessage *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case MessagePayload::WaveformMessage: {
+      auto ptr = reinterpret_cast<const AmpedUpMessaging::WaveformMessage *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     default: return true;
   }
 }
@@ -515,6 +618,36 @@ inline bool VerifyMessagePayloadVector(flatbuffers::Verifier &verifier, const fl
     }
   }
   return true;
+}
+
+inline const AmpedUpMessaging::Message *GetMessage(const void *buf) {
+  return flatbuffers::GetRoot<AmpedUpMessaging::Message>(buf);
+}
+
+inline const AmpedUpMessaging::Message *GetSizePrefixedMessage(const void *buf) {
+  return flatbuffers::GetSizePrefixedRoot<AmpedUpMessaging::Message>(buf);
+}
+
+inline bool VerifyMessageBuffer(
+    flatbuffers::Verifier &verifier) {
+  return verifier.VerifyBuffer<AmpedUpMessaging::Message>(nullptr);
+}
+
+inline bool VerifySizePrefixedMessageBuffer(
+    flatbuffers::Verifier &verifier) {
+  return verifier.VerifySizePrefixedBuffer<AmpedUpMessaging::Message>(nullptr);
+}
+
+inline void FinishMessageBuffer(
+    flatbuffers::FlatBufferBuilder &fbb,
+    flatbuffers::Offset<AmpedUpMessaging::Message> root) {
+  fbb.Finish(root);
+}
+
+inline void FinishSizePrefixedMessageBuffer(
+    flatbuffers::FlatBufferBuilder &fbb,
+    flatbuffers::Offset<AmpedUpMessaging::Message> root) {
+  fbb.FinishSizePrefixed(root);
 }
 
 }  // namespace AmpedUpMessaging

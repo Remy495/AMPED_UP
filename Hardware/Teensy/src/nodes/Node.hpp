@@ -9,6 +9,8 @@ namespace AmpedUp {
 
     using NodeValue = float;
 
+    class NodeGraph;
+
     ///////////////////////////////////////////////////////
     /// @brief Represents and input to a node. Either holds a constant value or points to an output value of another
     ///        node
@@ -125,8 +127,15 @@ namespace AmpedUp {
             return nodeType_;
         }
 
+        void setOwner(NodeGraph* owner)
+        {
+            ownerPtr_ = owner;
+        }
+
     protected:
         AmpedUpNodes::NodeType nodeType_;
+        NodeGraph* ownerPtr_{nullptr};
+
 
         ///////////////////////////////////////////////////////
         /// @brief Get this node's input array; to be implemented by subclasses

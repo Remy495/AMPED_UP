@@ -57,6 +57,11 @@ public:
         return !outgoingMessageInProgress_ && outgoingMessagePayloads_.canEnqueue(size);
     }
 
+    static uint32_t outgoingMessageCount()
+    {
+        return outgoingMessagePayloads_.getMessageCount();
+    }
+
     static SpiPayload stageOutgoingMessage(RemoteMessageSize_t size)
     {
         outgoingMessageInProgress_ = true;
@@ -73,6 +78,11 @@ public:
         return outgoingMessagePayloads_.resizeStagedMessage(newSize, headUsed, tailUsed);
     }
 
+    static SpiPayload trimStagedOutgoingMessage(const BinaryUtil::byte_t* dataWithinStagedMessage, RemoteMessageSize_t size)
+    {
+        return outgoingMessagePayloads_.trimStagedMessage(dataWithinStagedMessage, size);
+    }
+
     static void sendStagedMessage()
     {
         outgoingMessagePayloads_.commitStagedMessage();
@@ -87,6 +97,11 @@ public:
     static bool hasRecievedMessage()
     {
         return !incomingMessagePayloads_.empty();
+    }
+
+    static uint32_t recievedMessageCount()
+    {
+        return incomingMessagePayloads_.getMessageCount();
     }
 
     static SpiPayload peekRecievedMessage()
@@ -243,7 +258,7 @@ private:
 
     // Queues of incoming and outgoing message payloads
     // These large buffers should be kept out of TCM in order to leave room for more time-sensitive variables
-    static inline __attribute__ ((section(".dmabuffers"), used)) SpiMessageQueue<3> outgoingMessagePayloads_{};
+    static inline __attribute__ ((section(".dmabuffers"), used)) SpiMessageQueue<2> outgoingMessagePayloads_{};
     static inline __attribute__ ((section(".dmabuffers"), used)) SpiMessageQueue<2> incomingMessagePayloads_{};
 
     static inline SpiTransaction currentTransaction_{};
@@ -271,42 +286,63 @@ private:
             RemoteMessageHeader& outgoingHeader = outgoingMessageHeader_.getInstance();
             RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
 
-            TextLogging::debug(__FILE__, __LINE__, "recieved header: ", incomingHeader);
-
             RemoteMessageHeader defaultHeader;
             defaultHeader.setFlag(RemoteMessageFlag::READY_TO_RECIEVE);
 
-            if (incomingHeader.isValid() && outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+            if (incomingHeader != defaultHeader)
             {
+                TextLogging::debug(__FILE__, __LINE__, "recieved header: ", incomingHeader);
+            }
+
+            if (outgoingHeader != defaultHeader)
+            {
+                TextLogging::debug(__FILE__, __LINE__, "Sent header: ", outgoingHeader);
+            }
+
+            if (incomingHeader.isValid())
+            {
+                if (incomingHeader.hasFlag(RemoteMessageFlag::REMOTE_CONNECTED))
+                {
+                    hasNewConnection_ = true;
+                }
+
+                if (incomingHeader.hasFlag(RemoteMessageFlag::REMOTE_DISCONNECTED))
+                {
+                    hasNewDisconnection_ = true;
+                }
+
                 // Transfer payload if at least one side has a payload to send and at least the other side is ready to recieve it
-                sendHeader_ = false;
+
+                if (outgoingHeader.hasPayload() && incomingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+                {
+                    sendHeader_ = false;
+                }
+
+                if (incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
+                {
+                    sendHeader_ = false;
+
+                    // If this transaction is flagged as the first fragment but shouldn't be, discard the current message
+                    // in progress and start a new one
+                    if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT) && incomingPayloadBytesRecieved_ > 0)
+                    {
+                        incomingPayloadBytesRecieved_ = 0;
+                        TextLogging::warning(__FILE__, __LINE__, "New remote message started before ongoing message was terminated");
+                    }
+
+                    // Similarly, If this transaction should be the first fragment but isn't flaged as such, discard the message
+                    if (incomingPayloadBytesRecieved_ == 0)
+                    {
+                        keepIncomingMessage_ = true;
+                        if (!incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
+                        {
+                            keepIncomingMessage_ = false;
+                            TextLogging::warning(__FILE__, __LINE__, "Remote message was terminated but new message was not started as expected");
+                        }
+                    }
+                }
+
             }
-
-            if (incomingHeader.isValid() && incomingHeader.hasPayload() && outgoingHeader.hasFlag(RemoteMessageFlag::READY_TO_RECIEVE))
-            {
-                sendHeader_ = false;
-
-                 // If this transaction is flagged as the first fragment but shouldn't be, discard the current message
-                 // in progress and start a new one
-                 if (incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT) && incomingPayloadBytesRecieved_ > 0)
-                 {
-                     incomingPayloadBytesRecieved_ = 0;
-                     TextLogging::warning(__FILE__, __LINE__, "New remote message started before ongoing message was terminated");
-                 }
-
-                 // Similarly, If this transaction should be the first fragment but isn't flaged as such, discard the message
-                 if (incomingPayloadBytesRecieved_ == 0)
-                 {
-                     keepIncomingMessage_ = true;
-                     if (!incomingHeader.hasFlag(RemoteMessageFlag::FIRST_FRAGMENT))
-                     {
-                        keepIncomingMessage_ = false;
-                        TextLogging::warning(__FILE__, __LINE__, "Remote message was terminated but new message was not started as expected");
-                     }
-                 }
-            }
-
-            TextLogging::debug(__FILE__, __LINE__, "Sent header: ", outgoingHeader);
 
         }
         else
@@ -327,7 +363,7 @@ private:
             RemoteMessageSize_t incomingPayloadSize = incomingMessagePayloads_.getStagedMessage().getSize();
 
             RemoteMessageHeader& incomingHeader = incomingMessageHeader_.getInstance();
-            if (incomingPayloadBytesRecieved_ >= incomingPayloadSize || incomingHeader.hasFlag(RemoteMessageFlag::LAST_FRAGMENT))
+            if (currentTransaction_.getIncomingSize() > 0 && (incomingPayloadBytesRecieved_ >= incomingPayloadSize || incomingHeader.hasFlag(RemoteMessageFlag::LAST_FRAGMENT)))
             {
                 // At the end of the message we should have recieved the expected number of bytes and we should have the last fragment flag.
                 // If either condition is false, discard the message

@@ -3,9 +3,15 @@
 #include "TextLogging.hxx"
 
 // #ifdef ARDUINO
-    #include "Arduino.h"
-    #define SERIAL_MONITOR_LOG
+#include "Arduino.h"
+#define SERIAL_MONITOR_LOG
 // #endif
+
+#define REMOTE_LOG
+
+#ifdef REMOTE_LOG
+#include "RemoteCommunication.hpp"
+#endif
 
 
 void AmpedUp::TextLogging::initialize()
@@ -65,8 +71,9 @@ void AmpedUp::TextLogging::disableFatalVerbosity()
     isFatalEnabled_ = false;
 }
 
-void AmpedUp::TextLogging::logMessage(LogSeverity severity, const std::string& file, uint32_t line, const std::string& message, bool allowRecursion)
+void AmpedUp::TextLogging::logMessage(LogSeverity severity, const char* file, uint32_t line, const std::string& message, bool allowRecursion)
 {
+
     #ifdef SERIAL_MONITOR_LOG
     // Print a textual representation of the log entry to the serial monitor
 
@@ -99,11 +106,38 @@ void AmpedUp::TextLogging::logMessage(LogSeverity severity, const std::string& f
     }
 
     Serial.print(" ");
-    Serial.print(file.c_str());
+    Serial.print(file);
     Serial.print(" ");
     Serial.print(line);
     Serial.print(" - ");
     Serial.println(message.c_str());
+
+    #endif
+
+    #ifdef REMOTE_LOG
+    // Send log messages to the remote
+    if (RemoteCommunication::remoteIsConnected())
+    {
+        if (RemoteCommunication::isReadyToSend(true))
+        {
+            AmpedUpMessaging::LogSeverity severityFlatbuffers = AmpedUpMessaging::EnumValuesLogSeverity()[static_cast<uint32_t>(severity)];
+
+            auto& builder = RemoteCommunication::beginOutgoingMessage();
+            auto filenameOffset = builder.CreateString(file);
+            auto messageStringOffset = builder.CreateString(message);
+            auto logMessageOffset = AmpedUpMessaging::CreateLogMessage(builder, severityFlatbuffers, filenameOffset, line, messageStringOffset);
+            auto outgoingMessageOffset = AmpedUpMessaging::CreateMessage(builder, AmpedUpMessaging::MessagePayload::LogMessage, logMessageOffset.Union());
+            builder.Finish(outgoingMessageOffset);
+            RemoteCommunication::sendFinishedMessage();
+        }
+        else
+        {
+            if (allowRecursion)
+            {
+                logMessage(LogSeverity::WARNING, __FILE__, __LINE__, "Failed to send log message to remote", false);
+            }
+        }
+    }
 
     #endif
 
