@@ -24,6 +24,7 @@ class NodeScene(QtWidgets.QGraphicsScene):
 
 		# List of nodes currently present in the scene
 		self.nodes = []
+		self.outputNode = None
 
 		self.sceneRectChanged.connect(self.onSceneRectChanged)
 

@@ -1,7 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from drawing_constants import *
 from connection_item import *
-from slider_item import *
+from slider_item import Slider
+from dial_item import Dial
 
 	
 
@@ -81,17 +82,26 @@ class Node(QtWidgets.QGraphicsItem):
 			connectionPoint.indexNumber = connectionPointIndex
 
 			if self.scene() is not None:
-				inputTextItem = Slider(inputRange, connectionPointIndex, self)
-				textItemX = self.width / 2
-				textItemY = connectionPointY
-				inputTextItem.setPos(textItemX, textItemY)
-				self.inputTextItems.append(inputTextItem)
+				if (inputRange[0]):
+					inputTextItem = Dial((inputRange[1], inputRange[2]), self)
+					textItemX = self.width / 2 + DrawingConstants.DIAL_HEIGHT / 2
+					textItemY = connectionPointY + DrawingConstants.DIAL_HEIGHT / 2
+					inputTextItem.setPos(textItemX, textItemY)
+				else:
+					inputTextItem = Slider((inputRange[1], inputRange[2]), connectionPointIndex, self)
+					textItemX = self.width / 2
+					textItemY = connectionPointY
+					inputTextItem.setPos(textItemX, textItemY)
 
+				self.inputTextItems.append(inputTextItem)
 				connectionPoint.textBox = inputTextItem
 			
 			self.inputs.append(connectionPoint)
 
-			connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
+			if (inputRange[0]):
+				connectionPointY += DrawingConstants.DIAL_HEIGHT + DrawingConstants.NODE_PADDING
+			else:
+				connectionPointY += DrawingConstants.CONNECTION_POINT_DIAMETER + DrawingConstants.NODE_PADDING
 			connectionPointIndex += 1
 
 		# Adjust the height of the node to contain all of the inputs
@@ -352,6 +362,13 @@ class ConnectionPoint:
 		else:
 			return 0.0
 
+	@property
+	def literalPercentage(self):
+		if self.textBox is not None:
+			return self.textBox.percentage
+		else:
+			return 0.0
+
 	def registerConnection(self, connection):
 		# If this is an input and there is already a connection, remove it
 		if self.connections and not self.isOutput:
@@ -361,7 +378,7 @@ class ConnectionPoint:
 			self.connections.clear()
 
 		if self.textBox is not None:
-			self.textBox.hide()
+			self.textBox.makeDriven()
 
 		self.connections.append(connection)
 
@@ -369,7 +386,7 @@ class ConnectionPoint:
 		self.connections.remove(connection)
 
 		if not self.connections and self.textBox is not None:
-			self.textBox.show()
+			self.textBox.makeLiteral()
 
 	def updateConnections(self):
 		for connection in self.connections:

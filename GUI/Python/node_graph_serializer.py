@@ -1,4 +1,4 @@
-from AmpedUpNodes import ConstantValueFloat, Connection, Input, InputValue, Node, NodeGraph
+from AmpedUpNodes import ConstantValueFloat, Connection, Input, InputValue, Node, NodeGraph, OutputRange, NodeType
 
 class NodeGraphSerializer:
 
@@ -59,7 +59,12 @@ class NodeGraphSerializer:
                 else:
                     # If this input is not connected to another node, serialize its literal value
                     # Note that, for now, all literal values are considered floats. In a future revision some literal values may be considered integers
-                    literalValue = inputConnectionPoint.literalValue
+
+                    # Use percentage for the output node to cancel out the range of the dial
+                    if (node.nodeType == NodeType.NodeType.KNOB_POSITIONS):
+                        literalValue = inputConnectionPoint.literalPercentage
+                    else:
+                        literalValue = inputConnectionPoint.literalValue
 
                     ConstantValueFloat.ConstantValueFloatStart(builder)
                     ConstantValueFloat.ConstantValueFloatAddValue(builder, literalValue)
@@ -97,9 +102,33 @@ class NodeGraphSerializer:
             builder.PrependUOffsetTRelative(nodeOffset)
         nodes = builder.EndVector(len(nodeOffsets))
 
+        # Serialize the list of output ranges
+        outputRangeOffsets = []
+
+        outputNode = nodeScene.outputNode
+        for inputConnectionPoint in outputNode.inputs:
+
+            OutputRange.OutputRangeStart(builder),
+            if inputConnectionPoint.connections:
+                outputRange = inputConnectionPoint.textBox.range
+                OutputRange.OutputRangeAddMinimum(builder, outputRange[0])
+                OutputRange.OutputRangeAddMaximum(builder, outputRange[1])
+            else:
+                OutputRange.OutputRangeAddMinimum(builder, 0)
+                OutputRange.OutputRangeAddMaximum(builder, 1)
+
+            outputRangeOffsets.append(OutputRange.OutputRangeEnd(builder))
+
+        NodeGraph.NodeGraphStartOutputRangesVector(builder, len(outputRangeOffsets))
+        for outputRangeOffset in reversed(outputRangeOffsets):
+            builder.PrependUOffsetTRelative(outputRangeOffset)
+        outputRanges = builder.EndVector(len(outputRangeOffsets))
+            
+
         # Serialize the node graph itself
         NodeGraph.NodeGraphStart(builder)
         NodeGraph.NodeGraphAddNodes(builder, nodes)
+        NodeGraph.NodeGraphAddOutputRanges(builder, outputRanges)
         nodeGraphOffset = NodeGraph.NodeGraphEnd(builder)
 
         return nodeGraphOffset

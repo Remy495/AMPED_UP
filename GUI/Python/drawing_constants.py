@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui
 
 class DrawingConstants:
-    NODE_WIDTH = 215
+    NODE_WIDTH = 225
     NODE_BASE_HEIGHT = 25
     CONNECTION_POINT_DIAMETER = 20
     NODE_PADDING = 10
+    DIAL_HEIGHT = 70
 
     NODE_OUTLINE_COLOR = QtCore.Qt.black
     NODE_OUTLINE_WIDTH = 2

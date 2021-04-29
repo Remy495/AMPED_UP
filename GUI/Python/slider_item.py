@@ -112,6 +112,12 @@ class Slider(QtWidgets.QGraphicsTextItem):
         cursor.mergeBlockFormat(textFormat)
         cursor.clearSelection()
         self.setTextCursor(cursor)
+
+    def makeLiteral(self):
+        self.show()
+
+    def makeDriven(self):
+        self.hide()
         
     def boundingRect(self):
         # Get the bounding box of the textItem so that the hight will be correct

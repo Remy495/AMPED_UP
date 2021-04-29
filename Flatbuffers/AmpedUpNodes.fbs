@@ -41,10 +41,11 @@ enum NodeType: uint8
     //Mathematical Nodes
     MULTIPLY,
     ADD,
-    SUBTRACT,
-    DIVIDE,
-    MEAN,
+    AVERAGE,
+
+    // Utility Nodes
     REMAP_RANGE,
+    REVERSE,
 
     //Output Nodes
     KNOB_POSITIONS
@@ -56,7 +57,14 @@ table Node
     inputs: [Input];
 }
 
+table OutputRange
+{
+    minimum: float32;
+    maximum: float32;
+}
+
 table NodeGraph
 {
     nodes: [Node];
+    outputRanges: [OutputRange];
 }
