@@ -32,8 +32,8 @@
 #define DIRPIN &PA15
 
 #define START_STEP_SPEED 3000
-#define TRANSITION_SPEED 50000
-#define MAX_STEP_SPEED 500000
+#define TRANSITION_SPEED 500000
+#define MAX_STEP_SPEED 5000000
 //#define MAX_STEP_SPEED 3000
 #define STEP_SPEED_INCREMENT 220
 #define STEP_SPEED_DECREMENT 220
@@ -273,6 +273,8 @@ int main(void)
 	findEdges();
 	begin(identifier);
 	
+	delay_us(100000);
+	
 	steps1=(int)(stepsTotal*target);
 	currentDirection=0;
 	prevDirection=0;
@@ -303,7 +305,10 @@ int main(void)
 			{
 				lastCount = count;
 				start_timer_us(1000000);
-				while(!timer_is_complete() && abs(lastCount - count) < threshold);
+				while(!timer_is_complete() && abs(lastCount - count) < threshold)
+				{
+					actualPosition(1.0f - (float)count / (float)encTot, true);
+				}
 			} while (abs(lastCount - count) >= threshold);
 			
 			//delay_us(200000);
@@ -317,6 +322,11 @@ int main(void)
 			stepSpeed = START_STEP_SPEED;
 			counts = (int)((1-(float)count/encTot)*stepsTotal);
 		}
+		else
+		{
+			actualPosition(1.0f - (float)count / (float)encTot, false);
+		}
+		
 		//
 		//if (counts == steps1)
 		//{
