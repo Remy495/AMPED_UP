@@ -56,10 +56,12 @@ class NodeScene(QtWidgets.QGraphicsScene):
 	def removeNode(self, node):
 		# Remove all of the node connections
 		for connectionPoint in node.connectionPoints:
-			for connection in connectionPoint.connections:
+			connections = [connection for connection in connectionPoint.connections]
+			for connection in connections:
 				connection.input.unregisterConnection(connection)
 				connection.output.unregisterConnection(connection)
 				self.removeItem(connection)
+		self.updateBasicGui()
 
 		# Remove the node from the list of nodes
 		self.nodes.remove(node)
@@ -163,6 +165,44 @@ class NodeScene(QtWidgets.QGraphicsScene):
 				
 			
 		super(NodeScene, self).mouseReleaseEvent(e)
+		self.updateBasicGui()
+
+	def serialize(self):
+		builder = flatbuffers.Builder(1024)
+		nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
+		builder.Finish(nodeGraphOffset)
+		return builder.Output()
+
+	def updateBasicGui(self):
+		for connectionPoint in self.outputNode.inputs:
+			if (connectionPoint.connections):
+				self.context.basicGui.setKnobPos(connectionPoint.textBox.index, None)
+			else:
+				self.context.basicGui.setKnobPos(connectionPoint.textBox.index, connectionPoint.textBox.value)
+
+	def deserialize(self, buf):
+		nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
+		NodeGraphSerializer.deserialize(nodeGraph, self)
+		self.updateBasicGui()
+
+	def upload(self):
+		builder = flatbuffers.Builder(1024)
+		nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
+		
+		SavePresetMessage.SavePresetMessageStart(builder)
+		SavePresetMessage.SavePresetMessageAddId(builder, 2)
+		SavePresetMessage.SavePresetMessageAddValue(builder, nodeGraphOffset)
+		savePresetMessageOffset = SavePresetMessage.SavePresetMessageEnd(builder)
+
+		Message.MessageStart(builder)
+		Message.MessageAddPayloadType(builder, MessagePayload.MessagePayload.SavePresetMessage)
+		Message.MessageAddPayload(builder, savePresetMessageOffset)
+		messageOffset = Message.MessageEnd(builder)
+
+		builder.Finish(messageOffset)
+		buf = builder.Output()
+
+		self.context.comms.sendMessage(bytes(buf))
 
 	def keyPressEvent(self, e):
 		super(NodeScene, self).keyPressEvent(e)
@@ -177,26 +217,7 @@ class NodeScene(QtWidgets.QGraphicsScene):
 				self.clearSelection()
 
 			if e.key() == QtCore.Qt.Key_Space:
-				builder = flatbuffers.Builder(1024)
-				nodeGraphOffset = NodeGraphSerializer.serialize(self, builder)
-				
-				SavePresetMessage.SavePresetMessageStart(builder)
-				SavePresetMessage.SavePresetMessageAddId(builder, 2)
-				SavePresetMessage.SavePresetMessageAddValue(builder, nodeGraphOffset)
-				savePresetMessageOffset = SavePresetMessage.SavePresetMessageEnd(builder)
-
-				Message.MessageStart(builder)
-				Message.MessageAddPayloadType(builder, MessagePayload.MessagePayload.SavePresetMessage)
-				Message.MessageAddPayload(builder, savePresetMessageOffset)
-				messageOffset = Message.MessageEnd(builder)
-
-				builder.Finish(messageOffset)
-				buf = builder.Output()
-
-				self.context.comms.sendMessage(bytes(buf))
-
-				# nodeGraph = NodeGraph.NodeGraph.GetRootAsNodeGraph(buf, 0)
-				# NodeGraphSerializer.deserialize(nodeGraph, self)
+				self.upload()
 			
 
 	def onSceneRectChanged(self, rect):

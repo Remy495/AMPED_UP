@@ -1,30 +1,79 @@
 from AmpedUpNodes import ConstantValueFloat, Connection, Input, InputValue, Node, NodeGraph, OutputRange, NodeType
 
+import connection_item
+
+
 class NodeGraphSerializer:
 
     @classmethod
     def deserialize(clss, nodeGraph, nodeScene):
+        nodeScene.clearNetwork()
+        nodePallet = nodeScene.pallet
+
+        # Deserialize all of the node in the node graph
+
+        deserializedNodes = []
+
         for nodeIndex in range(nodeGraph.NodesLength()):
-            node = nodeGraph.Nodes(nodeIndex)
-            print(str(nodeIndex) + ": " + str(node.Type()))
+            nodeData = nodeGraph.Nodes(nodeIndex)
 
-            for inputIndex in range(node.InputsLength()):
-                input = node.Inputs(inputIndex)
+            nodeType = nodeData.Type()
 
-                if input.ValueType() == InputValue.InputValue().Connection:
-                    connectionTable = input.Value()
+            guiXPos = nodeData.GuiXPos()
+            guiYPos = nodeData.GuiYPos()
+
+            if nodeType == NodeType.NodeType.KNOB_POSITIONS:
+                newNode = nodeScene.outputNode
+            else:
+                palletNode = nodePallet.findNodeByType(nodeType)
+                newNode = palletNode.copy()
+
+            newNode.setX(guiXPos)
+            newNode.setY(guiYPos)
+            deserializedNodes.append(newNode)
+
+            for inputIndex in range(nodeData.InputsLength()):
+                inputData = nodeData.Inputs(inputIndex)
+
+                if inputData.ValueType() == InputValue.InputValue().Connection:
+                    connectionTable = inputData.Value()
                     connection = Connection.Connection()
                     connection.Init(connectionTable.Bytes, connectionTable.Pos)
 
-                    print("    " + str(connection.NodeIndex()) + " " + str(connection.OutputIndex()))
-                elif input.ValueType() == InputValue.InputValue().ConstantValueFloat:
-                    constantValueTable = input.Value()
+                    outputConnectionPoint = deserializedNodes[connection.NodeIndex()].outputs[connection.OutputIndex()]
+                    inputConnectionPoint = newNode.inputs[inputIndex]
+
+                    newConnection = connection_item.Connection(outputConnectionPoint, inputConnectionPoint)
+                    nodeScene.addItem(newConnection)
+
+
+
+                elif inputData.ValueType() == InputValue.InputValue().ConstantValueFloat:
+                    constantValueTable = inputData.Value()
                     constantValue = ConstantValueFloat.ConstantValueFloat()
                     constantValue.Init(constantValueTable.Bytes, constantValueTable.Pos)
 
-                    print("    " + str(constantValue.Value()))
+                    if nodeType == NodeType.NodeType.KNOB_POSITIONS:
+                        newNode.inputs[inputIndex].textBox.percentage = constantValue.Value()
+                    else:
+                        newNode.inputs[inputIndex].textBox.value = constantValue.Value()
                 else:
                     print("    ERROR: No value type supplied")
+
+                newNode.inputs[inputIndex].textBox.update()
+
+            newNode.update()
+
+        # Set the output ranges
+
+        outputNode = nodeScene.outputNode
+        for outputRangeIndex in range(nodeGraph.OutputRangesLength()):
+            outputRange = nodeGraph.OutputRanges(outputRangeIndex)
+
+            minimum = outputRange.Minimum()
+            maximum = outputRange.Maximum()
+
+            outputNode.inputs[outputRangeIndex].textBox.range = [minimum, maximum]
 
 
     @classmethod
@@ -91,6 +140,8 @@ class NodeGraphSerializer:
             Node.NodeStart(builder)
             Node.NodeAddType(builder, node.nodeType)
             Node.NodeAddInputs(builder, nodeInputs)
+            Node.NodeAddGuiXPos(builder, node.x())
+            Node.NodeAddGuiYPos(builder, node.y())
             nodeOffset = Node.NodeEnd(builder)
 
             # Add the node to the list of serialized nodes

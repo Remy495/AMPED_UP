@@ -4,10 +4,11 @@ import time
 from queue import SimpleQueue
 from select import select
 import threading
+import KnobValues
 
 from text_logging import TextLogging
 
-from AmpedUpMessaging import Message, MessagePayload, LogMessage, LogSeverity
+from AmpedUpMessaging import Message, MessagePayload, LogMessage, LogSeverity, SetKnobValueMessage
 
 tlog = TextLogging()
 
@@ -98,6 +99,12 @@ class HardwareComms:
             logMessage = LogMessage.LogMessage()
             logMessage.Init(message.Payload().Bytes, message.Payload().Pos)
             tlog.remoteLog(logMessage)
+        elif(message.PayloadType() == MessagePayload.MessagePayload().SetKnobValueMessage):
+            knobValueMessage = SetKnobValueMessage.SetKnobValueMessage()
+            knobValueMessage.Init(message.Payload().Bytes, message.Payload().Pos)
+            KnobValues.knobValues[knobValueMessage.KnobIndex()] = knobValueMessage.Value()
+            print(knobValueMessage.Value())
+
 
 
 

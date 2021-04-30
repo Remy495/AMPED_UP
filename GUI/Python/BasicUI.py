@@ -4,10 +4,20 @@ from PyQt5.QtWidgets import QApplication, QWidget,QGridLayout, QPushButton, QLin
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import copy
+import os.path
+import KnobValues
+
+from AdvancedUI import AdvancedGuiWindow
+
+def presetFilename(presetIndex):
+    return os.path.join("presets", str(presetIndex + 1) + ".prst")
 
 class basicUI(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.advancedWindow = AdvancedGuiWindow(self)
+
         self.layout = QGridLayout()
         self.knobs=[["Volume",1.0],["Drive",1.0],["Treble",1.0],["Bass",1.0],["Middle",1.0],["Master",1.0],["Reverb",1.0],["Presence",1.0]]
         self.buttons=[]
@@ -39,6 +49,11 @@ class basicUI(QWidget):
             self.dials[i].valueChanged.connect(self.sliderMove)
             self.dials[i].setMinimum(int(1*100/12))
             self.dials[i].setMaximum(int(12*100/12))
+
+        self.advancedGuiButton = QPushButton('Advanced...')
+        self.advancedGuiButton.clicked.connect(self.openAdvancedGui)
+
+        self.setWindowTitle("Amped Up Remote")
             
 
     def buildLayout(self):
@@ -54,22 +69,34 @@ class basicUI(QWidget):
                 k+=1
         for i in range(len(self.dials)):
             self.layout.addWidget(self.dials[i],11,2*i+1)
+        self.layout.addWidget(self.advancedGuiButton)
+        
     def sendButtonClicked(self,preset=0):
         send=self.sender()
         tosend = []
         tosend=self.presets[send.preset]
-        ##CASEY: Here is where you would do anything you need to send this currently printed preset over bluetooth
+        self.advancedWindow.upload()
         print(tosend)
     def readButtonClicked(self,preset=0):
         send=self.sender()
-        ##CASEY: Here is where you would read some values back into a preset from the main board over bluetooth. I will write everything but the receiving portion
-        values = [0.00,0.5,0.5,0.5,0.5,0.5,0.5,1.0]##Read them into this
+
+        values = [value for value in KnobValues.knobValues]
+
         for i in range(len(values)):
-            self.presets[send.preset][i][1] = 1 + values[i]*12
+            self.setKnobPos(i, values[i] * 11 + 1)
+            self.advancedWindow.setKnobPos(i, values[i] * 11 + 1)
     def saveButtonClicked(self,preset=0):
+
         send=self.sender()
         for i in range(len(self.valueFields)):
             self.presets[send.preset][i][1] = float(self.valueFields[i][1].value)
+
+        presetData = self.advancedWindow.serialize()
+        f = open(presetFilename(send.preset), "wb")
+        f.write(presetData)
+        f.close()
+
+
     def loadButtonClicked(self,preset=0):
         send=self.sender()
         for i in range(len(self.valueFields)):
@@ -77,6 +104,13 @@ class basicUI(QWidget):
             self.valueFields[i][1].setText(str("{:.2f}".format((float(self.presets[send.preset][i][1])))))
         for i in range(len(self.dials)):
             self.dials[i].setValue(int(100*self.presets[send.preset][i][1]/12))
+
+        f = open(presetFilename(send.preset), "rb")
+        presetData = f.read()
+        f.close()
+
+        self.advancedWindow.deserialize(presetData)
+
     def sliderMove(self):
         sender = self.sender()
         target=0
@@ -85,6 +119,7 @@ class basicUI(QWidget):
                 target = i
         self.valueFields[target][1].value = float(12*sender.value()/100)
         self.valueFields[target][1].setText(str(float(12*sender.value()/100)))
+        self.advancedWindow.setKnobPos(target, self.valueFields[target][1].value)
         
     def textChanged(self):
         send=self.sender()
@@ -96,6 +131,21 @@ class basicUI(QWidget):
             if(self.valueFields[i][1].paramater == send.paramater):
                 target=i
         self.dials[target].setValue(int(100*(send.value)/12))
+
+    def openAdvancedGui(self):
+        self.advancedWindow.show()
+
+    def setKnobPos(self, knobIndex, pos):
+        if pos is None:
+            self.dials[knobIndex].setEnabled(False)
+            self.valueFields[knobIndex][1].setEnabled(False)
+        else:
+            self.dials[knobIndex].setEnabled(True)
+            self.valueFields[knobIndex][1].setEnabled(True)
+
+            self.dials[knobIndex].setValue(int(100*(pos)/12))
+            self.valueFields[knobIndex][1].value = float(pos)
+            self.valueFields[knobIndex][1].setText("%.2f" % pos)
 
 class sendButton(QPushButton):
     def __init__(self,preset=0,text="",parent=None):
@@ -120,7 +170,6 @@ class valueField(QLineEdit):
         self.value=value
         super().__init__(self.value,parent)
         self.paramater=paramater
-        
 
 app = QApplication(sys.argv)
 window = basicUI()

@@ -17,7 +17,7 @@ class Dial(QtWidgets.QGraphicsItem):
 
     MINIMUM_RANGE = 0.04
 
-    def __init__(self, bounds, parent = None):
+    def __init__(self, bounds, index, parent = None):
         super(Dial,self).__init__(parent)
 
         self.bounds = bounds
@@ -25,6 +25,7 @@ class Dial(QtWidgets.QGraphicsItem):
 
         self.percentage = 0.5
         self.range = [0.1, 0.9]
+        self.index = index
 
         self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
@@ -94,6 +95,8 @@ class Dial(QtWidgets.QGraphicsItem):
 
         self.update()
         super(Dial,self).mouseMoveEvent(e)
+
+        self.scene().updateBasicGui()
 
 
     def boundingRect(self):

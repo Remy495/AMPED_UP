@@ -83,7 +83,7 @@ class Node(QtWidgets.QGraphicsItem):
 
 			if self.scene() is not None:
 				if (inputRange[0]):
-					inputTextItem = Dial((inputRange[1], inputRange[2]), self)
+					inputTextItem = Dial((inputRange[1], inputRange[2]), connectionPointIndex, self)
 					textItemX = self.width / 2 + DrawingConstants.DIAL_HEIGHT / 2
 					textItemY = connectionPointY + DrawingConstants.DIAL_HEIGHT / 2
 					inputTextItem.setPos(textItemX, textItemY)
@@ -156,7 +156,8 @@ class Node(QtWidgets.QGraphicsItem):
 					
 		return hasUnmarkedEdges
 
-	def copy(self, x, y):
+	def copy(self):
+
 		newNode = Node(self.title, self.nodeType, self.inputTable, self.outputTable, False, self.x(), self.y(), True)
 		self.scene().addNode(newNode)
 		return newNode

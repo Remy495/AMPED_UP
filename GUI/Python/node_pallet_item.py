@@ -27,6 +27,12 @@ class NodePallet(QtWidgets.QGraphicsItem):
     def boundingRect(self):
         return QtCore.QRectF(0, 0, self.width, self.height)
 
+    def findNodeByType(self, nodeType):
+        for tab in self.tabs.values():
+            for node in tab.nodes:
+                if node.nodeType == nodeType:
+                    return node
+
     def addNode(self, node, tabName):
         # Find the tab by the requested name
         if tabName not in self.tabs:
