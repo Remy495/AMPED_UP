@@ -55,6 +55,9 @@ table Node
 {
     type: NodeType;
     inputs: [Input];
+
+    guiXPos: float;
+    guiYPos: float;
 }
 
 table OutputRange
@@ -68,3 +71,5 @@ table NodeGraph
     nodes: [Node];
     outputRanges: [OutputRange];
 }
+
+root_type NodeGraph;
