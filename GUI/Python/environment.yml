@@ -6,6 +6,7 @@ dependencies:
   - pyqt
   - pyserial
   - flatbuffers
+  - python-flatbuffers
   - colorama
   - pip
   - pip:
