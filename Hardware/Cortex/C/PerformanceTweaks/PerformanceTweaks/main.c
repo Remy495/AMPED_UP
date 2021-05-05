@@ -294,7 +294,7 @@ int main(void)
 	while(1){
 		
 		
-		steps1=(int)((float)stepsTotal*requestedPosition());
+		steps1=(int)((float)stepsTotal*(1.0 - requestedPosition()));
 		//counts=(int)((1-(float)count/encTot)*stepsTotal);
 		
 		if(isGrabbed || isStalled){
@@ -307,7 +307,7 @@ int main(void)
 				start_timer_us(1000000);
 				while(!timer_is_complete() && abs(lastCount - count) < threshold)
 				{
-					actualPosition(1.0f - (float)count / (float)encTot, true);
+					actualPosition((float)count / (float)encTot, true);
 				}
 			} while (abs(lastCount - count) >= threshold);
 			
@@ -324,7 +324,7 @@ int main(void)
 		}
 		else
 		{
-			actualPosition(1.0f - (float)count / (float)encTot, false);
+			actualPosition((float)count / (float)encTot, false);
 		}
 		
 		//
